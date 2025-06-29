@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Terrain;
 use App\Models\TerrainAnalysis;
+use App\Services\GeocodingService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,15 @@ use Inertia\Response;
 class TerrainController extends Controller
 {
     use AuthorizesRequests;
+
+    protected GeocodingService $geocodingService;
+
+    public function __construct(GeocodingService $geocodingService)
+    {
+        $this->geocodingService = $geocodingService;
+    }
+
+
     /**
      * Display a listing of the terrains.
      */
@@ -70,6 +80,8 @@ class TerrainController extends Controller
             'source_platform' => ['nullable', 'string', 'max:255'],
         ]);
 
+        $coordinates = $this->geocodingService->getCoordinates($request->city, $request->zip_code);
+
         $terrain = Terrain::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -77,8 +89,8 @@ class TerrainController extends Controller
             'price' => $request->price,
             'city' => $request->city,
             'zip_code' => $request->zip_code,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+            'latitude' => $request->latitude ?? $coordinates['latitude'],
+            'longitude' => $request->longitude ?? $coordinates['longitude'],
             'viabilised' => $request->viabilised ?? false,
             'source_url' => $request->source_url,
             'source_platform' => $request->source_platform,
@@ -144,6 +156,17 @@ class TerrainController extends Controller
             'source_platform' => ['nullable', 'string', 'max:255'],
         ]);
 
+        // Déterminer s’il faut recalculer les coordonnées
+        $shouldUpdateCoordinates =
+            !$terrain->latitude || !$terrain->longitude ||
+            $terrain->city !== $request->city ||
+            $terrain->zip_code !== $request->zip_code;
+
+        $coordinates = null;
+        if ($shouldUpdateCoordinates) {
+            $coordinates = $this->geocodingService->getCoordinates($request->city, $request->zip_code);
+        }
+
         $terrain->update([
             'title' => $request->title,
             'description' => $request->description,
@@ -151,8 +174,8 @@ class TerrainController extends Controller
             'price' => $request->price,
             'city' => $request->city,
             'zip_code' => $request->zip_code,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
+            'latitude' => $request->latitude ?? $coordinates['latitude'],
+            'longitude' => $request->longitude ?? $coordinates['longitude'],
             'viabilised' => $request->viabilised ?? false,
             'source_url' => $request->source_url,
             'source_platform' => $request->source_platform,
@@ -199,8 +222,8 @@ class TerrainController extends Controller
         $lots_possible = max(1, floor($terrain->surface_m2 / 500)); // Placeholder: 1 lot per 500m²
 
         // Estimate resale values
-        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 1.15; // Placeholder: 15% profit
-        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.25; // Placeholder: 25% profit
+        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 0.85; // Placeholder: -15% en dessous du marché
+        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.15; // Placeholder: 15% au dessus du marché
 
         // Calculate net margin
         $net_margin_estimate = $resale_estimate_min - $terrain->price - $viability_cost;
@@ -258,8 +281,8 @@ class TerrainController extends Controller
         $lots_possible = max(1, floor($terrain->surface_m2 / 500));
 
         // Update resale estimates based on new surface
-        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 1.15;
-        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.25;
+        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 0.85;
+        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.15;
 
         // Recalculate net margin
         $net_margin_estimate = $resale_estimate_min - $terrain->price - $viability_cost;

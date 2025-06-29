@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import Map from '@/components/Map.vue';
 
 // Define props for the component
 const props = defineProps<{
@@ -272,6 +273,15 @@ const breadcrumbs: BreadcrumbItem[] = [
             </dl>
           </div>
         </div>
+
+          <div v-if="terrain.latitude && terrain.longitude" class="md:col-span-2 overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm dark:border-sidebar-border dark:bg-sidebar-bg">
+              <div class="px-6 py-5">
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white">Map</h3>
+              </div>
+              <div class="border-t border-sidebar-border/70 px-6 py-5 dark:border-sidebar-border">
+<!--                  <Map :latitude="Number(terrain.latitude)" :longitude="Number(terrain.longitude)" />-->
+              </div>
+          </div>
       </div>
 
       <!-- Analysis tab content -->

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed $zip_code
  * @property mixed $viabilised
  * @property mixed $id
+ * @property mixed $latitude
+ * @property mixed $longitude
  * @method static where(string $string, mixed $id)
  * @method static create(array $array)
  */
