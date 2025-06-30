@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @method static where(string $string, mixed $id)
+ * @method static create(array $array)
+ * @property mixed $terrains
+ * @property mixed $team
+ */
 class Project extends Model
 {
     use HasFactory;

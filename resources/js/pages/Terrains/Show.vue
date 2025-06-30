@@ -314,8 +314,7 @@ const breadcrumbs: BreadcrumbItem[] = [
               <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">AI Score</dt>
                 <dd class="mt-1 flex items-center">
-                  <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ analysis.ai_score }}</span>
-<!--                    <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ analysis.ai_score.toFixed(1) }}</span>-->
+                    <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ Number(analysis.ai_score).toFixed(1) }}</span>
                   <div class="ml-2 h-2 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
                     <div
                       class="h-2 rounded-full"
@@ -359,8 +358,7 @@ const breadcrumbs: BreadcrumbItem[] = [
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Profit Margin</dt>
-                <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{{ profitMarginPercentage }}%</dd>
-<!--                  <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{{ profitMarginPercentage.toFixed(2) }}%</dd>-->
+                  <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{{ Number(profitMarginPercentage).toFixed(2) }}%</dd>
               </div>
             </dl>
           </div>
@@ -394,8 +392,7 @@ const breadcrumbs: BreadcrumbItem[] = [
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Return on Investment</dt>
-                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ profitMarginPercentage }}%</dd>
-<!--                  <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ profitMarginPercentage.toFixed(2) }}%</dd>-->
+                  <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ Number(profitMarginPercentage).toFixed(2) }}%</dd>
               </div>
             </dl>
           </div>

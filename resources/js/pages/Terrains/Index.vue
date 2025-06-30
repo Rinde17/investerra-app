@@ -266,8 +266,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400">AI Score</p>
                 <div class="flex items-center">
                   <span class="text-sm font-semibold text-gray-900 dark:text-white">
-                    {{ terrain.analysis ? terrain.analysis.ai_score : 'N/A' }}
-<!--                    {{ terrain.analysis ? terrain.analysis.ai_score.toFixed(1) : 'N/A' }}-->
+                    {{ terrain.analysis ? Number(terrain.analysis.ai_score).toFixed(1) : 'N/A' }}
                   </span>
                   <div v-if="terrain.analysis" class="ml-2 h-2 w-16 rounded-full bg-gray-200 dark:bg-gray-700">
                     <div

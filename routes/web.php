@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TerrainController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/terrains/{terrain}/edit', [TerrainController::class, 'edit'])->name('terrains.edit');
     Route::put('/terrains/{terrain}', [TerrainController::class, 'update'])->name('terrains.update');
     Route::delete('/terrains/{terrain}', [TerrainController::class, 'destroy'])->name('terrains.destroy');
+
+    // Project routes
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+    Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+
+    // Project terrain management
+    Route::get('/projects/{project}/terrains/add', [ProjectController::class, 'addTerrainForm'])->name('projects.terrains.add');
+    Route::post('/projects/{project}/terrains', [ProjectController::class, 'addTerrain'])->name('projects.terrains.store');
+    Route::delete('/projects/{project}/terrains/{terrain}', [ProjectController::class, 'removeTerrain'])->name('projects.terrains.destroy');
+    Route::put('/projects/{project}/terrains/{terrain}/notes', [ProjectController::class, 'updateTerrainNotes'])->name('projects.terrains.notes.update');
 });
 
 require __DIR__.'/settings.php';
