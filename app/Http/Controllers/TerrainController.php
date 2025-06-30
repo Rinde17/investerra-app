@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TerrainRequest;
 use App\Models\Terrain;
 use App\Models\TerrainAnalysis;
+use App\Services\BieniciMarketPriceM2Service;
 use App\Services\GeocodingService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,12 +19,13 @@ class TerrainController extends Controller
     use AuthorizesRequests;
 
     protected GeocodingService $geocodingService;
+    protected BieniciMarketPriceM2Service $bieniciMarketPriceM2Service;
 
-    public function __construct(GeocodingService $geocodingService)
+    public function __construct(GeocodingService $geocodingService, BieniciMarketPriceM2Service $bieniciMarketPriceM2Service)
     {
         $this->geocodingService = $geocodingService;
+        $this->bieniciMarketPriceM2Service = $bieniciMarketPriceM2Service;
     }
-
 
     /**
      * Display a listing of the terrains.
@@ -63,37 +66,18 @@ class TerrainController extends Controller
 
     /**
      * Store a newly created terrain in storage.
+     * @throws ConnectionException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(TerrainRequest $request): RedirectResponse
     {
-        $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'surface_m2' => ['required', 'numeric', 'min:0'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'city' => ['required', 'string', 'max:255'],
-            'zip_code' => ['required', 'string', 'max:10'],
-            'latitude' => ['nullable', 'numeric'],
-            'longitude' => ['nullable', 'numeric'],
-            'viabilised' => ['boolean'],
-            'source_url' => ['nullable', 'url', 'max:255'],
-            'source_platform' => ['nullable', 'string', 'max:255'],
-        ]);
+        $data = $request->validated();
 
-        $coordinates = $this->geocodingService->getCoordinates($request->city, $request->zip_code);
+        $coordinates = $this->geocodingService->getCoordinates($data['city'], $data['zip_code']);
 
         $terrain = Terrain::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'surface_m2' => $request->surface_m2,
-            'price' => $request->price,
-            'city' => $request->city,
-            'zip_code' => $request->zip_code,
-            'latitude' => $request->latitude ?? $coordinates['latitude'],
-            'longitude' => $request->longitude ?? $coordinates['longitude'],
-            'viabilised' => $request->viabilised ?? false,
-            'source_url' => $request->source_url,
-            'source_platform' => $request->source_platform,
+            ...$data,
+            'latitude' => $data['latitude'] ?? $coordinates['latitude'],
+            'longitude' => $data['longitude'] ?? $coordinates['longitude'],
             'user_id' => $this->user()->id,
         ]);
 
@@ -137,48 +121,29 @@ class TerrainController extends Controller
     /**
      * Update the specified terrain in storage.
      * @throws AuthorizationException
+     * @throws ConnectionException
      */
-    public function update(Request $request, Terrain $terrain): RedirectResponse
+    public function update(TerrainRequest $request, Terrain $terrain): RedirectResponse
     {
         $this->authorize('update', $terrain);
 
-        $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'surface_m2' => ['required', 'numeric', 'min:0'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'city' => ['required', 'string', 'max:255'],
-            'zip_code' => ['required', 'string', 'max:10'],
-            'latitude' => ['nullable', 'numeric'],
-            'longitude' => ['nullable', 'numeric'],
-            'viabilised' => ['boolean'],
-            'source_url' => ['nullable', 'url', 'max:255'],
-            'source_platform' => ['nullable', 'string', 'max:255'],
-        ]);
+        $data = $request->validated();
 
         // Déterminer s’il faut recalculer les coordonnées
         $shouldUpdateCoordinates =
             !$terrain->latitude || !$terrain->longitude ||
-            $terrain->city !== $request->city ||
-            $terrain->zip_code !== $request->zip_code;
+            $terrain->city !== $data['city'] ||
+            $terrain->zip_code !== $data['zip_code'];
 
         $coordinates = null;
         if ($shouldUpdateCoordinates) {
-            $coordinates = $this->geocodingService->getCoordinates($request->city, $request->zip_code);
+            $coordinates = $this->geocodingService->getCoordinates($data['city'], $data['zip_code']);
         }
 
         $terrain->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'surface_m2' => $request->surface_m2,
-            'price' => $request->price,
-            'city' => $request->city,
-            'zip_code' => $request->zip_code,
-            'latitude' => $request->latitude ?? $coordinates['latitude'],
-            'longitude' => $request->longitude ?? $coordinates['longitude'],
-            'viabilised' => $request->viabilised ?? false,
-            'source_url' => $request->source_url,
-            'source_platform' => $request->source_platform,
+            ...$data,
+            'latitude' => $data['latitude'] ?? $coordinates['latitude'],
+            'longitude' => $data['longitude'] ?? $coordinates['longitude'],
         ]);
 
         // Update analysis if terrain data has changed
@@ -206,6 +171,7 @@ class TerrainController extends Controller
 
     /**
      * Create an initial analysis for a terrain.
+     * @throws ConnectionException
      */
     private function createInitialAnalysis(Terrain $terrain): void
     {
@@ -213,57 +179,26 @@ class TerrainController extends Controller
         $price_m2 = $terrain->getPricePerM2();
 
         // Estimate market price (this would be replaced with actual API data)
-        $market_price_m2 = 40; // Placeholder: 40€/mètre carré pour Montluçon
+        $market_price_m2 = $this->bieniciMarketPriceM2Service->getMarketPriceM2($terrain->city, $terrain->zip_code);
 
-        // Estimate viability cost if not viabilised
-        $viability_cost = $terrain->viabilised ? 0 : 10000; // Placeholder: 5000-15000€
+        $metrics = $this->calculateAnalysisMetrics($terrain, $market_price_m2);
 
-        // Estimate possible lots (simplified calculation)
-        $lots_possible = max(1, floor($terrain->surface_m2 / 500)); // Placeholder: 1 lot per 500m²
-
-        // Estimate resale values
-        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 0.85; // Placeholder: -15% en dessous du marché
-        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.15; // Placeholder: 15% au dessus du marché
-
-        // Calculate net margin
-        $net_margin_estimate = $resale_estimate_min - $terrain->price - $viability_cost;
-
-        // Calculate AI score (simplified)
-        $ai_score = min(100, max(0, ($net_margin_estimate / $terrain->price) * 50 + 50));
-
-        // Determine profitability label
-        $profitability_label = 'Average';
-        if ($ai_score >= 80) {
-            $profitability_label = 'Excellent';
-        } elseif ($ai_score >= 60) {
-            $profitability_label = 'Good';
-        } elseif ($ai_score <= 30) {
-            $profitability_label = 'Poor';
-        }
-
-        // Create the analysis
         TerrainAnalysis::create([
-            'terrain_id' => $terrain->id,
-            'price_m2' => $price_m2,
-            'market_price_m2' => $market_price_m2,
-            'viability_cost' => $viability_cost,
-            'lots_possible' => $lots_possible,
-            'resale_estimate_min' => $resale_estimate_min,
-            'resale_estimate_max' => $resale_estimate_max,
-            'net_margin_estimate' => $net_margin_estimate,
-            'ai_score' => $ai_score,
-            'profitability_label' => $profitability_label,
-            'analysis_details' => [
-                'calculation_method' => 'basic',
-                'market_data_source' => 'estimated',
-                'division_strategy' => 'equal_lots',
-            ],
-            'analyzed_at' => now(),
-        ]);
+                'terrain_id' => $terrain->id,
+                'price_m2' => $price_m2,
+                'market_price_m2' => $market_price_m2,
+                'analyzed_at' => now(),
+                'analysis_details' => [
+                    'calculation_method' => 'basic',
+                    'market_data_source' => 'estimated',
+                    'division_strategy' => 'equal_lots',
+                ],
+            ] + $metrics);
     }
 
     /**
      * Update the analysis for a terrain.
+     * @throws ConnectionException
      */
     private function updateAnalysis(Terrain $terrain): void
     {
@@ -276,41 +211,47 @@ class TerrainController extends Controller
 
         // Recalculate metrics
         $price_m2 = $terrain->getPricePerM2();
-        $market_price_m2 = $analysis->market_price_m2; // Keep the existing market price
-        $viability_cost = $terrain->viabilised ? 0 : 10000;
-        $lots_possible = max(1, floor($terrain->surface_m2 / 500));
+        $market_price_m2 = $analysis->market_price_m2; // Keep existing market price
 
-        // Update resale estimates based on new surface
-        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 0.85;
-        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.15;
+        $metrics = $this->calculateAnalysisMetrics($terrain, $market_price_m2);
 
-        // Recalculate net margin
+        $analysis->update([
+                'price_m2' => $price_m2,
+                'analyzed_at' => now(),
+            ] + $metrics);
+    }
+
+    private function calculateAnalysisMetrics(Terrain $terrain, float $market_price_m2): array
+    {
+        $viability_cost = $terrain->viabilised ? 0 : 10000; // Placeholder: 5000-15000€
+        $lots_possible = max(1, floor($terrain->surface_m2 / 500)); // Placeholder: 1 lot per 500m²
+
+        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 0.85; // -15% en dessous du marché
+        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.15; // +15% au dessus du marché
+
         $net_margin_estimate = $resale_estimate_min - $terrain->price - $viability_cost;
 
-        // Recalculate AI score
         $ai_score = min(100, max(0, ($net_margin_estimate / $terrain->price) * 50 + 50));
 
-        // Update profitability label
-        $profitability_label = 'Average';
         if ($ai_score >= 80) {
             $profitability_label = 'Excellent';
         } elseif ($ai_score >= 60) {
             $profitability_label = 'Good';
         } elseif ($ai_score <= 30) {
             $profitability_label = 'Poor';
+        } else {
+            $profitability_label = 'Average';
         }
 
-        // Update the analysis
-        $analysis->update([
-            'price_m2' => $price_m2,
-            'viability_cost' => $viability_cost,
-            'lots_possible' => $lots_possible,
-            'resale_estimate_min' => $resale_estimate_min,
-            'resale_estimate_max' => $resale_estimate_max,
-            'net_margin_estimate' => $net_margin_estimate,
-            'ai_score' => $ai_score,
-            'profitability_label' => $profitability_label,
-            'analyzed_at' => now(),
-        ]);
+        return compact(
+            'viability_cost',
+            'lots_possible',
+            'resale_estimate_min',
+            'resale_estimate_max',
+            'net_margin_estimate',
+            'ai_score',
+            'profitability_label'
+        );
     }
+
 }
