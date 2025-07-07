@@ -3,7 +3,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
-import Map from '@/components/Map.vue';
 
 // Define props for the component
 const props = defineProps<{
@@ -308,6 +307,29 @@ const breadcrumbs: BreadcrumbItem[] = [
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Analysis performed on {{ formatDate(analysis.analyzed_at) }}
             </p>
+
+            <!-- Export buttons -->
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a
+                :href="route('terrains.analyses.pdf', terrain.id)"
+                target="_blank"
+                class="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                <svg class="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Export as PDF
+              </a>
+              <a
+                :href="route('terrains.analyses.csv', terrain.id)"
+                class="inline-flex items-center rounded-md border border-sidebar-border/70 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-sidebar-border dark:bg-sidebar-bg dark:text-gray-300 dark:hover:bg-sidebar-bg/80"
+              >
+                <svg class="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Export as CSV
+              </a>
+            </div>
           </div>
           <div class="border-t border-sidebar-border/70 px-6 py-5 dark:border-sidebar-border">
             <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TerrainAnalysisController;
 use App\Http\Controllers\TerrainController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WebhookController;
@@ -47,6 +48,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/terrains/{terrain}/edit', [TerrainController::class, 'edit'])->name('terrains.edit');
     Route::put('/terrains/{terrain}', [TerrainController::class, 'update'])->name('terrains.update');
     Route::delete('/terrains/{terrain}', [TerrainController::class, 'destroy'])->name('terrains.destroy');
+
+    // Terrain Analysis routes
+    Route::get('/terrains/{terrain}/analysis', [TerrainAnalysisController::class, 'show'])->name('terrains.analyses.show');
+    Route::get('/terrains/{terrain}/analysis/pdf', [TerrainAnalysisController::class, 'generatePdf'])->name('terrains.analyses.pdf');
+    Route::get('/terrains/{terrain}/analysis/csv', [TerrainAnalysisController::class, 'exportCsv'])->name('terrains.analyses.csv');
 
     // Project routes
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');

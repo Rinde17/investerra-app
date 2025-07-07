@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed $id
  * @property mixed $latitude
  * @property mixed $longitude
+ * @property mixed $title
  * @method static where(string $string, mixed $id)
  * @method static create(array $array)
  */

@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float|mixed $net_margin_estimate
  * @property float|mixed $ai_score
  * @property Terrain|null $terrain
+ * @property mixed $lots_possible
+ * @property mixed $profitability_label
+ * @property mixed $analyzed_at
  * @method static create(array $array)
  */
 class TerrainAnalysis extends Model
