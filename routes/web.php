@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TerrainController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -13,6 +16,11 @@ Route::get('/', function () {
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Accès aux pricing disponibles
+Route::get('/pricing', [PricingController::class, 'index'])->name('pricing.index');
+// Webhooks Stripe
+Route::post('/stripe/webhook', [WebhookController::class, 'handleWebhook'])->name('cashier.webhook');
 
 // Team routes
 Route::middleware(['auth'])->group(function () {
@@ -54,6 +62,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/projects/{project}/terrains', [ProjectController::class, 'addTerrain'])->name('projects.terrains.store');
     Route::delete('/projects/{project}/terrains/{terrain}', [ProjectController::class, 'removeTerrain'])->name('projects.terrains.destroy');
     Route::put('/projects/{project}/terrains/{terrain}/notes', [ProjectController::class, 'updateTerrainNotes'])->name('projects.terrains.notes.update');
+
+    // Subscription routes
+    Route::get('/subscription-checkout/{stripePriceId}', [SubscriptionController::class, 'subscriptionCheckout'])->name('subscription.checkout');
+    Route::get('/checkout/success', [SubscriptionController::class, 'success'])->name('checkout-success');
+    Route::get('/checkout/cancel', [SubscriptionController::class, 'cancel'])->name('checkout-cancel');
+
+    // Routes that require an active subscription
+    Route::middleware([App\Http\Middleware\CheckSubscription::class])->group(function () {
+        Route::post('/subscriptions/resume', [SubscriptionController::class, 'resumeSubscription'])->name('subscriptions.resume');
+        Route::post('/subscriptions/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscriptions.cancel');
+        Route::post('/subscriptions/swap', [SubscriptionController::class, 'swapSubscription'])->name('subscriptions.swap');
+        Route::get('/billing-portal', [SubscriptionController::class, 'billingPortal'])->name('billing-portal');
+        Route::get('/settings/subscription', [SubscriptionController::class, 'showSubscriptionSettings'])->name('settings.subscription');
+
+        Route::get('/invoices/{invoiceId}/download', [SubscriptionController::class, 'downloadUserInvoice'])->name('invoices.download');
+    });
 });
 
 require __DIR__.'/settings.php';

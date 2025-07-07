@@ -26,4 +26,14 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/js'),
         },
     },
+    server: {
+        host: 'investerra-test.test',
+        hmr: {
+            host: 'investerra-test.test',
+        },
+        // Si problèmes, essayer 'usePolling: true'
+        // watch: {
+        //     usePolling: true,
+        // },
+    },
 });

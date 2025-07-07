@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property mixed $stripe_price_id
+ * @property mixed $id
+ * @property mixed $name
+ * @method static create(array $array)
+ * @method static where(string $string, mixed $stripePriceId)
+ * @method static find(mixed $new_plan_id)
+ */
 class Plan extends Model
 {
     use HasFactory;
