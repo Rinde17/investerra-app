@@ -91,19 +91,4 @@ class TerrainAnalysisController extends Controller
         // Use the CSV export service to generate the CSV
         return $this->csvExportService->exportCsv($terrain);
     }
-
-    /**
-     * Run AI analysis on the specified terrain.
-     * @throws AuthorizationException
-     */
-    public function runAiAnalysis(Terrain $terrain): RedirectResponse
-    {
-        $this->authorize('update', $terrain);
-
-        // Use the AI analysis service to analyze the terrain
-        $analysis = $this->aiAnalysisService->analyzeTerrain($terrain);
-
-        return redirect()->route('terrains.analysis.show', $terrain)
-            ->with('success', 'AI analysis completed successfully.');
-    }
 }
