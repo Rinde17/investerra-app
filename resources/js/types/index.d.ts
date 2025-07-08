@@ -10,6 +10,10 @@ export interface FlashMessages {
 
 export interface Auth {
     user: User;
+    subscription?: {
+        stripe_status: string;
+    };
+
 }
 
 export interface BreadcrumbItem {

@@ -11,22 +11,22 @@ import AppLogo from './AppLogo.vue';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: '/app/dashboard',
         icon: LayoutGrid,
     },
     {
         title: 'Teams',
-        href: '/teams',
+        href: '/app/teams',
         icon: UsersRound,
     },
     {
         title: 'Terrains',
-        href: '/terrains',
+        href: '/app/terrains',
         icon: Fence,
     },
     {
         title: 'Projects',
-        href: '/projects',
+        href: '/app/projects',
         icon: FolderKanban,
     },
     {

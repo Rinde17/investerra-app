@@ -12,7 +12,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { Banknote, BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
+const subscription = computed(() => auth.value?.subscription);
+const hasActiveSubscription = computed(() => subscription.value?.stripe_status === 'active');
 
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
@@ -32,13 +34,40 @@ const activeItemStyles = computed(
     () => (url: string) => (isCurrentRoute.value(url) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''),
 );
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
+const mainNavItems = computed<NavItem[]>(() => {
+    const items: NavItem[] = [];
+
+    console.log("User has active subscription : " + hasActiveSubscription.value);
+
+    if (auth.value.user && hasActiveSubscription.value) {
+        items.push({
+            title: 'Dashboard',
+            href: '/app/dashboard',
+            icon: LayoutGrid,
+        });
+    }
+
+    items.push({
+        title: 'Pricing',
+        href: '/pricing',
+        icon: Banknote,
+    });
+
+    return items;
+});
+
+// const mainNavItems: NavItem[] = [
+//     {
+//         title: 'Dashboard',
+//         href: '/dashboard',
+//         icon: LayoutGrid,
+//     },
+//     {
+//         title: 'Pricing',
+//         href: '/pricing',
+//         icon: Banknote,
+//     }
+// ];
 
 const rightNavItems: NavItem[] = [
     {

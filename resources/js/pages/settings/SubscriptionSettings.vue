@@ -12,7 +12,7 @@ import Modal from '@/components/Modal.vue';
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Subscription settings',
-        href: '/settings/subscription',
+        href: '/app/settings/subscription',
     },
 ];
 

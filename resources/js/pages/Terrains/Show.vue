@@ -499,7 +499,7 @@ const breadcrumbs: BreadcrumbItem[] = [
           <div class="mb-4 flex items-center justify-between">
             <h2 class="text-lg font-medium text-gray-900 dark:text-white">Projects Including This Terrain</h2>
             <Link
-              href="/projects/create"
+              :href="route('projects.create')"
               class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               New Project
@@ -523,7 +523,7 @@ const breadcrumbs: BreadcrumbItem[] = [
               </div>
               <div class="border-t border-sidebar-border/70 bg-gray-50 p-4 dark:border-sidebar-border dark:bg-sidebar-bg/50">
                 <Link
-                  :href="`/projects/${project.id}`"
+                  :href="route('projects.show', {project: project.id})"
                   class="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   View Project
@@ -554,7 +554,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Add this terrain to a project to organize your investments.</p>
             <div class="mt-6">
               <Link
-                href="/projects/create"
+                :href="route('projects.create')"
                 class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Create New Project
