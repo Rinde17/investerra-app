@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TerrainRequest;
 use App\Models\Terrain;
-use App\Models\TerrainAnalysis;
+use App\Services\AIAnalysisService;
 use App\Services\BieniciMarketPriceM2Service;
 use App\Services\GeocodingService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -20,11 +20,16 @@ class TerrainController extends Controller
 
     protected GeocodingService $geocodingService;
     protected BieniciMarketPriceM2Service $bieniciMarketPriceM2Service;
+    protected AIAnalysisService $aiAnalysisService;
 
-    public function __construct(GeocodingService $geocodingService, BieniciMarketPriceM2Service $bieniciMarketPriceM2Service)
-    {
+    public function __construct(
+        GeocodingService $geocodingService,
+        BieniciMarketPriceM2Service $bieniciMarketPriceM2Service,
+        AIAnalysisService $aiAnalysisService
+    ) {
         $this->geocodingService = $geocodingService;
         $this->bieniciMarketPriceM2Service = $bieniciMarketPriceM2Service;
+        $this->aiAnalysisService = $aiAnalysisService;
     }
 
     /**
@@ -82,7 +87,7 @@ class TerrainController extends Controller
         ]);
 
         // Create initial analysis
-        $this->createInitialAnalysis($terrain);
+        $this->aiAnalysisService->analyzeTerrain($terrain);
 
         return redirect()->route('terrains.show', $terrain)
             ->with('success', 'Terrain created successfully.');
@@ -121,7 +126,6 @@ class TerrainController extends Controller
     /**
      * Update the specified terrain in storage.
      * @throws AuthorizationException
-     * @throws ConnectionException
      */
     public function update(TerrainRequest $request, Terrain $terrain): RedirectResponse
     {
@@ -148,7 +152,7 @@ class TerrainController extends Controller
 
         // Update analysis if terrain data has changed
         if ($terrain->wasChanged(['price', 'surface_m2', 'viabilised'])) {
-            $this->updateAnalysis($terrain);
+            $this->aiAnalysisService->analyzeTerrain($terrain);
         }
 
         return redirect()->route('terrains.show', $terrain)
@@ -169,89 +173,5 @@ class TerrainController extends Controller
             ->with('success', 'Terrain deleted successfully.');
     }
 
-    /**
-     * Create an initial analysis for a terrain.
-     * @throws ConnectionException
-     */
-    private function createInitialAnalysis(Terrain $terrain): void
-    {
-        // Calculate basic metrics
-        $price_m2 = $terrain->getPricePerM2();
-
-        // Estimate market price (this would be replaced with actual API data)
-        $market_price_m2 = $this->bieniciMarketPriceM2Service->getMarketPriceM2($terrain->city, $terrain->zip_code);
-
-        $metrics = $this->calculateAnalysisMetrics($terrain, $market_price_m2);
-
-        TerrainAnalysis::create([
-                'terrain_id' => $terrain->id,
-                'price_m2' => $price_m2,
-                'market_price_m2' => $market_price_m2,
-                'analyzed_at' => now(),
-                'analysis_details' => [
-                    'calculation_method' => 'basic',
-                    'market_data_source' => 'estimated',
-                    'division_strategy' => 'equal_lots',
-                ],
-            ] + $metrics);
-    }
-
-    /**
-     * Update the analysis for a terrain.
-     * @throws ConnectionException
-     */
-    private function updateAnalysis(Terrain $terrain): void
-    {
-        $analysis = $terrain->analysis;
-
-        if (!$analysis) {
-            $this->createInitialAnalysis($terrain);
-            return;
-        }
-
-        // Recalculate metrics
-        $price_m2 = $terrain->getPricePerM2();
-        $market_price_m2 = $analysis->market_price_m2; // Keep existing market price
-
-        $metrics = $this->calculateAnalysisMetrics($terrain, $market_price_m2);
-
-        $analysis->update([
-                'price_m2' => $price_m2,
-                'analyzed_at' => now(),
-            ] + $metrics);
-    }
-
-    private function calculateAnalysisMetrics(Terrain $terrain, float $market_price_m2): array
-    {
-        $viability_cost = $terrain->viabilised ? 0 : 10000; // Placeholder: 5000-15000€
-        $lots_possible = max(1, floor($terrain->surface_m2 / 500)); // Placeholder: 1 lot per 500m²
-
-        $resale_estimate_min = ($market_price_m2 * $terrain->surface_m2) * 0.85; // -15% en dessous du marché
-        $resale_estimate_max = ($market_price_m2 * $terrain->surface_m2) * 1.15; // +15% au dessus du marché
-
-        $net_margin_estimate = $resale_estimate_min - $terrain->price - $viability_cost;
-
-        $ai_score = min(100, max(0, ($net_margin_estimate / $terrain->price) * 50 + 50));
-
-        if ($ai_score >= 80) {
-            $profitability_label = 'Excellent';
-        } elseif ($ai_score >= 60) {
-            $profitability_label = 'Good';
-        } elseif ($ai_score <= 30) {
-            $profitability_label = 'Poor';
-        } else {
-            $profitability_label = 'Average';
-        }
-
-        return compact(
-            'viability_cost',
-            'lots_possible',
-            'resale_estimate_min',
-            'resale_estimate_max',
-            'net_margin_estimate',
-            'ai_score',
-            'profitability_label'
-        );
-    }
 
 }

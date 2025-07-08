@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Terrain;
+use App\Services\AIAnalysisService;
 use App\Services\PdfExportService;
 use App\Services\CsvExportService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,15 +29,25 @@ class TerrainAnalysisController extends Controller
     protected CsvExportService $csvExportService;
 
     /**
+     * @var AIAnalysisService
+     */
+    protected AIAnalysisService $aiAnalysisService;
+
+    /**
      * TerrainAnalysisController constructor.
      *
      * @param PdfExportService $pdfExportService
      * @param CsvExportService $csvExportService
+     * @param AIAnalysisService $aiAnalysisService
      */
-    public function __construct(PdfExportService $pdfExportService, CsvExportService $csvExportService)
-    {
+    public function __construct(
+        PdfExportService $pdfExportService,
+        CsvExportService $csvExportService,
+        AIAnalysisService $aiAnalysisService
+    ) {
         $this->pdfExportService = $pdfExportService;
         $this->csvExportService = $csvExportService;
+        $this->aiAnalysisService = $aiAnalysisService;
     }
 
     /**
@@ -78,5 +90,20 @@ class TerrainAnalysisController extends Controller
 
         // Use the CSV export service to generate the CSV
         return $this->csvExportService->exportCsv($terrain);
+    }
+
+    /**
+     * Run AI analysis on the specified terrain.
+     * @throws AuthorizationException
+     */
+    public function runAiAnalysis(Terrain $terrain): RedirectResponse
+    {
+        $this->authorize('update', $terrain);
+
+        // Use the AI analysis service to analyze the terrain
+        $analysis = $this->aiAnalysisService->analyzeTerrain($terrain);
+
+        return redirect()->route('terrains.analysis.show', $terrain)
+            ->with('success', 'AI analysis completed successfully.');
     }
 }

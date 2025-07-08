@@ -33,13 +33,17 @@ class TerrainAnalysis extends Model
         'terrain_id',
         'price_m2',
         'market_price_m2',
+        'price_difference_percentage',
         'viability_cost',
         'lots_possible',
         'resale_estimate_min',
         'resale_estimate_max',
         'net_margin_estimate',
+        'profit_margin_percentage',
         'ai_score',
         'profitability_label',
+        'overall_risk',
+        'overall_recommendation',
         'analysis_details',
         'analyzed_at',
     ];
@@ -52,14 +56,18 @@ class TerrainAnalysis extends Model
     protected $casts = [
         'price_m2' => 'decimal:2',
         'market_price_m2' => 'decimal:2',
+        'price_difference_percentage' => 'decimal:2',
         'viability_cost' => 'decimal:2',
         'lots_possible' => 'integer',
         'resale_estimate_min' => 'decimal:2',
         'resale_estimate_max' => 'decimal:2',
         'net_margin_estimate' => 'decimal:2',
+        'profit_margin_percentage' => 'decimal:2',
         'ai_score' => 'decimal:2',
         'analysis_details' => 'array',
         'analyzed_at' => 'datetime',
+        'overall_risk' => 'string',
+        'overall_recommendation' => 'string',
     ];
 
     /**
@@ -68,45 +76,5 @@ class TerrainAnalysis extends Model
     public function terrain(): BelongsTo
     {
         return $this->belongsTo(Terrain::class);
-    }
-
-    /**
-     * Calculate the profit margin percentage.
-     */
-    public function getProfitMarginPercentage(): float
-    {
-        $terrain = $this->terrain;
-
-        if (!$terrain || $terrain->price <= 0) {
-            return 0;
-        }
-
-        return ($this->net_margin_estimate / $terrain->price) * 100;
-    }
-
-    /**
-     * Get the total investment cost (purchase price and viability cost).
-     */
-    public function getTotalInvestmentCost(): float
-    {
-        $terrain = $this->terrain;
-
-        if (!$terrain) {
-            return 0;
-        }
-
-        return $terrain->price + ($this->viability_cost ?? 0);
-    }
-
-    /**
-     * Get the average resale estimate.
-     */
-    public function getAverageResaleEstimate(): float
-    {
-        if ($this->resale_estimate_min === null || $this->resale_estimate_max === null) {
-            return 0;
-        }
-
-        return ($this->resale_estimate_min + $this->resale_estimate_max) / 2;
     }
 }

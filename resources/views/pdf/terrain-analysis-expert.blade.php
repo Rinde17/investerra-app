@@ -332,6 +332,36 @@
                 <td>Based on recent sales data</td>
             </tr>
             <tr>
+                <td>Price Difference</td>
+                <td>{{ $analysis->price_difference_percentage > 0 ? '+' : '' }}{{ number_format($analysis->price_difference_percentage, 2) }}%</td>
+                <td>
+                    @if($analysis->price_difference_percentage < -10)
+                        Significantly below market
+                    @elseif($analysis->price_difference_percentage < 0)
+                        Below market
+                    @elseif($analysis->price_difference_percentage <= 5)
+                        At market price
+                    @elseif($analysis->price_difference_percentage <= 15)
+                        Above market
+                    @else
+                        Significantly above market
+                    @endif
+                </td>
+                <td>
+                    @if($analysis->price_difference_percentage < -10)
+                        Excellent purchase opportunity
+                    @elseif($analysis->price_difference_percentage < 0)
+                        Good purchase opportunity
+                    @elseif($analysis->price_difference_percentage <= 5)
+                        Fair purchase
+                    @elseif($analysis->price_difference_percentage <= 15)
+                        Consider negotiating
+                    @else
+                        Overpriced, negotiate or avoid
+                    @endif
+                </td>
+            </tr>
+            <tr>
                 <td>Viability Cost</td>
                 <td>{{ number_format($analysis->viability_cost, 2) }} €</td>
                 <td>{{ number_format($analysis->viability_cost / $terrain->price * 100, 1) }}% of purchase price</td>
@@ -441,6 +471,58 @@
                     @endif
                 </td>
             </tr>
+            <tr>
+                <td>Overall Risk</td>
+                <td>{{ ucfirst($analysis->overall_risk) }}</td>
+                <td>
+                    @if($analysis->overall_risk == 'low')
+                        Minimal risk factors
+                    @elseif($analysis->overall_risk == 'medium')
+                        Some risk factors present
+                    @else
+                        Significant risk factors
+                    @endif
+                </td>
+                <td>
+                    @if($analysis->overall_risk == 'low')
+                        Safe investment
+                    @elseif($analysis->overall_risk == 'medium')
+                        Proceed with caution
+                    @else
+                        Thorough risk mitigation required
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>Recommendation</td>
+                <td>{{ $analysis->overall_recommendation === 'strong_buy' ? 'Strong Buy' : ucfirst(str_replace('_', ' ', $analysis->overall_recommendation)) }}</td>
+                <td>
+                    @if($analysis->overall_recommendation == 'strong_buy')
+                        Exceptional opportunity
+                    @elseif($analysis->overall_recommendation == 'buy')
+                        Good opportunity
+                    @elseif($analysis->overall_recommendation == 'neutral')
+                        Average opportunity
+                    @elseif($analysis->overall_recommendation == 'caution')
+                        Proceed with caution
+                    @else
+                        Not recommended
+                    @endif
+                </td>
+                <td>
+                    @if($analysis->overall_recommendation == 'strong_buy')
+                        Act quickly
+                    @elseif($analysis->overall_recommendation == 'buy')
+                        Recommended purchase
+                    @elseif($analysis->overall_recommendation == 'neutral')
+                        Consider alternatives
+                    @elseif($analysis->overall_recommendation == 'caution')
+                        Negotiate or reconsider
+                    @else
+                        Look for better opportunities
+                    @endif
+                </td>
+            </tr>
         </table>
     </div>
 
@@ -479,13 +561,13 @@
             </tr>
             <tr>
                 <td>Return on Investment</td>
-                <td>{{ number_format(($analysis->net_margin_estimate / $terrain->price) * 100, 2) }}%</td>
+                <td>{{ number_format($analysis->profit_margin_percentage, 2) }}%</td>
                 <td>
-                    @if(($analysis->net_margin_estimate / $terrain->price) * 100 > 30)
+                    @if($analysis->profit_margin_percentage > 30)
                         Excellent ROI
-                    @elseif(($analysis->net_margin_estimate / $terrain->price) * 100 > 15)
+                    @elseif($analysis->profit_margin_percentage > 15)
                         Good ROI
-                    @elseif(($analysis->net_margin_estimate / $terrain->price) * 100 > 5)
+                    @elseif($analysis->profit_margin_percentage > 5)
                         Average ROI
                     @else
                         Poor ROI
@@ -499,7 +581,7 @@
             </tr>
             <tr>
                 <td>Estimated Annual Return</td>
-                <td>{{ number_format(($analysis->net_margin_estimate / $terrain->price) * 100 / ($terrain->viabilised ? 0.375 : 0.75), 2) }}%</td>
+                <td>{{ number_format($analysis->profit_margin_percentage / ($terrain->viabilised ? 0.375 : 0.75), 2) }}%</td>
                 <td>Annualized based on development timeline</td>
             </tr>
         </table>

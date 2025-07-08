@@ -28,17 +28,28 @@ const props = defineProps<{
     terrain_id: number;
     price_m2: number;
     market_price_m2: number;
+    price_difference_percentage: number;
     viability_cost: number;
     lots_possible: number;
     resale_estimate_min: number;
     resale_estimate_max: number;
     net_margin_estimate: number;
+    profit_margin_percentage: number;
     ai_score: number;
     profitability_label: string;
+    overall_risk: string;
+    overall_recommendation: string;
     analysis_details: {
       calculation_method: string;
       market_data_source: string;
       division_strategy: string;
+      price_analysis: any;
+      development_potential: any;
+      profitability_analysis: any;
+      risk_assessment: any;
+      recommendations: any;
+      resale_estimate_min: number;
+      resale_estimate_max: number;
     };
     analyzed_at: string;
   } | null;
@@ -77,12 +88,6 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const profitMarginPercentage = computed(() => {
-  if (!props.analysis || !props.terrain.price || props.terrain.price <= 0) {
-    return 0;
-  }
-  return (props.analysis.net_margin_estimate / props.terrain.price) * 100;
-});
 
 const totalInvestmentCost = computed(() => {
    if (!props.analysis) {
@@ -311,7 +316,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <!-- Export buttons -->
             <div class="mt-4 flex flex-wrap gap-2">
               <a
-                :href="route('terrains.analyses.pdf', terrain.id)"
+                :href="route('terrains.analysis.pdf', terrain.id)"
                 target="_blank"
                 class="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
@@ -321,7 +326,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 Export as PDF
               </a>
               <a
-                :href="route('terrains.analyses.csv', terrain.id)"
+                :href="route('terrains.analysis.csv', terrain.id)"
                 class="inline-flex items-center rounded-md border border-sidebar-border/70 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-sidebar-border dark:bg-sidebar-bg dark:text-gray-300 dark:hover:bg-sidebar-bg/80"
               >
                 <svg class="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -359,6 +364,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPricePerM2(analysis.market_price_m2) }}</dd>
               </div>
               <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Price Difference</dt>
+                <dd class="mt-1 text-sm" :class="analysis.price_difference_percentage <= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+                  {{ analysis.price_difference_percentage > 0 ? '+' : '' }}{{ Number(analysis.price_difference_percentage).toFixed(2) }}%
+                </dd>
+              </div>
+              <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Viability Cost</dt>
                 <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(analysis.viability_cost) }}</dd>
               </div>
@@ -380,7 +391,47 @@ const breadcrumbs: BreadcrumbItem[] = [
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Profit Margin</dt>
-                  <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{{ Number(profitMarginPercentage).toFixed(2) }}%</dd>
+                  <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{{ Number(analysis.profit_margin_percentage).toFixed(2) }}%</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Overall Risk</dt>
+                <dd class="mt-1 text-sm">
+                  <span
+                    :class="[
+                      analysis.overall_risk === 'low'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
+                        : analysis.overall_risk === 'medium'
+                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
+                      'rounded-full px-2.5 py-0.5 text-xs font-medium',
+                    ]"
+                  >
+                    {{ analysis.overall_risk?.charAt(0).toUpperCase() + analysis.overall_risk?.slice(1) }}
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Recommendation</dt>
+                <dd class="mt-1 text-sm">
+                  <span
+                    :class="[
+                      analysis.overall_recommendation === 'strong_buy'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
+                        : analysis.overall_recommendation === 'buy'
+                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+                        : analysis.overall_recommendation === 'neutral'
+                        ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        : analysis.overall_recommendation === 'caution'
+                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
+                      'rounded-full px-2.5 py-0.5 text-xs font-medium',
+                    ]"
+                  >
+                    {{ analysis.overall_recommendation === 'strong_buy'
+                      ? 'Strong Buy'
+                      : analysis.overall_recommendation?.charAt(0).toUpperCase() + analysis.overall_recommendation?.slice(1) }}
+                  </span>
+                </dd>
               </div>
             </dl>
           </div>
@@ -414,7 +465,7 @@ const breadcrumbs: BreadcrumbItem[] = [
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Return on Investment</dt>
-                  <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ Number(profitMarginPercentage).toFixed(2) }}%</dd>
+                  <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ Number(analysis.profit_margin_percentage).toFixed(2) }}%</dd>
               </div>
             </dl>
           </div>

@@ -50,9 +50,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/terrains/{terrain}', [TerrainController::class, 'destroy'])->name('terrains.destroy');
 
     // Terrain Analysis routes
-    Route::get('/terrains/{terrain}/analysis', [TerrainAnalysisController::class, 'show'])->name('terrains.analyses.show');
-    Route::get('/terrains/{terrain}/analysis/pdf', [TerrainAnalysisController::class, 'generatePdf'])->name('terrains.analyses.pdf');
-    Route::get('/terrains/{terrain}/analysis/csv', [TerrainAnalysisController::class, 'exportCsv'])->name('terrains.analyses.csv');
+    Route::get('/terrains/{terrain}/analysis', [TerrainAnalysisController::class, 'show'])->name('terrains.analysis.show');
+    Route::get('/terrains/{terrain}/analysis/pdf', [TerrainAnalysisController::class, 'generatePdf'])->name('terrains.analysis.pdf');
+    Route::get('/terrains/{terrain}/analysis/csv', [TerrainAnalysisController::class, 'exportCsv'])->name('terrains.analysis.csv');
+    Route::post('/terrains/{terrain}/analysis/ai', [TerrainAnalysisController::class, 'runAiAnalysis'])->name('terrains.analysis.ai');
 
     // Project routes
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');

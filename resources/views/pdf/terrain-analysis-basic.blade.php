@@ -160,6 +160,10 @@
                 <td>{{ number_format($analysis->market_price_m2, 2) }} €/m²</td>
             </tr>
             <tr>
+                <td>Price Difference</td>
+                <td>{{ $analysis->price_difference_percentage > 0 ? '+' : '' }}{{ number_format($analysis->price_difference_percentage, 2) }}%</td>
+            </tr>
+            <tr>
                 <td>Viability Cost</td>
                 <td>{{ number_format($analysis->viability_cost, 2) }} €</td>
             </tr>
@@ -190,6 +194,14 @@
                         {{ $analysis->profitability_label }}
                     </span>
                 </td>
+            </tr>
+            <tr>
+                <td>Overall Risk</td>
+                <td>{{ ucfirst($analysis->overall_risk) }}</td>
+            </tr>
+            <tr>
+                <td>Recommendation</td>
+                <td>{{ $analysis->overall_recommendation === 'strong_buy' ? 'Strong Buy' : ucfirst(str_replace('_', ' ', $analysis->overall_recommendation)) }}</td>
             </tr>
         </table>
     </div>
@@ -223,7 +235,7 @@
             </tr>
             <tr>
                 <td>Return on Investment</td>
-                <td>{{ number_format(($analysis->net_margin_estimate / $terrain->price) * 100, 2) }}%</td>
+                <td>{{ number_format($analysis->profit_margin_percentage, 2) }}%</td>
             </tr>
         </table>
     </div>

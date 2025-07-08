@@ -30,7 +30,10 @@ class GeocodingService
         }
 
         try {
-            $response = Http::get($this->geoApiUrl, $query);
+            $response = Http::timeout(5) // 5 seconds timeout
+                ->retry(3, 1000) // Retry 3 times with 1 second delay between attempts
+                ->get($this->geoApiUrl, $query);
+
             $response->throw(); // Throws exception for 4xx/5xx
 
             $data = $response->json();

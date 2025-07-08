@@ -245,6 +245,23 @@
                 <td>Reference value</td>
             </tr>
             <tr>
+                <td>Price Difference</td>
+                <td>{{ $analysis->price_difference_percentage > 0 ? '+' : '' }}{{ number_format($analysis->price_difference_percentage, 2) }}%</td>
+                <td>
+                    @if($analysis->price_difference_percentage < -10)
+                        Significantly below market (excellent)
+                    @elseif($analysis->price_difference_percentage < 0)
+                        Below market (good)
+                    @elseif($analysis->price_difference_percentage <= 5)
+                        At market price (fair)
+                    @elseif($analysis->price_difference_percentage <= 15)
+                        Above market (caution)
+                    @else
+                        Significantly above market (poor)
+                    @endif
+                </td>
+            </tr>
+            <tr>
                 <td>Viability Cost</td>
                 <td>{{ number_format($analysis->viability_cost, 2) }} €</td>
                 <td>{{ number_format($analysis->viability_cost / $terrain->price * 100, 1) }}% of purchase price</td>
@@ -292,6 +309,36 @@
                     @endif
                 </td>
             </tr>
+            <tr>
+                <td>Overall Risk</td>
+                <td>{{ ucfirst($analysis->overall_risk) }}</td>
+                <td>
+                    @if($analysis->overall_risk == 'low')
+                        Minimal risk factors identified
+                    @elseif($analysis->overall_risk == 'medium')
+                        Some risk factors present
+                    @else
+                        Significant risk factors present
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>Recommendation</td>
+                <td>{{ $analysis->overall_recommendation === 'strong_buy' ? 'Strong Buy' : ucfirst(str_replace('_', ' ', $analysis->overall_recommendation)) }}</td>
+                <td>
+                    @if($analysis->overall_recommendation == 'strong_buy')
+                        Exceptional investment opportunity
+                    @elseif($analysis->overall_recommendation == 'buy')
+                        Good investment opportunity
+                    @elseif($analysis->overall_recommendation == 'neutral')
+                        Average investment opportunity
+                    @elseif($analysis->overall_recommendation == 'caution')
+                        Proceed with caution
+                    @else
+                        Not recommended
+                    @endif
+                </td>
+            </tr>
         </table>
     </div>
 
@@ -330,13 +377,13 @@
             </tr>
             <tr>
                 <td>Return on Investment</td>
-                <td>{{ number_format(($analysis->net_margin_estimate / $terrain->price) * 100, 2) }}%</td>
+                <td>{{ number_format($analysis->profit_margin_percentage, 2) }}%</td>
                 <td>
-                    @if(($analysis->net_margin_estimate / $terrain->price) * 100 > 30)
+                    @if($analysis->profit_margin_percentage > 30)
                         Excellent ROI
-                    @elseif(($analysis->net_margin_estimate / $terrain->price) * 100 > 15)
+                    @elseif($analysis->profit_margin_percentage > 15)
                         Good ROI
-                    @elseif(($analysis->net_margin_estimate / $terrain->price) * 100 > 5)
+                    @elseif($analysis->profit_margin_percentage > 5)
                         Average ROI
                     @else
                         Poor ROI
@@ -382,11 +429,11 @@
             </tr>
             <tr>
                 <td class="metric">ROI Potential</td>
-                <td>{{ number_format(($analysis->net_margin_estimate / $terrain->price) * 100, 2) }}%</td>
+                <td>{{ number_format($analysis->profit_margin_percentage, 2) }}%</td>
                 <td>15.00%</td>
-                <td class="{{ ($analysis->net_margin_estimate / $terrain->price) * 100 > 15 ? 'better' : 'worse' }}">
-                    {{ number_format(abs((($analysis->net_margin_estimate / $terrain->price) * 100 - 15) / 15 * 100), 1) }}%
-                    {{ ($analysis->net_margin_estimate / $terrain->price) * 100 > 15 ? 'better' : 'worse' }}
+                <td class="{{ $analysis->profit_margin_percentage > 15 ? 'better' : 'worse' }}">
+                    {{ number_format(abs(($analysis->profit_margin_percentage - 15) / 15 * 100), 1) }}%
+                    {{ $analysis->profit_margin_percentage > 15 ? 'better' : 'worse' }}
                 </td>
             </tr>
         </table>
