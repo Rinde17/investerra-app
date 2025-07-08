@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/terrains/{terrain}/analysis', [TerrainAnalysisController::class, 'show'])->name('terrains.analysis.show');
     Route::get('/terrains/{terrain}/analysis/pdf', [TerrainAnalysisController::class, 'generatePdf'])->name('terrains.analysis.pdf');
     Route::get('/terrains/{terrain}/analysis/csv', [TerrainAnalysisController::class, 'exportCsv'])->name('terrains.analysis.csv');
+    Route::post('/terrains/analysis/compare', [TerrainAnalysisController::class, 'compare'])->name('terrains.analysis.compare');
 
     // Project routes
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');

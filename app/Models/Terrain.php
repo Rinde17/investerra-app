@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed $title
  * @method static where(string $string, mixed $id)
  * @method static create(array $array)
+ * @method static whereIn(string $string, mixed $terrain_ids)
  */
 class Terrain extends Model
 {

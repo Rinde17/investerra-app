@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Auth;
 
 class TerrainAnalysisController extends Controller
 {
@@ -60,9 +61,24 @@ class TerrainAnalysisController extends Controller
 
         $terrain->load('analysis');
 
+        $user = $this->user();
+        $canCompare = $user->canAccess('comparator');
+
+        $comparableTerrains = [];
+        if ($canCompare) {
+            // Get terrains that the user has access to for comparison
+            $comparableTerrains = Terrain::where('user_id', $user->id)
+                ->where('id', '!=', $terrain->id)
+                ->whereHas('analysis')
+                ->select('id', 'title', 'city', 'zip_code')
+                ->get();
+        }
+
         return Inertia::render('Terrains/Analysis/Show', [
             'terrain' => $terrain,
             'analysis' => $terrain->analysis,
+            'canCompare' => $canCompare,
+            'comparableTerrains' => $comparableTerrains,
         ]);
     }
 
@@ -90,5 +106,40 @@ class TerrainAnalysisController extends Controller
 
         // Use the CSV export service to generate the CSV
         return $this->csvExportService->exportCsv($terrain);
+    }
+
+    /**
+     * Compare multiple terrain analyses.
+     * @throws AuthorizationException
+     */
+    public function compare(Request $request): Response|RedirectResponse
+    {
+        $user = $this->user();
+
+        // Check if the user has access to the comparator feature
+        if (!$user->canAccess('comparator')) {
+            return redirect()->route('settings.subscription')
+                ->with('info', 'Your current plan does not include the terrain comparison feature. Please upgrade to access it.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'terrain_ids' => 'required|array|min:2|max:5',
+            'terrain_ids.*' => 'exists:terrains,id'
+        ]);
+
+        // Get the terrains with their analyses
+        $terrains = Terrain::whereIn('id', $validated['terrain_ids'])
+            ->with('analysis')
+            ->get();
+
+        // Authorize the user to view each terrain
+        foreach ($terrains as $terrain) {
+            $this->authorize('view', $terrain);
+        }
+
+        return Inertia::render('Terrains/Analysis/Compare', [
+            'terrains' => $terrains
+        ]);
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -56,8 +57,12 @@ class TerrainController extends Controller
             $terrains = $terrains->merge($teamTerrains)->unique('id');
         }
 
+        // Check if the user has access to the comparator feature
+        $canCompare = $user->canAccess('comparator');
+
         return Inertia::render('Terrains/Index', [
             'terrains' => $terrains,
+            'canCompare' => $canCompare,
         ]);
     }
 
@@ -125,7 +130,7 @@ class TerrainController extends Controller
 
     /**
      * Update the specified terrain in storage.
-     * @throws AuthorizationException
+     * @throws AuthorizationException|ConnectionException
      */
     public function update(TerrainRequest $request, Terrain $terrain): RedirectResponse
     {

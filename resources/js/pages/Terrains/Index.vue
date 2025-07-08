@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
 // Define props for the component
@@ -22,11 +22,29 @@ const props = defineProps<{
       net_margin_estimate: number;
     } | null;
   }>;
+  canCompare: boolean;
 }>();
 
 const searchQuery = ref('');
 const sortBy = ref('created_at');
 const sortOrder = ref('desc');
+const selectedTerrains = ref<number[]>([]);
+
+const compareTerrains = () => {
+  if (selectedTerrains.value.length < 2) {
+    alert('Please select at least 2 terrains to compare.');
+    return;
+  }
+
+  if (selectedTerrains.value.length > 5) {
+    alert('You can compare a maximum of 5 terrains at once.');
+    return;
+  }
+
+  router.post(route('terrains.analysis.compare'), {
+    terrain_ids: selectedTerrains.value
+  });
+};
 
 const filteredTerrains = computed(() => {
   let filtered = [...props.terrains];
@@ -118,7 +136,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     <div class="flex flex-col gap-6 p-4">
       <!-- Header with Create Terrain button and search -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Terrains</h1>
+        <div class="flex items-center gap-4">
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Terrains</h1>
+          <div v-if="canCompare && selectedTerrains.length > 0" class="flex items-center">
+            <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary dark:bg-primary/20">
+              {{ selectedTerrains.length }} selected
+            </span>
+          </div>
+        </div>
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div class="relative">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -133,12 +158,47 @@ const breadcrumbs: BreadcrumbItem[] = [
               placeholder="Search terrains..."
             />
           </div>
+          <button
+            v-if="canCompare && selectedTerrains.length >= 2"
+            @click="compareTerrains"
+            class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          >
+            <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Compare Terrains
+          </button>
           <Link
             :href="route('terrains.create')"
             class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Add New Terrain
           </Link>
+        </div>
+      </div>
+
+      <!-- Upgrade message for comparison feature -->
+      <div v-if="!canCompare && filteredTerrains.length > 0" class="rounded-lg border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border dark:bg-sidebar-bg">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white">Terrain Comparison Tool</h3>
+            <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p>Upgrade to Pro or Investor plan to access our powerful terrain comparison tool. Compare up to 5 terrains side by side to make better investment decisions.</p>
+            </div>
+            <div class="mt-2">
+              <Link
+                :href="route('pricing.index')"
+                class="text-sm font-medium text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary"
+              >
+                View Pricing Plans
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -224,10 +284,33 @@ const breadcrumbs: BreadcrumbItem[] = [
           v-for="terrain in filteredTerrains"
           :key="terrain.id"
           class="flex flex-col overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm transition-all hover:shadow-md dark:border-sidebar-border dark:bg-sidebar-bg"
+          :class="{ 'ring-2 ring-primary': canCompare && selectedTerrains.includes(terrain.id) }"
         >
           <div class="flex flex-1 flex-col p-6">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ terrain.title }}</h3>
+              <div class="flex items-center gap-2">
+                <div v-if="canCompare && terrain.analysis" class="flex items-center">
+                  <input
+                    type="checkbox"
+                    :id="`terrain-${terrain.id}`"
+                    :checked="selectedTerrains.includes(terrain.id)"
+                    @change="(e) => {
+                      if (e.target.checked) {
+                        if (selectedTerrains.length < 5) {
+                          selectedTerrains.push(terrain.id);
+                        } else {
+                          e.target.checked = false;
+                          alert('You can select a maximum of 5 terrains for comparison.');
+                        }
+                      } else {
+                        selectedTerrains = selectedTerrains.filter(id => id !== terrain.id);
+                      }
+                    }"
+                    class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700"
+                  />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ terrain.title }}</h3>
+              </div>
               <span
                 v-if="terrain.analysis"
                 :class="[
