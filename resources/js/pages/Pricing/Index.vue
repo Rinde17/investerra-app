@@ -2,6 +2,7 @@
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3'; // Keep Link for internal POST requests
 import { computed } from 'vue';
+import { CircleCheck, CircleX } from 'lucide-vue-next';
 // import AuthLayout from '@/layouts/AuthLayout.vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 // import AppLayout from '@/layouts/AppLayout.vue';
@@ -12,7 +13,6 @@ const props = defineProps<{
         id: number;
         name: string;
         price_monthly: number;
-        features: Array<string>;
         stripe_price_id: string;
         description: string | null;
         analyses_per_week: number;
@@ -21,15 +21,14 @@ const props = defineProps<{
         pdf_expert: boolean;
         fiscal_analysis: boolean;
         custom_alerts: boolean;
+        priority_support: boolean;
+        dedicated_account_manager: boolean;
     }>;
     subscription: {
         stripe_status: string;
         ends_at: string | null;
         stripe_price_id: string;
     } | null;
-    intent: {
-        client_secret: string;
-    };
 }>();
 
 const formatPrice = (price: number) => {
@@ -83,6 +82,22 @@ const getButtonProps = (planStripePriceId: string) => {
 
     // If the user is subscribed to ANOTHER plan (for changing/upgrading/downgrading)
     return { text: 'Gérer mon abonnement', disabled: false, classes: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary', action: 'manage' };
+};
+
+const getFeatureList = (plan: typeof props.plans[0]) => {
+    return [
+        {
+            label: 'Analyses par semaine : ' + (plan.analyses_per_week === 0 ? 'Illimité' : plan.analyses_per_week),
+            value: true,
+        },
+        { label: 'Export PDF Pro', value: plan.pdf_pro },
+        { label: 'Comparateur de terrains', value: plan.comparator },
+        { label: 'Export PDF Expert', value: plan.pdf_expert },
+        { label: 'Analyse fiscale', value: plan.fiscal_analysis },
+        { label: 'Alertes personnalisées', value: plan.custom_alerts },
+        { label: 'Support prioritaire', value: plan.priority_support },
+        { label: 'Gestionnaire de compte dédié', value: plan.dedicated_account_manager },
+    ];
 };
 </script>
 
@@ -143,13 +158,12 @@ const getButtonProps = (planStripePriceId: string) => {
                         </p>
 
                         <ul class="mt-6 space-y-4">
-                            <li v-for="(feature, index) in plan.features" :key="index" class="flex items-start">
+                            <li v-for="(feature, index) in getFeatureList(plan)" :key="index" class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-green-500" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
+                                    <CircleCheck v-if="feature['value']" class="text-green-700" />
+                                    <CircleX v-else class="text-red-700" />
                                 </div>
-                                <p class="ml-3 text-base text-gray-700 dark:text-gray-300">{{ feature }}</p>
+                                <p class="ml-3 text-base text-gray-700 dark:text-gray-300">{{ feature['label'] }}</p>
                             </li>
                         </ul>
                     </div>
@@ -157,7 +171,7 @@ const getButtonProps = (planStripePriceId: string) => {
                     <div class="mt-auto flex border-t border-sidebar-border/70 p-6 dark:border-sidebar-border">
                         <a
                             v-if="getButtonProps(plan.stripe_price_id).action === 'checkout'"
-                            :href="route('settings.subscription')"
+                            :href="route('subscription.checkout', plan.stripe_price_id)"
                             :class="['flex-grow flex items-center justify-center rounded-md px-4 py-2 text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2', getButtonProps(plan.stripe_price_id).classes]"
                         >
                             {{ getButtonProps(plan.stripe_price_id).text }}

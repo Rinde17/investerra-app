@@ -22,13 +22,14 @@ interface PlanProps {
     stripe_price_id: string;
     price_monthly: number;
     description: string;
-    features: string[];
     analyses_per_week: number;
     pdf_pro: boolean;
     comparator: boolean;
     pdf_expert: boolean;
     fiscal_analysis: boolean;
     custom_alerts: boolean;
+    priority_support: boolean;
+    dedicated_account_manager: boolean;
 }
 
 interface Subscription {
@@ -157,16 +158,17 @@ const featureIcon = (hasFeature: boolean) => {
                             Statut : <span class="font-bold">{{ subscription.stripe_status }}</span>
                         </p>
 
-                        <div v-if="subscription.plan.features && subscription.plan.features.length > 0" class="mt-4">
+                        <div class="mt-4">
                             <h4 class="text-md font-medium text-gray-900 dark:text-gray-100 mb-2">Fonctionnalités incluses :</h4>
                             <ul class="text-gray-600 dark:text-gray-400 space-y-1">
-                                <li v-for="feature in subscription.plan.features" :key="feature" v-html="featureIcon(true) + feature"></li>
                                 <li v-html="featureIcon(true) + 'Analyses par semaine\u00A0: ' + (subscription.plan.analyses_per_week === 0 ? 'Illimité' : subscription.plan.analyses_per_week)"></li>
                                 <li v-html="featureIcon(subscription.plan.pdf_pro) + 'PDF Pro'"></li>
                                 <li v-html="featureIcon(subscription.plan.comparator) + 'Comparateur'"></li>
                                 <li v-html="featureIcon(subscription.plan.pdf_expert) + 'PDF Expert'"></li>
                                 <li v-html="featureIcon(subscription.plan.fiscal_analysis) + 'Analyse fiscale'"></li>
                                 <li v-html="featureIcon(subscription.plan.custom_alerts) + 'Alertes personnalisées'"></li>
+                                <li v-html="featureIcon(subscription.plan.priority_support) + 'Support prioritaire'"></li>
+                                <li v-html="featureIcon(subscription.plan.dedicated_account_manager) + 'Gestionnaire de compte dédié'"></li>
                             </ul>
                         </div>
 
@@ -310,11 +312,11 @@ const featureIcon = (hasFeature: boolean) => {
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="plan in plans" :key="plan.id"
-                                                                                         :class="[
-                         'border rounded-lg p-4 cursor-pointer flex flex-col', /* Ajout de flex flex-col pour que le contenu s'empile verticalement dans la carte */
+                     :class="[
+                         'border rounded-lg p-4 cursor-pointer flex flex-col',
                          {'border-indigo-600 ring-2 ring-indigo-500': swapForm.new_plan_id === plan.id},
                          {'dark:border-gray-700': swapForm.new_plan_id !== plan.id},
-                         'hover:shadow-lg transition-shadow duration-200' /* Effet sympa au survol */
+                         'hover:shadow-lg transition-shadow duration-200'
                      ]"
                      @click="swapForm.new_plan_id = plan.id"
                 >
@@ -325,13 +327,14 @@ const featureIcon = (hasFeature: boolean) => {
                     <p class="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">{{ formatPrice(Number(plan.price_monthly)) }}</p>
                     <p class="text-gray-500 dark:text-gray-300 text-sm mt-2 flex-grow">{{ plan.description }}</p>
                     <ul class="text-gray-600 dark:text-gray-400 text-sm mt-3 space-y-1">
-                        <li v-for="feature in plan.features" :key="feature" v-html="featureIcon(true) + feature"></li>
                         <li v-html="featureIcon(true) + 'Analyses par semaine\u00A0: ' + (plan.analyses_per_week === 0 ? 'Illimité' : plan.analyses_per_week)"></li>
                         <li v-html="featureIcon(plan.pdf_pro) + 'PDF Pro'"></li>
                         <li v-html="featureIcon(plan.comparator) + 'Comparateur'"></li>
                         <li v-html="featureIcon(plan.pdf_expert) + 'PDF Expert'"></li>
                         <li v-html="featureIcon(plan.fiscal_analysis) + 'Analyse fiscale'"></li>
                         <li v-html="featureIcon(plan.custom_alerts) + 'Alertes personnalisées'"></li>
+                        <li v-html="featureIcon(plan.priority_support) + 'Support prioritaire'"></li>
+                        <li v-html="featureIcon(plan.dedicated_account_manager) + 'Gestionnaire de compte dédié'"></li>
                     </ul>
                 </div>
             </div>

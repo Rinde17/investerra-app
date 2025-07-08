@@ -85,7 +85,9 @@ class SubscriptionController extends Controller
         // Récupère l'abonnement l'utilisateur
         $subscription = $user->subscription();
 
-        $plan = Plan::where('stripe_price_id', $subscription->stripe_price)->first();
+        $plan = $subscription
+            ? Plan::where('stripe_price_id', $subscription->stripe_price)->first()
+            : null;
 
         $invoices = [];
         if ($user->hasStripeId()) {

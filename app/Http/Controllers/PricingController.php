@@ -34,11 +34,6 @@ class PricingController extends Controller
                 // Ou si tu as lié un plan_id à ton abonnement dans ta DB:
                 // $userSubscriptionPlanId = $userSubscription->plan_id; // Si tu as une colonne plan_id sur ta table subscriptions
             }
-
-            // Le createSetupIntent() est généralement pour les mises à jour de paiement futures,
-            // pas pour l'affichage initial de la page d'abonnement avec Stripe Checkout.
-            // Décommente si tu as une section pour ajouter/mettre à jour la méthode de paiement.
-            // $paymentIntent = $user->createSetupIntent();
         }
 
         return Inertia::render('Pricing/Index', [
@@ -48,10 +43,6 @@ class PricingController extends Controller
                 'stripe_status' => $userSubscription->stripe_status,
                 'ends_at' => $userSubscription->ends_at?->toISOString(), // Convertir en ISO string pour JS
                 'stripe_price_id' => $userSubscriptionPriceId,
-            ] : null,
-            // Passe l'intent ou null
-            'intent' => $paymentIntent ? [
-                'client_secret' => $paymentIntent->client_secret,
             ] : null,
         ]);
     }

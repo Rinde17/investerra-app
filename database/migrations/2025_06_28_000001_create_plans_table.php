@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('price_monthly', 8, 2);
-            $table->json('features');
             $table->string('stripe_price_id')->nullable();
             $table->string('description')->nullable();
             $table->integer('analyses_per_week')->default(5);
@@ -24,6 +23,8 @@ return new class extends Migration
             $table->boolean('pdf_expert')->default(false);
             $table->boolean('fiscal_analysis')->default(false);
             $table->boolean('custom_alerts')->default(false);
+            $table->boolean('priority_support')->default(false);
+            $table->boolean('dedicated_account_manager')->default(false);
             $table->timestamps();
         });
     }

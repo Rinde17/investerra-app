@@ -26,7 +26,6 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'price_monthly',
-        'features',
         'stripe_price_id',
         'description',
         'analyses_per_week',
@@ -35,6 +34,8 @@ class Plan extends Model
         'pdf_expert',
         'fiscal_analysis',
         'custom_alerts',
+        'priority_support',
+        'dedicated_account_manager',
     ];
 
     /**
@@ -43,13 +44,14 @@ class Plan extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'features' => 'array',
         'price_monthly' => 'decimal:2',
         'pdf_pro' => 'boolean',
         'comparator' => 'boolean',
         'pdf_expert' => 'boolean',
         'fiscal_analysis' => 'boolean',
         'custom_alerts' => 'boolean',
+        'priority_support' => 'boolean',
+        'dedicated_account_manager' => 'boolean',
     ];
 
     /**
