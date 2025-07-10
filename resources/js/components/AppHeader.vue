@@ -42,14 +42,14 @@ const mainNavItems = computed<NavItem[]>(() => {
     if (auth.value.user && hasActiveSubscription.value) {
         items.push({
             title: 'Dashboard',
-            href: '/app/dashboard',
+            href: route('dashboard'),
             icon: LayoutGrid,
         });
     }
 
     items.push({
         title: 'Pricing',
-        href: '/pricing',
+        href: route('pricing.index'),
         icon: Banknote,
     });
 

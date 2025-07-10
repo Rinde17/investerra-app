@@ -72,9 +72,6 @@ function toggleTheme() {
                         <Link :href="route('pricing.index')" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
                             Tarifs
                         </Link>
-                        <Link :href="route('example')" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
-                            Example
-                        </Link>
                         <Link href="#" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
                             Contact
                         </Link>
