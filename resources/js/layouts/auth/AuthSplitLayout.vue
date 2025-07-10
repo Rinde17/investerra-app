@@ -87,18 +87,9 @@ function toggleTheme() {
     background-size: 30px 30px; /* Smaller dots, more dense */
 }
 
-.dark .bg-pattern-dark {
-    background-image: radial-gradient(rgba(30, 30, 30, 0.7) 0.5px, transparent 0.5px); /* Darker gray dots, semi-transparent */
-    background-size: 30px 30px;
-}
-
 .card-pattern-light {
     background-image: radial-gradient(rgba(240, 240, 240, 0.8) 0.5px, transparent 0.5px); /* Slightly visible dots on card for light mode */
     background-size: 30px 30px;
 }
 
-.dark .card-pattern-dark {
-    background-image: radial-gradient(rgba(40, 40, 40, 0.8) 0.5px, transparent 0.5px); /* Dots for dark mode card */
-    background-size: 30px 30px;
-}
 </style>
