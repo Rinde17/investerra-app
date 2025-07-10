@@ -2,21 +2,27 @@
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Link, useForm } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
+// Define the form structure
 const form = useForm({
     title: '',
     description: '',
-    surface_m2: null as number | null,
-    price: null as number | null,
+    surface_m2: undefined as number | undefined,
+    price: undefined as number | undefined,
     city: '',
     zip_code: '',
-    latitude: null as number | null,
-    longitude: null as number | null,
+    latitude: undefined as number | undefined,
+    longitude: undefined as number | undefined,
     viabilised: false,
     source_url: '',
     source_platform: '',
 });
 
+// Define breadcrumbs for the layout
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Terrains',
@@ -28,10 +34,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+// Form submission handler
 const submit = () => {
     form.post(route('terrains.store'), {
         onSuccess: () => {
             form.reset();
+            // Optionally, add a success toast/notification here if you have one setup
+        },
+        onError: () => {
+            // Optionally, add an error toast/notification here
         },
     });
 };
@@ -39,233 +50,226 @@ const submit = () => {
 
 <template>
     <AuthenticatedLayout title="Add Terrain" :breadcrumbs="breadcrumbs">
-        <div class="mx-auto max-w-4xl p-4">
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Add New Terrain</h1>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the details of the terrain you want to analyze.</p>
+        <div class="mx-auto max-w-4xl p-6 lg:p-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Add New Terrain</h1>
+                <p class="mt-2 text-base text-gray-600 dark:text-gray-400">Enter the details of the terrain you want to analyze.</p>
             </div>
 
-            <div class="dark:bg-sidebar-bg overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm dark:border-sidebar-border">
-                <form @submit.prevent="submit" class="p-6">
-                    <!-- Basic Information Section -->
+            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+                <form @submit.prevent="submit" class="p-8">
                     <div class="mb-8">
-                        <h2 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">Basic Information</h2>
+                        <h2 class="mb-5 text-xl font-semibold text-gray-900 dark:text-white">Basic Information</h2>
                         <div class="grid gap-6 md:grid-cols-2">
-                            <div class="col-span-2">
-                                <label for="title" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Title <span class="text-red-500">*</span>
-                                </label>
-                                <input
+                            <div class="md:col-span-2">
+                                <Label for="title" class="mb-2"> Title <span class="text-red-500">*</span> </Label>
+                                <Input
                                     id="title"
                                     v-model="form.title"
                                     type="text"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     required
                                     placeholder="Enter terrain title"
+                                    :class="{ 'border-red-500': form.errors.title }"
                                 />
-                                <div v-if="form.errors.title" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.title" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.title }}
                                 </div>
                             </div>
 
-                            <div class="col-span-2">
-                                <label for="description" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Description </label>
-                                <textarea
+                            <div class="md:col-span-2">
+                                <Label for="description" class="mb-2"> Description </Label>
+                                <Textarea
                                     id="description"
                                     v-model="form.description"
                                     rows="3"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     placeholder="Describe the terrain"
-                                ></textarea>
-                                <div v-if="form.errors.description" class="mt-1 text-sm text-red-500">
+                                    :class="{ 'border-red-500': form.errors.description }"
+                                ></Textarea>
+                                <div v-if="form.errors.description" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.description }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="surface_m2" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Surface (m²) <span class="text-red-500">*</span>
-                                </label>
-                                <input
+                                <Label for="surface_m2" class="mb-2"> Surface (m²) <span class="text-red-500">*</span> </Label>
+                                <Input
                                     id="surface_m2"
                                     v-model="form.surface_m2"
                                     type="number"
                                     min="0"
                                     step="0.01"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     required
                                     placeholder="Enter surface area"
+                                    :class="{ 'border-red-500': form.errors.surface_m2 }"
                                 />
-                                <div v-if="form.errors.surface_m2" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.surface_m2" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.surface_m2 }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="price" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Price (€) <span class="text-red-500">*</span>
-                                </label>
-                                <input
+                                <Label for="price" class="mb-2"> Price (€) <span class="text-red-500">*</span> </Label>
+                                <Input
                                     id="price"
                                     v-model="form.price"
                                     type="number"
                                     min="0"
                                     step="0.01"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     required
                                     placeholder="Enter price"
+                                    :class="{ 'border-red-500': form.errors.price }"
                                 />
-                                <div v-if="form.errors.price" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.price" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.price }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="city" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    City <span class="text-red-500">*</span>
-                                </label>
-                                <input
+                                <Label for="city" class="mb-2"> City <span class="text-red-500">*</span> </Label>
+                                <Input
                                     id="city"
                                     v-model="form.city"
                                     type="text"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     required
                                     placeholder="Enter city"
+                                    :class="{ 'border-red-500': form.errors.city }"
                                 />
-                                <div v-if="form.errors.city" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.city" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.city }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="zip_code" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    ZIP Code <span class="text-red-500">*</span>
-                                </label>
-                                <input
+                                <Label for="zip_code" class="mb-2"> ZIP Code <span class="text-red-500">*</span> </Label>
+                                <Input
                                     id="zip_code"
                                     v-model="form.zip_code"
                                     type="text"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     required
                                     placeholder="Enter ZIP code"
+                                    :class="{ 'border-red-500': form.errors.zip_code }"
                                 />
-                                <div v-if="form.errors.zip_code" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.zip_code" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.zip_code }}
                                 </div>
                             </div>
 
-                            <div class="col-span-2">
-                                <div class="flex items-center">
+                            <div class="md:col-span-2">
+                                <div class="mt-2 flex items-center">
                                     <input
                                         id="viabilised"
                                         v-model="form.viabilised"
                                         type="checkbox"
-                                        class="h-4 w-4 rounded border-sidebar-border/70 text-primary focus:ring-primary dark:border-sidebar-border"
+                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-indigo-500"
                                     />
-                                    <label for="viabilised" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    <Label for="viabilised" class="!mb-0 ml-2 text-sm">
                                         This terrain is already viabilised (has utilities and access)
-                                    </label>
+                                    </Label>
                                 </div>
-                                <div v-if="form.errors.viabilised" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.viabilised" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.viabilised }}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Location Section -->
                     <div class="mb-8">
-                        <h2 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">Location (Optional)</h2>
+                        <h2 class="mb-5 text-xl font-semibold text-gray-900 dark:text-white">Location (Optional)</h2>
                         <div class="grid gap-6 md:grid-cols-2">
                             <div>
-                                <label for="latitude" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Latitude </label>
-                                <input
+                                <Label for="latitude" class="mb-2"> Latitude </Label>
+                                <Input
                                     id="latitude"
                                     v-model="form.latitude"
                                     type="number"
                                     step="0.00000001"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     placeholder="Enter latitude"
+                                    :class="{ 'border-red-500': form.errors.latitude }"
                                 />
-                                <div v-if="form.errors.latitude" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.latitude" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.latitude }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="longitude" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Longitude </label>
-                                <input
+                                <Label for="longitude" class="mb-2"> Longitude </Label>
+                                <Input
                                     id="longitude"
                                     v-model="form.longitude"
                                     type="number"
                                     step="0.00000001"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     placeholder="Enter longitude"
+                                    :class="{ 'border-red-500': form.errors.longitude }"
                                 />
-                                <div v-if="form.errors.longitude" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.longitude" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.longitude }}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Source Section -->
                     <div class="mb-8">
-                        <h2 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">Source Information (Optional)</h2>
+                        <h2 class="mb-5 text-xl font-semibold text-gray-900 dark:text-white">Source Information (Optional)</h2>
                         <div class="grid gap-6 md:grid-cols-2">
                             <div>
-                                <label for="source_url" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Source URL </label>
-                                <input
+                                <Label for="source_url" class="mb-2"> Source URL </Label>
+                                <Input
                                     id="source_url"
                                     v-model="form.source_url"
                                     type="url"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
                                     placeholder="https://example.com/terrain-listing"
+                                    :class="{ 'border-red-500': form.errors.source_url }"
                                 />
-                                <div v-if="form.errors.source_url" class="mt-1 text-sm text-red-500">
+                                <div v-if="form.errors.source_url" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.source_url }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="source_platform" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Source Platform
-                                </label>
-                                <select
-                                    id="source_platform"
-                                    v-model="form.source_platform"
-                                    class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
-                                >
-                                    <option value="">Select a platform</option>
-                                    <option value="Leboncoin">Leboncoin</option>
-                                    <option value="SeLoger">SeLoger</option>
-                                    <option value="PAP">PAP</option>
-                                    <option value="Bien'ici">Bien'ici</option>
-                                    <option value="Logic-Immo">Logic-Immo</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                                <div v-if="form.errors.source_platform" class="mt-1 text-sm text-red-500">
+                                <Label for="source_platform" class="mb-2"> Source Platform </Label>
+                                <div class="relative">
+                                    <select
+                                        id="source_platform"
+                                        v-model="form.source_platform"
+                                        class="block w-full appearance-none rounded-md border border-gray-300 bg-background px-3 py-2 pr-8 text-sm ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:focus:ring-offset-gray-900"
+                                        :class="{ 'border-red-500': form.errors.source_platform }"
+                                    >
+                                        <option value="">Select a platform</option>
+                                        <option value="Leboncoin">Leboncoin</option>
+                                        <option value="SeLoger">SeLoger</option>
+                                        <option value="PAP">PAP</option>
+                                        <option value="Bien'ici">Bien'ici</option>
+                                        <option value="Logic-Immo">Logic-Immo</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <svg
+                                        class="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
+                                <div v-if="form.errors.source_platform" class="mt-2 text-sm text-red-500">
                                     {{ form.errors.source_platform }}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-end gap-3">
-                        <Link
-                            :href="route('terrains.index')"
-                            class="dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none dark:border-sidebar-border dark:text-gray-300"
-                        >
-                            Cancel
+                    <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-800">
+                        <Link :href="route('terrains.index')">
+                            <Button type="button" variant="outline"> Cancel </Button>
                         </Link>
-                        <button
-                            type="submit"
-                            class="hover:bg-primary-dark rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
-                            :disabled="form.processing"
-                        >
+                        <Button type="submit" :disabled="form.processing">
                             <span v-if="form.processing">Creating...</span>
                             <span v-else>Create Terrain</span>
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

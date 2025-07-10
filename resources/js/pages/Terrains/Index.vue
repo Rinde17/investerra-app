@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
+import { BarChart2, Blocks, ChevronDown, Frown, Info, PlusCircle, Search } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 // Define props for the component
@@ -32,12 +35,12 @@ const selectedTerrains = ref<number[]>([]);
 
 const compareTerrains = () => {
     if (selectedTerrains.value.length < 2) {
-        alert('Please select at least 2 terrains to compare.');
+        alert('Please select at least 2 terrains to compare.'); // Replace with a more sophisticated notification if available
         return;
     }
 
     if (selectedTerrains.value.length > 5) {
-        alert('You can compare a maximum of 5 terrains at once.');
+        alert('You can compare a maximum of 5 terrains at once.'); // Replace with a more sophisticated notification
         return;
     }
 
@@ -128,81 +131,73 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('terrains.index'),
     },
 ];
+
+const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
+    const target = event.target as HTMLInputElement;
+    if (target?.checked) {
+        if (selectedTerrains.value.length < 5) {
+            selectedTerrains.value.push(terrainId);
+        } else {
+            target.checked = false;
+            alert('You can select a maximum of 5 terrains for comparison.');
+        }
+    } else {
+        selectedTerrains.value = selectedTerrains.value.filter((id) => id !== terrainId);
+    }
+};
 </script>
 
 <template>
     <AuthenticatedLayout title="Terrains" :breadcrumbs="breadcrumbs">
-        <div class="flex flex-col gap-6 p-4">
-            <!-- Header with Create Terrain button and search -->
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mx-auto w-full max-w-7xl p-6 lg:p-8">
+            <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-4">
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Terrains</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Terrains</h1>
                     <div v-if="canCompare && selectedTerrains.length > 0" class="flex items-center">
-                        <span class="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary dark:bg-primary/20">
+                        <span
+                            class="rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300"
+                        >
                             {{ selectedTerrains.length }} selected
                         </span>
                     </div>
                 </div>
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <div class="relative">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                        </div>
-                        <input
+                    <div class="relative w-full sm:w-auto">
+                        <Search class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <Input
                             v-model="searchQuery"
                             type="text"
-                            class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white py-1.5 pr-3 pl-10 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none sm:text-sm sm:leading-6 dark:border-sidebar-border dark:text-white"
                             placeholder="Search terrains..."
+                            class="rounded-md border border-gray-300 bg-gray-50 py-2 pr-3 pl-10 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                         />
                     </div>
-                    <button
+                    <Button
                         v-if="canCompare && selectedTerrains.length >= 2"
                         @click="compareTerrains"
-                        class="hover:bg-primary-dark inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
+                        class="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600"
                     >
-                        <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                            />
-                        </svg>
+                        <BarChart2 class="mr-2 h-4 w-4" />
                         Compare Terrains
-                    </button>
-                    <Link
-                        :href="route('terrains.create')"
-                        class="hover:bg-primary-dark rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
-                    >
-                        Add New Terrain
+                    </Button>
+                    <Link :href="route('terrains.create')">
+                        <Button class="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600">
+                            <PlusCircle class="mr-2 h-4 w-4" /> Add New Terrain
+                        </Button>
                     </Link>
                 </div>
             </div>
 
-            <!-- Upgrade message for comparison feature -->
             <div
                 v-if="!canCompare && filteredTerrains.length > 0"
-                class="dark:bg-sidebar-bg rounded-lg border border-sidebar-border/70 bg-white p-4 shadow-sm dark:border-sidebar-border"
+                class="mb-8 rounded-xl border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-800 dark:bg-gray-900"
             >
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                            <path
-                                fill-rule="evenodd"
-                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
+                        <Info class="h-5 w-5 text-indigo-500" />
                     </div>
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-gray-900 dark:text-white">Terrain Comparison Tool</h3>
-                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                             <p>
                                 Upgrade to Pro or Investor plan to access our powerful terrain comparison tool. Compare up to 5 terrains side by side
                                 to make better investment decisions.
@@ -211,170 +206,113 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <div class="mt-2">
                             <Link
                                 :href="route('pricing.index')"
-                                class="hover:text-primary-dark dark:text-primary-light text-sm font-medium text-primary dark:hover:text-primary"
+                                class="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
                             >
-                                View Pricing Plans
+                                View Pricing Plans &rarr;
                             </Link>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sorting options -->
-            <div class="flex flex-wrap gap-2">
-                <button
+            <div class="mb-6 flex flex-wrap gap-2">
+                <Button
+                    variant="outline"
                     @click="toggleSort('title')"
-                    :class="[
-                        sortBy === 'title'
-                            ? 'bg-primary/10 text-primary'
-                            : 'dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 bg-white text-gray-700 hover:bg-gray-50 dark:text-gray-300',
-                        'inline-flex items-center rounded-md border border-sidebar-border/70 px-3 py-1 text-sm font-medium dark:border-sidebar-border',
-                    ]"
+                    :class="{
+                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                            sortBy === 'title',
+                    }"
                 >
                     Name
-                    <svg v-if="sortBy === 'title'" class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                            :transform="sortOrder === 'asc' ? 'rotate(180)' : ''"
-                        />
-                    </svg>
-                </button>
-                <button
+                    <ChevronDown v-if="sortBy === 'title'" class="ml-1 h-4 w-4 transition-transform" :class="{ 'rotate-180': sortOrder === 'asc' }" />
+                </Button>
+                <Button
+                    variant="outline"
                     @click="toggleSort('price')"
-                    :class="[
-                        sortBy === 'price'
-                            ? 'bg-primary/10 text-primary'
-                            : 'dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 bg-white text-gray-700 hover:bg-gray-50 dark:text-gray-300',
-                        'inline-flex items-center rounded-md border border-sidebar-border/70 px-3 py-1 text-sm font-medium dark:border-sidebar-border',
-                    ]"
+                    :class="{
+                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                            sortBy === 'price',
+                    }"
                 >
                     Price
-                    <svg v-if="sortBy === 'price'" class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                            :transform="sortOrder === 'asc' ? 'rotate(180)' : ''"
-                        />
-                    </svg>
-                </button>
-                <button
+                    <ChevronDown v-if="sortBy === 'price'" class="ml-1 h-4 w-4 transition-transform" :class="{ 'rotate-180': sortOrder === 'asc' }" />
+                </Button>
+                <Button
+                    variant="outline"
                     @click="toggleSort('surface')"
-                    :class="[
-                        sortBy === 'surface'
-                            ? 'bg-primary/10 text-primary'
-                            : 'dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 bg-white text-gray-700 hover:bg-gray-50 dark:text-gray-300',
-                        'inline-flex items-center rounded-md border border-sidebar-border/70 px-3 py-1 text-sm font-medium dark:border-sidebar-border',
-                    ]"
+                    :class="{
+                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                            sortBy === 'surface',
+                    }"
                 >
                     Surface
-                    <svg v-if="sortBy === 'surface'" class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                            :transform="sortOrder === 'asc' ? 'rotate(180)' : ''"
-                        />
-                    </svg>
-                </button>
-                <button
+                    <ChevronDown
+                        v-if="sortBy === 'surface'"
+                        class="ml-1 h-4 w-4 transition-transform"
+                        :class="{ 'rotate-180': sortOrder === 'asc' }"
+                    />
+                </Button>
+                <Button
+                    variant="outline"
                     @click="toggleSort('price_m2')"
-                    :class="[
-                        sortBy === 'price_m2'
-                            ? 'bg-primary/10 text-primary'
-                            : 'dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 bg-white text-gray-700 hover:bg-gray-50 dark:text-gray-300',
-                        'inline-flex items-center rounded-md border border-sidebar-border/70 px-3 py-1 text-sm font-medium dark:border-sidebar-border',
-                    ]"
+                    :class="{
+                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                            sortBy === 'price_m2',
+                    }"
                 >
                     Price/m²
-                    <svg v-if="sortBy === 'price_m2'" class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                            :transform="sortOrder === 'asc' ? 'rotate(180)' : ''"
-                        />
-                    </svg>
-                </button>
-                <button
+                    <ChevronDown
+                        v-if="sortBy === 'price_m2'"
+                        class="ml-1 h-4 w-4 transition-transform"
+                        :class="{ 'rotate-180': sortOrder === 'asc' }"
+                    />
+                </Button>
+                <Button
+                    variant="outline"
                     @click="toggleSort('score')"
-                    :class="[
-                        sortBy === 'score'
-                            ? 'bg-primary/10 text-primary'
-                            : 'dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 bg-white text-gray-700 hover:bg-gray-50 dark:text-gray-300',
-                        'inline-flex items-center rounded-md border border-sidebar-border/70 px-3 py-1 text-sm font-medium dark:border-sidebar-border',
-                    ]"
+                    :class="{
+                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                            sortBy === 'score',
+                    }"
                 >
                     AI Score
-                    <svg v-if="sortBy === 'score'" class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                            :transform="sortOrder === 'asc' ? 'rotate(180)' : ''"
-                        />
-                    </svg>
-                </button>
-                <button
+                    <ChevronDown v-if="sortBy === 'score'" class="ml-1 h-4 w-4 transition-transform" :class="{ 'rotate-180': sortOrder === 'asc' }" />
+                </Button>
+                <Button
+                    variant="outline"
                     @click="toggleSort('profit')"
-                    :class="[
-                        sortBy === 'profit'
-                            ? 'bg-primary/10 text-primary'
-                            : 'dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 bg-white text-gray-700 hover:bg-gray-50 dark:text-gray-300',
-                        'inline-flex items-center rounded-md border border-sidebar-border/70 px-3 py-1 text-sm font-medium dark:border-sidebar-border',
-                    ]"
+                    :class="{
+                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                            sortBy === 'profit',
+                    }"
                 >
                     Profit
-                    <svg v-if="sortBy === 'profit'" class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                            :transform="sortOrder === 'asc' ? 'rotate(180)' : ''"
-                        />
-                    </svg>
-                </button>
+                    <ChevronDown
+                        v-if="sortBy === 'profit'"
+                        class="ml-1 h-4 w-4 transition-transform"
+                        :class="{ 'rotate-180': sortOrder === 'asc' }"
+                    />
+                </Button>
             </div>
 
-            <!-- Terrains grid -->
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <div
                     v-for="terrain in filteredTerrains"
                     :key="terrain.id"
-                    class="dark:bg-sidebar-bg flex flex-col overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm transition-all hover:shadow-md dark:border-sidebar-border"
-                    :class="{ 'ring-2 ring-primary': canCompare && selectedTerrains.includes(terrain.id) }"
+                    class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"
+                    :class="{ 'ring-2 ring-indigo-500': canCompare && selectedTerrains.includes(terrain.id) }"
                 >
                     <div class="flex flex-1 flex-col p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <div v-if="canCompare && terrain.analysis" class="flex items-center">
-                                    <!--                                    <input-->
-                                    <!--                                        type="checkbox"-->
-                                    <!--                                        :id="`terrain-${terrain.id}`"-->
-                                    <!--                                        :checked="selectedTerrains.includes(terrain.id)"-->
-                                    <!--                                        class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700"-->
-                                    <!--                                    />-->
                                     <input
                                         type="checkbox"
                                         :id="`terrain-${terrain.id}`"
                                         :checked="selectedTerrains.includes(terrain.id)"
-                                        @change="
-                                            (e) => {
-                                                if (e.target?.checked) {
-                                                    if (selectedTerrains.length < 5) {
-                                                        selectedTerrains.push(terrain.id);
-                                                    } else {
-                                                        e.target.checked = false;
-                                                        alert('You can select a maximum of 5 terrains for comparison.');
-                                                    }
-                                                } else {
-                                                    selectedTerrains = selectedTerrains.filter((id) => id !== terrain.id);
-                                                }
-                                            }
-                                        "
-                                        class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700"
+                                        @change="handleTerrainCheckboxChange($event, terrain.id)"
+                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-indigo-500"
                                     />
                                 </div>
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ terrain.title }}</h3>
@@ -395,7 +333,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 {{ terrain.analysis.profitability_label }}
                             </span>
                         </div>
-                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ terrain.city }}, {{ terrain.zip_code }}</p>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ terrain.city }}, {{ terrain.zip_code }}</p>
                         <div class="mt-4 grid grid-cols-2 gap-4">
                             <div>
                                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Price</p>
@@ -457,53 +395,43 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </p>
                         </div>
                     </div>
-                    <div class="dark:bg-sidebar-bg/50 flex border-t border-sidebar-border/70 bg-gray-50 dark:border-sidebar-border">
+                    <div class="flex border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
                         <Link
                             :href="route('terrains.show', terrain.id)"
-                            class="dark:hover:bg-sidebar-bg/80 flex flex-1 items-center justify-center p-3 text-sm font-medium text-primary hover:bg-gray-100"
+                            class="flex flex-1 items-center justify-center p-3 text-sm font-medium text-indigo-600 hover:bg-gray-100 dark:text-indigo-400 dark:hover:bg-gray-800"
                         >
                             View Details
                         </Link>
                         <Link
                             :href="route('terrains.edit', terrain.id)"
-                            class="dark:hover:bg-sidebar-bg/80 flex flex-1 items-center justify-center border-l border-sidebar-border/70 p-3 text-sm font-medium text-primary hover:bg-gray-100 dark:border-sidebar-border"
+                            class="flex flex-1 items-center justify-center border-l border-gray-200 p-3 text-sm font-medium text-indigo-600 hover:bg-gray-100 dark:border-gray-800 dark:text-indigo-400 dark:hover:bg-gray-800"
                         >
                             Edit
                         </Link>
                     </div>
                 </div>
 
-                <!-- Empty state when no terrains -->
                 <div
                     v-if="filteredTerrains.length === 0"
-                    class="dark:bg-sidebar-bg/30 col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed border-sidebar-border/70 bg-gray-50 p-12 text-center dark:border-sidebar-border"
+                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-800"
                 >
-                    <svg
-                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
-                        />
-                    </svg>
-                    <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">No terrains found</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{ searchQuery ? 'No terrains match your search criteria.' : 'Get started by adding a new terrain.' }}
-                    </p>
-                    <div class="mt-6">
-                        <Link
-                            :href="route('terrains.create')"
-                            class="hover:bg-primary-dark rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
-                        >
-                            Add New Terrain
-                        </Link>
-                    </div>
+                    <template v-if="searchQuery">
+                        <Frown class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                        <h3 class="mt-2 text-base font-semibold text-gray-900 dark:text-white">No terrains found</h3>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">No terrains match your search criteria.</p>
+                    </template>
+                    <template v-else>
+                        <Blocks class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                        <h3 class="mt-2 text-base font-semibold text-gray-900 dark:text-white">No terrains available</h3>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Get started by adding a new terrain.</p>
+                        <div class="mt-6">
+                            <Link :href="route('terrains.create')">
+                                <Button class="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600">
+                                    <PlusCircle class="mr-2 h-4 w-4" /> Add New Terrain
+                                </Button>
+                            </Link>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
@@ -27,44 +28,43 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
     <AuthenticatedLayout title="Teams" :breadcrumbs="breadcrumbs">
-        <div class="flex flex-col gap-6 p-4">
-            <!-- Header with Create Team button -->
+        <div class="flex flex-col gap-8 p-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Your Teams</h1>
-                <Link
-                    :href="route('teams.create')"
-                    class="hover:bg-primary-dark rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
-                >
-                    Create New Team
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Your Teams</h1>
+                <Link :href="route('teams.create')">
+                    <Button
+                        class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                    >
+                        Create New Team
+                    </Button>
                 </Link>
             </div>
 
-            <!-- Teams grid -->
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <div
                     v-for="team in teams"
                     :key="team.id"
-                    class="dark:bg-sidebar-bg flex flex-col overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm transition-all hover:shadow-md dark:border-sidebar-border"
+                    class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"
                 >
                     <div class="flex flex-1 flex-col p-6">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ team.name }}</h3>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ team.name }}</h3>
                             <span
                                 v-if="currentTeam && currentTeam.id === team.id"
-                                class="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-100"
+                                class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-100"
                             >
                                 Current
                             </span>
                         </div>
-                        <p v-if="team.description" class="mt-2 flex-1 text-sm text-gray-500 dark:text-gray-400">
+                        <p v-if="team.description" class="mt-3 flex-1 text-base text-gray-600 dark:text-gray-400">
                             {{ team.description }}
                         </p>
-                        <p v-else class="mt-2 flex-1 text-sm text-gray-400 italic dark:text-gray-500">No description provided</p>
+                        <p v-else class="mt-3 flex-1 text-base text-gray-500 italic dark:text-gray-600">No description provided</p>
                     </div>
-                    <div class="dark:bg-sidebar-bg/50 flex border-t border-sidebar-border/70 bg-gray-50 dark:border-sidebar-border">
+                    <div class="flex border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950/50">
                         <Link
                             :href="route('teams.show', team.id)"
-                            class="dark:hover:bg-sidebar-bg/80 flex flex-1 items-center justify-center p-3 text-sm font-medium text-primary hover:bg-gray-100"
+                            class="flex flex-1 items-center justify-center p-4 text-base font-medium text-indigo-600 transition-colors duration-200 hover:bg-gray-100 dark:text-indigo-400 dark:hover:bg-gray-800"
                         >
                             View Details
                         </Link>
@@ -74,20 +74,19 @@ const breadcrumbs: BreadcrumbItem[] = [
                             method="post"
                             as="button"
                             type="button"
-                            class="dark:hover:bg-sidebar-bg/80 flex flex-1 items-center justify-center border-l border-sidebar-border/70 p-3 text-sm font-medium text-primary hover:bg-gray-100 dark:border-sidebar-border"
+                            class="flex flex-1 items-center justify-center border-l border-gray-200 p-4 text-base font-medium text-indigo-600 transition-colors duration-200 hover:bg-gray-100 dark:border-gray-800 dark:text-indigo-400 dark:hover:bg-gray-800"
                         >
                             Switch to this Team
                         </Link>
                     </div>
                 </div>
 
-                <!-- Empty state when no teams -->
                 <div
                     v-if="teams.length === 0"
-                    class="dark:bg-sidebar-bg/30 col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed border-sidebar-border/70 bg-gray-50 p-12 text-center dark:border-sidebar-border"
+                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-16 text-center dark:border-gray-700 dark:bg-gray-900/50"
                 >
                     <svg
-                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                        class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -100,14 +99,15 @@ const breadcrumbs: BreadcrumbItem[] = [
                             d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
                         />
                     </svg>
-                    <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">No teams yet</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new team.</p>
-                    <div class="mt-6">
-                        <Link
-                            :href="route('teams.create')"
-                            class="hover:bg-primary-dark rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
-                        >
-                            Create New Team
+                    <h3 class="mt-4 text-lg font-semibold text-gray-900 dark:text-white">No teams yet</h3>
+                    <p class="mt-2 text-base text-gray-600 dark:text-gray-400">Get started by creating a new team.</p>
+                    <div class="mt-8">
+                        <Link :href="route('teams.create')">
+                            <Button
+                                class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                            >
+                                Create New Team
+                            </Button>
                         </Link>
                     </div>
                 </div>

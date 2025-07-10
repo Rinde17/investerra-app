@@ -52,37 +52,6 @@ class TerrainAnalysisController extends Controller
     }
 
     /**
-     * Display the analysis for the specified terrain.
-     * @throws AuthorizationException
-     */
-    public function show(Terrain $terrain): Response
-    {
-        $this->authorize('view', $terrain);
-
-        $terrain->load('analysis');
-
-        $user = $this->user();
-        $canCompare = $user->canAccess('comparator');
-
-        $comparableTerrains = [];
-        if ($canCompare) {
-            // Get terrains that the user has access to for comparison
-            $comparableTerrains = Terrain::where('user_id', $user->id)
-                ->where('id', '!=', $terrain->id)
-                ->whereHas('analysis')
-                ->select('id', 'title', 'city', 'zip_code')
-                ->get();
-        }
-
-        return Inertia::render('Terrains/Analysis/Show', [
-            'terrain' => $terrain,
-            'analysis' => $terrain->analysis,
-            'canCompare' => $canCompare,
-            'comparableTerrains' => $comparableTerrains,
-        ]);
-    }
-
-    /**
      * Generate a PDF report for the terrain analysis.
      * @throws AuthorizationException
      */

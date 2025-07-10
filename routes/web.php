@@ -68,7 +68,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/terrains/{terrain}', [TerrainController::class, 'destroy'])->name('terrains.destroy');
 
         // Terrain Analysis routes
-        Route::get('/terrains/{terrain}/analysis', [TerrainAnalysisController::class, 'show'])->name('terrains.analysis.show');
         Route::get('/terrains/{terrain}/analysis/pdf', [TerrainAnalysisController::class, 'generatePdf'])->name('terrains.analysis.pdf');
         Route::get('/terrains/{terrain}/analysis/csv', [TerrainAnalysisController::class, 'exportCsv'])->name('terrains.analysis.csv');
         Route::post('/terrains/analysis/compare', [TerrainAnalysisController::class, 'compare'])->name('terrains.analysis.compare');

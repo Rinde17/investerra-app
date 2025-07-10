@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import InputError from '@/components/InputError.vue'; // Assuming this is a custom component for errors
+import { Button } from '@/components/ui/button'; // Import shadcn Button
+import { Input } from '@/components/ui/input'; // Import shadcn Input
+import { Label } from '@/components/ui/label'; // Import shadcn Label
+import { Textarea } from '@/components/ui/textarea'; // Assuming shadcn Textarea
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
     name: '',
@@ -30,62 +35,72 @@ const submit = () => {
 
 <template>
     <AuthenticatedLayout title="Create Team" :breadcrumbs="breadcrumbs">
-        <div class="mx-auto max-w-3xl p-4">
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Team</h1>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <div class="mx-auto max-w-3xl p-6">
+            <!-- Increased padding -->
+            <div class="mb-8">
+                <!-- Increased margin-bottom -->
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Create New Team</h1>
+                <!-- Larger title -->
+                <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                    <!-- Adjusted size and color -->
                     Create a new team to collaborate with your colleagues on investment projects.
                 </p>
             </div>
 
-            <div class="dark:bg-sidebar-bg overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm dark:border-sidebar-border">
-                <form @submit.prevent="submit" class="p-6">
-                    <div class="mb-6">
-                        <label for="name" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+                <!-- Consistent card styling -->
+                <form @submit.prevent="submit" class="p-8">
+                    <!-- Increased padding -->
+                    <div class="mb-6 grid gap-4">
+                        <!-- Using grid gap for consistency -->
+                        <Label for="name" class="text-gray-700 dark:text-gray-200">
+                            <!-- Consistent label color -->
                             Team Name <span class="text-red-500">*</span>
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             id="name"
                             v-model="form.name"
                             type="text"
-                            class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
+                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
                             required
                             placeholder="Enter team name"
                         />
-                        <div v-if="form.errors.name" class="mt-1 text-sm text-red-500">
-                            {{ form.errors.name }}
-                        </div>
+                        <InputError :message="form.errors.name" />
+                        <!-- Using InputError component -->
                     </div>
 
-                    <div class="mb-6">
-                        <label for="description" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Description </label>
-                        <textarea
+                    <div class="mb-6 grid gap-2">
+                        <!-- Using grid gap for consistency -->
+                        <Label for="description" class="text-gray-700 dark:text-gray-200"> Description </Label>
+                        <Textarea
                             id="description"
                             v-model="form.description"
                             rows="4"
-                            class="dark:bg-sidebar-bg/50 block w-full rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none dark:border-sidebar-border dark:text-white"
+                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
                             placeholder="Describe the purpose of this team"
-                        ></textarea>
-                        <div v-if="form.errors.description" class="mt-1 text-sm text-red-500">
-                            {{ form.errors.description }}
-                        </div>
+                        ></Textarea>
+                        <InputError :message="form.errors.description" />
+                        <!-- Using InputError component -->
                     </div>
 
-                    <div class="flex items-center justify-end gap-3">
-                        <a
-                            :href="route('teams.index')"
-                            class="dark:bg-sidebar-bg dark:hover:bg-sidebar-bg/80 rounded-md border border-sidebar-border/70 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none dark:border-sidebar-border dark:text-gray-300"
-                        >
-                            Cancel
-                        </a>
-                        <button
+                    <div class="mt-8 flex items-center justify-end gap-3">
+                        <!-- Increased margin-top -->
+                        <Link :href="route('teams.index')">
+                            <Button
+                                variant="outline"
+                                class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                            >
+                                Cancel
+                            </Button>
+                        </Link>
+                        <Button
                             type="submit"
-                            class="hover:bg-primary-dark rounded-md bg-primary px-4 py-2 text-sm font-medium text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
+                            class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
                             :disabled="form.processing"
                         >
                             <span v-if="form.processing">Creating...</span>
                             <span v-else>Create Team</span>
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

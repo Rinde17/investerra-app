@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3'; // Keep Link for internal POST requests
-import { computed } from 'vue';
-import { CircleCheck, CircleX } from 'lucide-vue-next';
 import GuestLayout from '@/layouts/GuestLayout.vue';
+import { type BreadcrumbItem } from '@/types';
+import { CircleCheck, CircleX } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 // Define props for the component
 const props = defineProps<{
@@ -42,16 +41,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const isSubscribed = computed(() => props.subscription !== null && props.subscription.stripe_status === 'active');
 
-const isOnGracePeriod = computed(() =>
-    props.subscription !== null &&
-    (props.subscription.stripe_status === 'active' || props.subscription.stripe_status === 'canceled') &&
-    props.subscription.ends_at !== null &&
-    new Date(props.subscription.ends_at).getTime() > Date.now()
+const isOnGracePeriod = computed(
+    () =>
+        props.subscription !== null &&
+        (props.subscription.stripe_status === 'active' || props.subscription.stripe_status === 'canceled') &&
+        props.subscription.ends_at !== null &&
+        new Date(props.subscription.ends_at).getTime() > Date.now(),
 );
 
 const formattedEndDate = computed(() => {
     if (props.subscription?.ends_at) {
-        return new Date(props.subscription.ends_at).toLocaleDateString();
+        return new Date(props.subscription.ends_at).toLocaleDateString('fr-FR'); // Format for French locale
     }
     return '';
 });
@@ -65,24 +65,45 @@ const isCurrentPlan = (planStripePriceId: string) => {
 const getButtonProps = (planStripePriceId: string) => {
     if (!props.subscription) {
         // If the user is NOT subscribed
-        return { text: 'Souscrire', disabled: false, classes: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary', action: 'checkout' };
+        return {
+            text: 'Souscrire',
+            disabled: false,
+            classes: 'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 focus:ring-indigo-500',
+            action: 'checkout',
+        };
     }
 
     // If the user IS subscribed
     if (isCurrentPlan(planStripePriceId)) {
         // If it's the user's current plan
         if (isOnGracePeriod.value) {
-            // Text for the main button for current plan on a grace period
-            return { text: 'Plan Actuel', disabled: true, classes: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200 cursor-not-allowed', action: 'current' };
+            // Text for the main button for the current plan on a grace period
+            return {
+                text: 'Plan Actuel',
+                disabled: true,
+                classes:
+                    'bg-yellow-100 text-yellow-800 border border-yellow-200 dark:bg-yellow-800/30 dark:text-yellow-300 dark:border-yellow-700 cursor-not-allowed',
+                action: 'current',
+            };
         }
-        return { text: 'Plan Actuel', disabled: true, classes: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 cursor-not-allowed', action: 'current' };
+        return {
+            text: 'Plan Actuel',
+            disabled: true,
+            classes: 'bg-gray-100 text-gray-700 border border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 cursor-not-allowed',
+            action: 'current',
+        };
     }
 
     // If the user is subscribed to ANOTHER plan (for changing/upgrading/downgrading)
-    return { text: 'Gérer mon abonnement', disabled: false, classes: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary', action: 'manage' };
+    return {
+        text: 'Gérer mon abonnement',
+        disabled: false,
+        classes: 'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 focus:ring-indigo-500',
+        action: 'manage',
+    };
 };
 
-const getFeatureList = (plan: typeof props.plans[0]) => {
+const getFeatureList = (plan: (typeof props.plans)[0]) => {
     return [
         {
             label: 'Analyses par semaine : ' + (plan.analyses_per_week === 0 ? 'Illimité' : plan.analyses_per_week),
@@ -101,74 +122,85 @@ const getFeatureList = (plan: typeof props.plans[0]) => {
 
 <template>
     <GuestLayout title="Pricing" :breadcrumbs="breadcrumbs">
-        <div class="mx-auto max-w-7xl p-4">
-            <div class="mb-8 text-center">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Choose Your Plan</h1>
-                <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                    Select the plan that best fits your investment needs
+        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl lg:text-6xl dark:text-white">Choisissez votre plan</h1>
+                <p class="mt-4 text-xl text-gray-600 dark:text-gray-400">
+                    Sélectionnez le plan qui correspond le mieux à vos besoins d'investissement.
                 </p>
             </div>
 
-            <div v-if="isSubscribed" class="mb-8 rounded-md bg-green-50 p-4 dark:bg-green-900/20">
-                <div class="flex">
+            <div v-if="isSubscribed" class="mb-10 rounded-lg bg-green-50 p-6 shadow-md dark:bg-green-900/20">
+                <div class="flex items-start">
                     <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                        <svg class="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                                clip-rule="evenodd"
+                            />
                         </svg>
                     </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-green-800 dark:text-green-200">Active Subscription</h3>
-                        <div class="mt-2 text-sm text-green-700 dark:text-green-300">
+                    <div class="ml-4 flex-1">
+                        <h3 class="text-lg font-semibold text-green-800 dark:text-green-200">Abonnement Actif</h3>
+                        <div class="mt-2 text-base text-green-700 dark:text-green-300">
                             <p v-if="isOnGracePeriod">
-                                Your subscription is currently active but will end on {{ formattedEndDate }}.
+                                Votre abonnement est actuellement actif mais se terminera le **{{ formattedEndDate }}**.
                                 <a
                                     :href="route('settings.subscription')"
                                     class="font-medium text-green-700 underline hover:text-green-600 dark:text-green-200 dark:hover:text-green-100"
                                 >
-                                    Resume Subscription
+                                    Reprendre l'abonnement
                                 </a>
                             </p>
                             <p v-else>
-                                You currently have an active subscription. You can manage your subscription in your
-                                <a :href="route('settings.subscription')" target="_top" class="font-medium text-green-700 underline hover:text-green-600 dark:text-green-200 dark:hover:text-green-100">
-                                    account settings
-                                </a>.
+                                Vous avez actuellement un abonnement actif. Vous pouvez gérer votre abonnement dans vos
+                                <a
+                                    :href="route('settings.subscription')"
+                                    target="_top"
+                                    class="font-medium text-green-700 underline hover:text-green-600 dark:text-green-200 dark:hover:text-green-100"
+                                >
+                                    paramètres de compte </a
+                                >.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid gap-6 md:grid-cols-3">
+            <div class="grid gap-8 md:grid-cols-3 lg:gap-10">
                 <div
                     v-for="plan in plans"
                     :key="plan.id"
-                    class="flex flex-col overflow-hidden rounded-lg border border-sidebar-border/70 bg-white shadow-sm transition-all hover:shadow-md dark:border-sidebar-border dark:bg-sidebar-bg"
+                    class="flex flex-col rounded-xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"
                 >
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ plan.name }}</h2>
-                        <p class="mt-4 text-gray-500 dark:text-gray-400">{{ plan.description }}</p>
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ plan.name }}</h2>
+                        <p class="mt-3 text-base text-gray-500 dark:text-gray-400">{{ plan.description }}</p>
                         <p class="mt-6">
-                            <span class="text-4xl font-bold text-gray-900 dark:text-white">{{ formatPrice(plan.price_monthly) }}</span>
-                            <span class="text-base font-medium text-gray-500 dark:text-gray-400">/month</span>
+                            <span class="text-5xl font-extrabold text-gray-900 dark:text-white">{{ formatPrice(plan.price_monthly) }}</span>
+                            <span class="text-lg font-medium text-gray-500 dark:text-gray-400">/mois</span>
                         </p>
-
-                        <ul class="mt-6 space-y-4">
-                            <li v-for="(feature, index) in getFeatureList(plan)" :key="index" class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <CircleCheck v-if="feature['value']" class="text-green-700" />
-                                    <CircleX v-else class="text-red-700" />
-                                </div>
-                                <p class="ml-3 text-base text-gray-700 dark:text-gray-300">{{ feature['label'] }}</p>
-                            </li>
-                        </ul>
                     </div>
 
-                    <div class="mt-auto flex border-t border-sidebar-border/70 p-6 dark:border-sidebar-border">
+                    <ul class="mt-8 space-y-4">
+                        <li v-for="(feature, index) in getFeatureList(plan)" :key="index" class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <CircleCheck v-if="feature.value" class="h-5 w-5 text-green-500" />
+                                <CircleX v-else class="h-5 w-5 text-red-500" />
+                            </div>
+                            <p class="ml-3 text-base text-gray-700 dark:text-gray-300">{{ feature.label }}</p>
+                        </li>
+                    </ul>
+
+                    <div class="mt-10 flex flex-col gap-4">
                         <a
                             v-if="getButtonProps(plan.stripe_price_id).action === 'checkout'"
                             :href="route('subscription.checkout', plan.stripe_price_id)"
-                            :class="['flex-grow flex items-center justify-center rounded-md px-4 py-2 text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2', getButtonProps(plan.stripe_price_id).classes]"
+                            :class="[
+                                'flex w-full items-center justify-center rounded-md px-6 py-3 text-lg font-semibold transition-colors duration-300 focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                                getButtonProps(plan.stripe_price_id).classes,
+                            ]"
                         >
                             {{ getButtonProps(plan.stripe_price_id).text }}
                         </a>
@@ -176,13 +208,19 @@ const getFeatureList = (plan: typeof props.plans[0]) => {
                             v-else-if="getButtonProps(plan.stripe_price_id).action === 'manage'"
                             :href="route('settings.subscription')"
                             target="_top"
-                            :class="['flex-grow flex items-center justify-center rounded-md px-4 py-2 text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2', getButtonProps(plan.stripe_price_id).classes]"
+                            :class="[
+                                'flex w-full items-center justify-center rounded-md px-6 py-3 text-lg font-semibold transition-colors duration-300 focus:ring-2 focus:ring-offset-2 focus:outline-none',
+                                getButtonProps(plan.stripe_price_id).classes,
+                            ]"
                         >
                             {{ getButtonProps(plan.stripe_price_id).text }}
                         </a>
                         <span
                             v-else-if="getButtonProps(plan.stripe_price_id).action === 'current'"
-                            :class="['flex-grow flex items-center justify-center rounded-md px-4 py-2 text-center text-sm font-medium', getButtonProps(plan.stripe_price_id).classes]"
+                            :class="[
+                                'flex w-full cursor-not-allowed items-center justify-center rounded-md px-6 py-3 text-lg font-semibold',
+                                getButtonProps(plan.stripe_price_id).classes,
+                            ]"
                         >
                             {{ getButtonProps(plan.stripe_price_id).text }}
                         </span>
@@ -190,37 +228,35 @@ const getFeatureList = (plan: typeof props.plans[0]) => {
                         <a
                             v-if="isOnGracePeriod && isCurrentPlan(plan.stripe_price_id)"
                             :href="route('settings.subscription')"
-                            class="ml-4 flex-shrink-0 rounded-md px-4 py-2 text-sm font-medium underline focus:outline-none focus:ring-2 focus:ring-offset-2"
-                            :class="{
-                                'text-yellow-800 hover:text-yellow-600 dark:text-yellow-200 dark:hover:text-yellow-100': getButtonProps(plan.stripe_price_id).classes.includes('bg-yellow'),
-                                'text-green-800 hover:text-green-600 dark:text-green-200 dark:hover:text-green-100': !getButtonProps(plan.stripe_price_id).classes.includes('bg-yellow')
-                            }"
+                            class="text-center text-sm font-medium text-yellow-700 underline transition-colors duration-300 hover:text-yellow-800 dark:text-yellow-300 dark:hover:text-yellow-200"
                         >
-                            Reprendre
+                            Reprendre l'abonnement
                         </a>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-16">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h2>
-                <dl class="mt-6 space-y-6 divide-y divide-sidebar-border/70 dark:divide-sidebar-border">
-                    <div class="pt-6">
-                        <dt class="text-lg font-medium text-gray-900 dark:text-white">How do the subscription plans work?</dt>
-                        <dd class="mt-2 text-base text-gray-500 dark:text-gray-400">
-                            Our subscription plans are billed monthly. You can upgrade, downgrade, or cancel your subscription at any time.
+            <div class="mt-20">
+                <h2 class="text-center text-3xl font-extrabold text-gray-900 dark:text-white">Questions Fréquemment Posées</h2>
+                <dl class="mt-8 space-y-8 divide-y divide-gray-200 dark:divide-gray-800">
+                    <div class="pt-8">
+                        <dt class="text-xl font-semibold text-gray-900 dark:text-white">Comment fonctionnent les plans d'abonnement ?</dt>
+                        <dd class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                            Nos plans d'abonnement sont facturés mensuellement. Vous pouvez mettre à niveau, rétrograder ou annuler votre abonnement à
+                            tout moment.
                         </dd>
                     </div>
-                    <div class="pt-6">
-                        <dt class="text-lg font-medium text-gray-900 dark:text-white">Can I cancel my subscription?</dt>
-                        <dd class="mt-2 text-base text-gray-500 dark:text-gray-400">
-                            Yes, you can cancel your subscription at any time. Your subscription will remain active until the end of your current billing period.
+                    <div class="pt-8">
+                        <dt class="text-xl font-semibold text-gray-900 dark:text-white">Puis-je annuler mon abonnement ?</dt>
+                        <dd class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                            Oui, vous pouvez annuler votre abonnement à tout moment. Votre abonnement restera actif jusqu'à la fin de votre période de
+                            facturation actuelle.
                         </dd>
                     </div>
-                    <div class="pt-6">
-                        <dt class="text-lg font-medium text-gray-900 dark:text-white">What payment methods do you accept?</dt>
-                        <dd class="mt-2 text-base text-gray-500 dark:text-gray-400">
-                            We accept all major credit cards, including Visa, Mastercard, and American Express.
+                    <div class="pt-8">
+                        <dt class="text-xl font-semibold text-gray-900 dark:text-white">Quels modes de paiement acceptez-vous ?</dt>
+                        <dd class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                            Nous acceptons toutes les principales cartes de crédit, y compris Visa, Mastercard et American Express.
                         </dd>
                     </div>
                 </dl>
