@@ -34,6 +34,11 @@ const mainNavItems: NavItem[] = [
         href: '/pricing',
         icon: Banknote,
     },
+    {
+        title: 'Example',
+        href: '/example',
+        icon: BookOpen,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

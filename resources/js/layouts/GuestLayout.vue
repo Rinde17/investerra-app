@@ -1,106 +1,141 @@
 <script setup lang="ts">
-import { Link, Head } from '@inertiajs/vue3';
+import { Link, Head, usePage } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import { computed } from 'vue'; // Si tu as besoin de computed pour des liens conditionnels (login/register)
-import { usePage } from '@inertiajs/vue3';
-import AppLayout from '@/layouts/app/AppHeaderLayout.vue';
+import { computed } from 'vue';
+import type { BreadcrumbItemType } from '@/types';
+import { Moon, Sun } from 'lucide-vue-next';
+import { useAppearance } from '@/composables/useAppearance';
 
-// Optionnel: Définir des props si tu veux passer des titres, descriptions, etc.
-defineProps<{
-    breadcrumbs?: Array<{ title: string; href: string }>;
+// Define props for title, description, and breadcrumbs
+interface Props {
+    breadcrumbs?: BreadcrumbItemType[];
     title?: string;
-}>();
+    description?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    breadcrumbs: () => [],
+});
 
 const page = usePage();
+const auth = computed(() => page.props.auth);
 
-// Vérifie si l'utilisateur est authentifié pour adapter la navigation
-const user = computed(() => page.props.auth?.user); // Assumes 'auth.user' is shared via HandleInertiaRequests
+// Check if a user is authenticated to adapt navigation
+const user = computed(() => auth.value?.user);
+const subscription = computed(() => auth.value?.subscription);
+const hasActiveSubscription = computed(() => subscription.value?.stripe_status === 'active');
 
+// Check if user is authenticated AND has an active subscription
+const isAuthenticatedAndSubscribed = computed(() => {
+    return user.value && hasActiveSubscription.value;
+});
+
+// Use props to pass title to a Head component
+const pageTitle = computed(() => props.title || 'Investerra');
+
+const { appearance, updateAppearance } = useAppearance();
+
+function toggleTheme() {
+    const next = appearance.value === 'dark' ? 'light' : 'dark'
+    updateAppearance(next)
+}
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <slot />
-    </AppLayout>
-<!--    <Head :title="title" />-->
+    <Head :title="pageTitle">
+        <link rel="preconnect" href="https://rsms.me/" />
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    </Head>
 
-<!--    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">-->
-<!--        <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">-->
-<!--            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">-->
-<!--                <div class="flex justify-between h-16">-->
-<!--                    <div class="flex">-->
-<!--                        <div class="shrink-0 flex items-center">-->
-<!--                            <Link :href="route('home')">-->
-<!--                                <AppLogoIcon class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />-->
-<!--                            </Link>-->
-<!--                        </div>-->
-<!--                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">-->
-<!--                            <Link :href="route('home')" :class="route().current('home') ? 'border-indigo-400 text-gray-900 dark:text-gray-100' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out">-->
-<!--                                Accueil-->
-<!--                            </Link>-->
-<!--                            <Link :href="route('pricing.index')" :class="route().current('pricing.index') ? 'border-indigo-400 text-gray-900 dark:text-gray-100' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out">-->
-<!--                                Tarifs-->
-<!--                            </Link>-->
-<!--                        </div>-->
-<!--                    </div>-->
+    <div class="min-h-screen flex flex-col bg-gradient-to-br from-[#f8f8f8] via-[#f0f0f0] to-[#f8f8f8] dark:from-[#0a0a0a] dark:via-[#100c1c] dark:to-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC]">
+        <!-- Dot pattern background -->
+        <div class="absolute inset-0 z-0 opacity-10" style="background-image: radial-gradient(#202020 1px, transparent 1px); background-size: 40px 40px;"></div>
 
-<!--                    <div class="hidden sm:flex sm:items-center sm:ms-6">-->
-<!--                        <div v-if="user" class="ms-3 relative">-->
-<!--                            <Link-->
-<!--                                :href="route('dashboard')"-->
-<!--                                class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"-->
-<!--                            >-->
-<!--                                Dashboard-->
-<!--                            </Link>-->
-<!--                        </div>-->
-<!--                        <div v-else class="flex items-center gap-4">-->
-<!--                            <Link-->
-<!--                                :href="route('login')"-->
-<!--                                class="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"-->
-<!--                            >-->
-<!--                                Log in-->
-<!--                            </Link>-->
-<!--                            <Link-->
-<!--                                :href="route('register')"-->
-<!--                                class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"-->
-<!--                            >-->
-<!--                                Register-->
-<!--                            </Link>-->
-<!--                        </div>-->
-<!--                    </div>-->
+        <!-- Header -->
+        <header class="relative z-10 w-full border-b border-gray-200 dark:border-[#3E3E3A] bg-white/80 dark:bg-[#161615]/80 backdrop-blur-sm">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <Link :href="route('home')" class="flex items-center">
+                            <AppLogoIcon class="mr-3 size-9 fill-current text-indigo-600 dark:text-indigo-400" />
+                            <span class="text-xl font-semibold" style="font-family: 'Orbitron', sans-serif;">Investerra</span>
+                        </Link>
+                    </div>
 
-<!--                </div>-->
-<!--            </div>-->
-<!--        </nav>-->
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center space-x-8">
+                        <Link :href="route('home')" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
+                            Accueil
+                        </Link>
+                        <Link :href="route('pricing.index')" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
+                            Tarifs
+                        </Link>
+                        <Link :href="route('example')" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
+                            Example
+                        </Link>
+                        <Link href="#" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
+                            Contact
+                        </Link>
+                        <Link href="#" class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium">
+                            Infos
+                        </Link>
+                    </nav>
 
-<!--        <header v-if="breadcrumbs && breadcrumbs.length > 0" class="bg-white dark:bg-gray-800 shadow">-->
-<!--            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">-->
-<!--                <nav class="flex" aria-label="Breadcrumb">-->
-<!--                    <ol role="list" class="flex items-center space-x-4">-->
-<!--                        <li v-for="(item, index) in breadcrumbs" :key="item.href">-->
-<!--                            <div class="flex items-center">-->
-<!--                                <svg v-if="index > 0" class="h-5 w-5 flex-shrink-0 text-gray-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">-->
-<!--                                    <path d="M5.555 17.776l8-16 .894.447-8 16-.894-.447z" />-->
-<!--                                </svg>-->
-<!--                                <Link :href="item.href" :class="[index === breadcrumbs.length - 1 ? 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' : 'text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300', 'ml-4 text-sm font-medium']">-->
-<!--                                    {{ item.title }}-->
-<!--                                </Link>-->
-<!--                            </div>-->
-<!--                        </li>-->
-<!--                    </ol>-->
-<!--                </nav>-->
-<!--            </div>-->
-<!--        </header>-->
+                    <!-- Auth Buttons -->
+                    <div class="flex items-center space-x-4">
+                        <!-- Dark/Light Mode Toggle Button -->
+                        <button
+                            @click="toggleTheme"
+                            :class="[
+                            'flex items-center justify-center rounded-md p-2 transition-colors',
+                            'hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60',
+                            'text-neutral-500 dark:text-neutral-400'
+                        ]"
+                        >
+                            <component :is="appearance === 'dark' ? Sun : Moon" class="h-4 w-4" />
+                        </button>
 
+                        <!-- User is authenticated but not subscribed -->
+                        <template v-if="user && !isAuthenticatedAndSubscribed">
+                            <Link :href="route('pricing.index')" class="inline-block rounded-md border border-indigo-500 dark:border-indigo-400 px-5 py-2 text-sm leading-normal text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors duration-300">
+                                S'abonner
+                            </Link>
+                            <Link :href="route('dashboard')" class="inline-block rounded-md border border-gray-300 dark:border-[#3E3E3A] px-5 py-2 text-sm leading-normal hover:bg-gray-100 dark:hover:bg-[#252525] transition-colors duration-300">
+                                Dashboard
+                            </Link>
+                        </template>
+                        <!-- User is authenticated and subscribed -->
+                        <template v-else-if="isAuthenticatedAndSubscribed">
+                            <Link :href="route('dashboard')" class="inline-block rounded-md border border-gray-300 dark:border-[#3E3E3A] px-5 py-2 text-sm leading-normal hover:bg-gray-100 dark:hover:bg-[#252525] transition-colors duration-300">
+                                Dashboard
+                            </Link>
+                        </template>
+                        <!-- User is not authenticated -->
+                        <template v-else>
+                            <Link :href="route('login')" class="inline-block rounded-md border border-transparent px-5 py-2 text-sm leading-normal hover:bg-gray-100 dark:hover:bg-[#252525] transition-colors duration-300">
+                                Connexion
+                            </Link>
+                            <Link :href="route('register')" class="inline-block rounded-md bg-indigo-600 px-5 py-2 text-sm leading-normal text-white hover:bg-indigo-700 transition-colors duration-300">
+                                S'inscrire
+                            </Link>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-<!--        <main>-->
-<!--            <slot />-->
-<!--        </main>-->
+        <!-- Main Content -->
+        <main class="flex-grow relative z-10">
+            <slot />
+        </main>
 
-<!--        <footer class="bg-gray-800 dark:bg-gray-900 text-gray-400 dark:text-gray-500 py-8 mt-12">-->
-<!--            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">-->
-<!--                &copy; {{ new Date().getFullYear() }} Mon Entreprise. Tous droits réservés.-->
-<!--            </div>-->
-<!--        </footer>-->
-<!--    </div>-->
+        <!-- Footer -->
+        <footer class="relative z-10 w-full py-8 bg-white/80 dark:bg-[#161615]/80 backdrop-blur-sm border-t border-gray-200 dark:border-[#3E3E3A]">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-gray-600 dark:text-gray-400">&copy; {{ new Date().getFullYear() }} Investerra. Tous droits réservés.</p>
+            </div>
+        </footer>
+    </div>
 </template>

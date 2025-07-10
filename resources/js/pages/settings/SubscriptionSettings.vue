@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { Button } from '@/components/ui/button';
 import Modal from '@/components/Modal.vue';
-
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -135,9 +134,7 @@ const featureIcon = (hasFeature: boolean) => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Subscription settings" />
-
+    <AuthenticatedLayout title="Subscription settings" :breadcrumbs="breadcrumbItems">
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall title="Subscription settings" description="Update your subscription" />
@@ -285,7 +282,7 @@ const featureIcon = (hasFeature: boolean) => {
                 </div>
             </div>
         </SettingsLayout>
-    </AppLayout>
+    </AuthenticatedLayout>
 
     <Modal :show="showCancelConfirmationModal" @close="showCancelConfirmationModal = false">
         <div class="p-6">

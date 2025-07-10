@@ -3,9 +3,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3'; // Keep Link for internal POST requests
 import { computed } from 'vue';
 import { CircleCheck, CircleX } from 'lucide-vue-next';
-// import AuthLayout from '@/layouts/AuthLayout.vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
-// import AppLayout from '@/layouts/AppLayout.vue';
 
 // Define props for the component
 const props = defineProps<{
@@ -102,9 +100,7 @@ const getFeatureList = (plan: typeof props.plans[0]) => {
 </script>
 
 <template>
-    <Head title="Pricing" />
-
-    <GuestLayout :breadcrumbs="breadcrumbs">
+    <GuestLayout title="Pricing" :breadcrumbs="breadcrumbs">
         <div class="mx-auto max-w-7xl p-4">
             <div class="mb-8 text-center">
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Choose Your Plan</h1>
