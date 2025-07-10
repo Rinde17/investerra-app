@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Link, router } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-
-// Shadcn UI Components
+import DeleteTerrain from '@/components/DeleteTerrain.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Import Card components
 import { Separator } from '@/components/ui/separator'; // Can be used for visual separation
@@ -67,12 +66,6 @@ const props = defineProps<{
 
 const activeTab = ref('details');
 
-const confirmDelete = () => {
-    if (confirm('Are you sure you want to delete this terrain? This action cannot be undone.')) {
-        router.delete(route('terrains.destroy', { terrain: props.terrain.id }));
-    }
-};
-
 const formatPrice = (price: number) => {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
 };
@@ -131,7 +124,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <Link :href="route('terrains.edit', terrain.id)">
                         <Button variant="outline"> Edit Terrain </Button>
                     </Link>
-                    <Button variant="destructive" @click="confirmDelete"> Delete Terrain </Button>
+                    <DeleteTerrain :terrainId="props.terrain.id" :terrainTitle="props.terrain.title" />
                 </div>
             </div>
 

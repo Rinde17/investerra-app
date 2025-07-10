@@ -2,8 +2,10 @@
 import { Button } from '@/components/ui/button'; // Import shadcn Button
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Link, router } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import DeleteTeam from '@/components/DeleteTeam.vue';
+import RemoveTeamMember from '@/components/RemoveTeamMember.vue';
 
 // Define props for the component
 const props = defineProps<{
@@ -37,12 +39,6 @@ const props = defineProps<{
 }>();
 
 const activeTab = ref('members');
-
-const confirmDelete = () => {
-    if (confirm('Are you sure you want to delete this team? This action cannot be undone.')) {
-        router.delete(route('teams.destroy', { team: props.team.id }));
-    }
-};
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -84,14 +80,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                             Add Member
                         </Button>
                     </Link>
-                    <Button
+                    <DeleteTeam
                         v-if="userRole === 'owner'"
-                        @click="confirmDelete"
-                        variant="destructive"
-                        class="bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
-                    >
-                        Delete Team
-                    </Button>
+                        :teamId="props.team.id"
+                        :teamName="props.team.name"
+                    />
                 </div>
             </div>
 
@@ -216,20 +209,17 @@ const breadcrumbs: BreadcrumbItem[] = [
                                             :data="{ role: member.pivot.role === 'admin' ? 'member' : 'admin' }"
                                             as="button"
                                             type="button"
-                                            class="text-indigo-600 transition-colors duration-200 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                            class="cursor-pointer text-indigo-600 transition-colors duration-200 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
                                         >
                                             {{ member.pivot.role === 'admin' ? 'Demote to Member' : 'Promote to Admin' }}
                                         </Link>
-                                        <Link
+                                        <RemoveTeamMember
                                             v-if="member.pivot.role !== 'owner'"
-                                            :href="route('teams.members.destroy', { team: team.id, user: member.id })"
-                                            method="delete"
-                                            as="button"
-                                            type="button"
-                                            class="text-red-600 transition-colors duration-200 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                                        >
-                                            Remove
-                                        </Link>
+                                            :teamId="team.id"
+                                            :memberId="member.id"
+                                            :memberName="member.name"
+                                            :teamName="team.name"
+                                        />
                                     </div>
                                 </td>
                             </tr>

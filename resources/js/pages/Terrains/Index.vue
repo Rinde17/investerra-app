@@ -149,8 +149,8 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
 
 <template>
     <AuthenticatedLayout title="Terrains" :breadcrumbs="breadcrumbs">
-        <div class="mx-auto w-full max-w-7xl p-6 lg:p-8">
-            <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col gap-8 p-6">
+            <div class="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-4">
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Terrains</h1>
                     <div v-if="canCompare && selectedTerrains.length > 0" class="flex items-center">
@@ -189,7 +189,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
 
             <div
                 v-if="!canCompare && filteredTerrains.length > 0"
-                class="mb-8 rounded-xl border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-800 dark:bg-gray-900"
+                class="mb-2 rounded-xl border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-800 dark:bg-gray-900"
             >
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -215,7 +215,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                 </div>
             </div>
 
-            <div class="mb-6 flex flex-wrap gap-2">
+            <div class="mb-2 flex flex-wrap gap-2">
                 <Button
                     variant="outline"
                     @click="toggleSort('title')"

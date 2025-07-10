@@ -6,6 +6,8 @@ import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Blocks, PlusCircle } from 'lucide-vue-next';
+import DeleteProject from '@/components/DeleteProject.vue';
+import RemoveTerrainFromProject from '@/components/RemoveTerrainFromProject.vue';
 
 // Define props for the component
 const props = defineProps<{
@@ -72,29 +74,6 @@ const terrainNotes = ref<{ [key: number]: string }>({});
 props.terrains.forEach((terrain) => {
     terrainNotes.value[terrain.id] = terrain.pivot.notes || '';
 });
-
-const confirmDelete = () => {
-    if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-        router.delete(route('projects.destroy', { project: props.project.id }));
-    }
-};
-
-const removeTerrain = (terrainId: number) => {
-    if (confirm('Are you sure you want to remove this terrain from the project? This will not delete the terrain itself.')) {
-        router.delete(
-            route('projects.terrains.destroy', {
-                project: props.project.id,
-                terrain: terrainId,
-            }),
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    router.reload({ only: ['terrains', 'totalInvestment', 'totalProfit', 'averageScore'] });
-                },
-            },
-        );
-    }
-};
 
 const startEditingNotes = (terrainId: number) => {
     editingNotes.value[terrainId] = true;
@@ -193,13 +172,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                             Edit Project
                         </Button>
                     </Link>
-                    <Button
-                        @click="confirmDelete"
-                        variant="destructive"
-                        class="bg-red-600 text-white hover:bg-red-700 active:bg-red-800 dark:bg-red-700 dark:hover:bg-red-600 dark:active:bg-red-800"
-                    >
-                        Delete Project
-                    </Button>
+                    <DeleteProject
+                        :projectId="props.project.id"
+                        :projectName="props.project.name"
+                    />
                 </div>
             </div>
 
@@ -534,13 +510,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                                                 View Terrain
                                             </Button>
                                         </Link>
-                                        <Button
-                                            @click="removeTerrain(terrain.id)"
-                                            variant="destructive"
-                                            class="bg-red-600 text-white hover:bg-red-700 active:bg-red-800 dark:bg-red-700 dark:hover:bg-red-600 dark:active:bg-red-800"
-                                        >
-                                            Remove
-                                        </Button>
+                                        <RemoveTerrainFromProject
+                                            :projectId="props.project.id"
+                                            :projectName="props.project.name"
+                                            :terrainId="terrain.id"
+                                            :terrainTitle="terrain.title"
+                                        />
                                     </div>
                                 </div>
                             </li>
