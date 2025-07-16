@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed $id
  * @property mixed $users
  * @property mixed $owner_id
+ * @property mixed $name
  * @method static create(array $array)
  */
 class Team extends Model

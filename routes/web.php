@@ -20,7 +20,7 @@ Route::get('/pricing', [PricingController::class, 'index'])->name('pricing.index
 Route::post('/stripe/webhook', [WebhookController::class, 'handleWebhook'])->name('cashier.webhook');
 
 // Team routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     // Subscription routes
     Route::get('/subscription-checkout/{stripePriceId}', [SubscriptionController::class, 'subscriptionCheckout'])->name('subscription.checkout');

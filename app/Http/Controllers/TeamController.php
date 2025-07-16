@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MemberAddedToTeam;
+use App\Mail\MemberRemovedFromTeam;
 use App\Models\Team;
 use App\Models\User;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -192,10 +196,23 @@ class TeamController extends Controller
                 ->with('error', 'This user is already a member of the team.');
         }
 
-        $team->users()->attach($user, ['role' => $request->role]);
+        try {
+            $team->users()->attach($user, ['role' => $request->role]);
 
-        return redirect()->route('teams.show', $team)
-            ->with('success', 'Member added successfully.');
+            // 🔥 ENVOI DU MAIL ICI
+            $inviter = $request->user();
+            $members = $team->users()->get();
+
+            Mail::to($user->email)->queue(
+                new MemberAddedToTeam($inviter, $team, $members)
+            );
+
+            return redirect()->route('teams.show', $team)
+                ->with('success', 'Member added successfully.');
+        } catch (Exception $e) {
+            return redirect()->route('teams.show', $team)
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -248,12 +265,24 @@ class TeamController extends Controller
                 ->with('error', 'Cannot remove the team owner.');
         }
 
-        $team->users()->detach($user);
+        try {
+            $team->users()->detach($user);
 
-        // If the removed user had this team as their current team, set current_team_id to null
-        if ($user->current_team_id === $team->id) {
-            $user->current_team_id = null;
-            $user->save();
+            if ($user->current_team_id === $team->id) {
+                $user->current_team_id = null;
+                $user->save();
+            }
+
+            // 🔥 Envoi du mail en file d’attente
+            $remover = request()->user();
+            $members = $team->users()->get();
+
+            Mail::to($user->email)->queue(
+                new MemberRemovedFromTeam($remover, $team, $members)
+            );
+        } catch (Exception $e) {
+            return redirect()->route('teams.show', $team)
+                ->with('error', $e->getMessage());
         }
 
         return redirect()->route('teams.show', $team)

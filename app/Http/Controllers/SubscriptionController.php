@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SubscriptionCancelled;
+use App\Mail\SubscriptionConfirmed;
+use App\Mail\SubscriptionResumed;
+use App\Mail\SubscriptionSwapped;
 use App\Models\Plan;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -52,29 +58,22 @@ class SubscriptionController extends Controller
      */
     public function resumeSubscription(): RedirectResponse
     {
-        $user = $this->user(); // Supposons que l'utilisateur est authentifié
+        $user = $this->user();
 
-        // Récupère l'abonnement 'default' de l'utilisateur.
         $subscription = $user->subscription('default');
 
-        // Condition pour la reprise : l'abonnement existe et est en période de grâce.
-        // La méthode onGracePeriod() implique qu'il a été annulé mais n'est pas encore terminé.
         if ($subscription && $subscription->onGracePeriod()) {
             try {
-                $subscription->resume(); // Appel de la méthode resume() de Cashier
-
-                // Redirige avec un message de succès après la reprise
+                $subscription->resume();
+                Mail::to($user->email)->send(new SubscriptionResumed($user, $subscription));
+                Log::info("Email de confirmation de reprise d'abonnement envoyé par le contrôleur.");
                 return Redirect::back()->with('success', 'Votre abonnement a été repris avec succès ! Il est de nouveau actif et récurrent.');
             } catch (\Exception $e) {
-                // Capture toute exception lors du processus de reprise (par exemple, erreur de l'API Stripe)
-                // Log l'erreur pour le débogage.
                 Log::error("Erreur lors de la reprise de l'abonnement pour l'utilisateur {$user->id}: " . $e->getMessage());
                 return Redirect::back()->with('error', 'Une erreur est survenue lors de la tentative de reprise de votre abonnement. Veuillez réessayer ou contacter le support.');
             }
         }
 
-        // Si aucun abonnement n'est trouvé, ou s'il n'est pas en période de grâce
-        // (par exemple, déjà terminé, jamais annulé, ou statut différent), redirige avec une erreur.
         return Redirect::route('pricing.index')->with('error', 'Impossible de reprendre l\'abonnement. Soit il n\'existe pas, soit il n\'est pas éligible à une reprise.');
     }
 
@@ -122,8 +121,16 @@ class SubscriptionController extends Controller
     public function cancelSubscription(): RedirectResponse
     {
         $user = $this->user();
+
         try {
-            $user->subscription('default')->cancel();
+            $subscription = $user->subscription('default');
+
+            $subscription->cancel();
+
+            Mail::to($user->email)->send(new SubscriptionCancelled($user, $subscription));
+
+            Log::info("Email de confirmation d'annulation envoyé par le contrôleur.");
+
             return Redirect::back()->with('success', 'Votre abonnement sera annulé à la fin de la période actuelle. Vous pouvez le reprendre à tout moment avant cette date.');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', 'Erreur lors de l\'annulation de votre abonnement : ' . $e->getMessage());
@@ -147,7 +154,14 @@ class SubscriptionController extends Controller
         }
 
         try {
-            $user->subscription('default')->swap($newPlan->stripe_price_id);
+            $subscription = $user->subscription('default')->swap($newPlan->stripe_price_id);
+
+            if ($subscription) {
+                Mail::to($user->email)->send(new SubscriptionSwapped($user, $subscription, $newPlan));
+                $subscription->update(['last_plan_swapped_email_sent_at' => Carbon::now()]);
+                Log::info("Email de changement de plan envoyé par le contrôleur.");
+            }
+
             return Redirect::back()->with('success', 'Votre abonnement a été mis à jour avec succès vers le plan ' . $newPlan->name . ' !');
         } catch (\Exception $e) {
             return Redirect::back()->with('error', 'Erreur lors du changement de plan : ' . $e->getMessage());
@@ -180,6 +194,24 @@ class SubscriptionController extends Controller
     public function success(): RedirectResponse
     {
         Log::info("Checkout success");
+
+        $user = $this->user();
+
+        $subscription = $user->subscription('default');
+
+        if ($subscription) {
+            $lastEmailSentAt = $subscription->last_subscription_created_email_sent_at;
+            $gracePeriod = Carbon::now()->subMinutes(2);
+
+            if (!$lastEmailSentAt || $lastEmailSentAt->lessThan($gracePeriod)) {
+                Mail::to($user->email)->send(new SubscriptionConfirmed($user, $subscription));
+                $subscription->update(['last_subscription_created_email_sent_at' => Carbon::now()]);
+                Log::info("Email de confirmation d'abonnement envoyé via controller.");
+            } else {
+                Log::info("Email de confirmation d'abonnement déjà envoyé récemment (created), ignoré.");
+            }
+        }
+
         return Redirect::route('settings.subscription')->with('info', 'Votre abonnement à bien été pris en compte !');
     }
 
