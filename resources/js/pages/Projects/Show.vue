@@ -151,15 +151,15 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="flex flex-col gap-8 p-6">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ project.name }}</h1>
-                    <p v-if="project.team" class="mt-2 text-base text-gray-600 dark:text-gray-400">Team: {{ project.team.name }}</p>
-                    <p v-else class="mt-2 text-base text-gray-600 dark:text-gray-400">Personal Project</p>
+                    <h1 class="text-3xl font-bold text-foreground">{{ project.name }}</h1>
+                    <p v-if="project.team" class="mt-2 text-base text-muted-foreground">Team: {{ project.team.name }}</p>
+                    <p v-else class="mt-2 text-base text-muted-foreground">Personal Project</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <Link :href="route('projects.terrains.add', project.id)">
                         <Button
                             variant="outline"
-                            class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                            class="border-border text-foreground hover:text-foreground/90"
                         >
                             <PlusCircle class="mr-2 h-4 w-4" /> Add Terrain
                         </Button>
@@ -167,7 +167,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <Link :href="route('projects.edit', project.id)">
                         <Button
                             variant="outline"
-                            class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                            class="border-border text-foreground hover:text-foreground/90"
                         >
                             Edit Project
                         </Button>
@@ -180,25 +180,25 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-800 dark:bg-gray-900">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Investment</p>
-                    <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{{ formatPrice(totalInvestment) }}</p>
+                <div class="rounded-xl border border-border bg-card p-6 shadow-lg">
+                    <p class="text-sm font-medium text-muted-foreground">Total Investment</p>
+                    <p class="mt-2 text-2xl font-bold text-foreground">{{ formatPrice(totalInvestment) }}</p>
                 </div>
-                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-800 dark:bg-gray-900">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Estimated Profit</p>
-                    <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{{ formatPrice(totalProfit) }}</p>
+                <div class="rounded-xl border border-border bg-card p-6 shadow-lg">
+                    <p class="text-sm font-medium text-muted-foreground">Estimated Profit</p>
+                    <p class="mt-2 text-2xl font-bold text-foreground">{{ formatPrice(totalProfit) }}</p>
                 </div>
-                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-800 dark:bg-gray-900">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">ROI</p>
-                    <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                <div class="rounded-xl border border-border bg-card p-6 shadow-lg">
+                    <p class="text-sm font-medium text-muted-foreground">ROI</p>
+                    <p class="mt-2 text-2xl font-bold text-foreground">
                         {{ totalInvestment > 0 ? formatPercentage((totalProfit / totalInvestment) * 100) : 'N/A' }}
                     </p>
                 </div>
-                <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-800 dark:bg-gray-900">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Average AI Score</p>
+                <div class="rounded-xl border border-border bg-card p-6 shadow-lg">
+                    <p class="text-sm font-medium text-muted-foreground">Average AI Score</p>
                     <div class="mt-2 flex items-center">
-                        <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ Number(averageScore).toFixed(1) }}</span>
-                        <div class="ml-4 h-2.5 w-28 rounded-full bg-gray-200 dark:bg-gray-700">
+                        <span class="text-2xl font-bold text-foreground">{{ Number(averageScore).toFixed(1) }}</span>
+                        <div class="ml-4 h-2.5 w-28 rounded-full bg-muted">
                             <div
                                 class="h-2.5 rounded-full transition-all duration-300"
                                 :class="[
@@ -217,15 +217,15 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </div>
             </div>
 
-            <div class="border-b border-gray-200 dark:border-gray-800">
+            <div class="border-b border-border">
                 <nav class="-mb-px flex space-x-8">
                     <button
                         @click="activeTab = 'overview'"
                         :class="[
                             activeTab === 'overview'
-                                ? 'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-700 dark:hover:text-gray-300',
-                            'border-b-2 px-1 py-4 text-base font-medium whitespace-nowrap transition-colors duration-200', // Adjusted font size
+                                ? 'border-primary text-primary'
+                                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground',
+                            'border-b-2 px-1 py-4 text-base font-medium whitespace-nowrap transition-colors duration-200',
                         ]"
                     >
                         Overview
@@ -234,8 +234,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                         @click="activeTab = 'terrains'"
                         :class="[
                             activeTab === 'terrains'
-                                ? 'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
-                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-700 dark:hover:text-gray-300',
+                                ? 'border-primary text-primary'
+                                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground',
                             'border-b-2 px-1 py-4 text-base font-medium whitespace-nowrap transition-colors duration-200',
                         ]"
                     >
@@ -245,39 +245,39 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div v-if="activeTab === 'overview'" class="grid gap-6 md:grid-cols-2">
-                <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+                <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                     <div class="px-6 py-5">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Project Information</h3>
+                        <h3 class="text-xl font-semibold text-foreground">Project Information</h3>
                     </div>
-                    <div class="border-t border-gray-200 px-6 py-5 dark:border-gray-800">
+                    <div class="border-t border-border px-6 py-5">
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                             <div class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Description</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Description</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{ project.description || 'No description provided' }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Created By</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">{{ project.user.name }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Created By</dt>
+                                <dd class="mt-1 text-base text-foreground">{{ project.user.name }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Team</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Team</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{ project.team ? project.team.name : 'Personal Project' }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Created</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">{{ formatDate(project.created_at) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Created</dt>
+                                <dd class="mt-1 text-base text-foreground">{{ formatDate(project.created_at) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Last Updated</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">{{ formatDate(project.updated_at) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Last Updated</dt>
+                                <dd class="mt-1 text-base text-foreground">{{ formatDate(project.updated_at) }}</dd>
                             </div>
                             <div class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Notes</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Notes</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{ project.notes || 'No notes provided' }}
                                 </dd>
                             </div>
@@ -285,61 +285,61 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </div>
                 </div>
 
-                <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+                <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                     <div class="px-6 py-5">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Project Summary</h3>
+                        <h3 class="text-xl font-semibold text-foreground">Project Summary</h3>
                     </div>
-                    <div class="border-t border-gray-200 px-6 py-5 dark:border-gray-800">
+                    <div class="border-t border-border px-6 py-5">
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Number of Terrains</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">{{ terrains.length }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Number of Terrains</dt>
+                                <dd class="mt-1 text-base text-foreground">{{ terrains.length }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Surface Area</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Total Surface Area</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{ formatSurface(terrains.reduce((sum, terrain) => sum + Number(terrain.surface_m2), 0)) }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Purchase Price</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Total Purchase Price</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{ formatPrice(terrains.reduce((sum, terrain) => sum + Number(terrain.price), 0)) }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Viability Cost</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Total Viability Cost</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{ formatPrice(terrains.reduce((sum, terrain) => sum + (Number(terrain.analysis?.viability_cost) || 0), 0)) }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Resale Estimate (Min)</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Total Resale Estimate (Min)</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{
                                         formatPrice(terrains.reduce((sum, terrain) => sum + (Number(terrain.analysis?.resale_estimate_min) || 0), 0))
                                     }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Resale Estimate (Max)</dt>
-                                <dd class="mt-1 text-base text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Total Resale Estimate (Max)</dt>
+                                <dd class="mt-1 text-base text-foreground">
                                     {{
                                         formatPrice(terrains.reduce((sum, terrain) => sum + (Number(terrain.analysis?.resale_estimate_max) || 0), 0))
                                     }}
                                 </dd>
                             </div>
-                            <div class="border-t border-gray-200 pt-4 sm:col-span-2 dark:border-gray-800">
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Investment</dt>
-                                <dd class="mt-1 text-base font-semibold text-gray-900 dark:text-white">{{ formatPrice(totalInvestment) }}</dd>
+                            <div class="border-t border-border pt-4 sm:col-span-2">
+                                <dt class="text-sm font-medium text-muted-foreground">Total Investment</dt>
+                                <dd class="mt-1 text-base font-semibold text-foreground">{{ formatPrice(totalInvestment) }}</dd>
                             </div>
                             <div class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Profit</dt>
-                                <dd class="mt-1 text-base font-semibold text-gray-900 dark:text-white">{{ formatPrice(totalProfit) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Total Profit</dt>
+                                <dd class="mt-1 text-base font-semibold text-foreground">{{ formatPrice(totalProfit) }}</dd>
                             </div>
                             <div class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">Return on Investment</dt>
-                                <dd class="mt-1 text-base font-semibold text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Return on Investment</dt>
+                                <dd class="mt-1 text-base font-semibold text-foreground">
                                     {{ totalInvestment > 0 ? formatPercentage((totalProfit / totalInvestment) * 100) : 'N/A' }}
                                 </dd>
                             </div>
@@ -349,27 +349,27 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div v-if="activeTab === 'terrains'">
-                <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+                <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                     <div class="flex items-center justify-between px-6 py-5">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Project Terrains</h3>
+                        <h3 class="text-xl font-semibold text-foreground">Project Terrains</h3>
                         <Link :href="route('projects.terrains.add', project.id)">
                             <Button
-                                class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                                class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                             >
                                 <PlusCircle class="mr-2 h-4 w-4" /> Add Terrain
                             </Button>
                         </Link>
                     </div>
 
-                    <div v-if="terrains.length > 0" class="border-t border-gray-200 dark:border-gray-800">
-                        <ul class="divide-y divide-gray-200 dark:divide-gray-800">
+                    <div v-if="terrains.length > 0" class="border-t border-border">
+                        <ul class="divide-y divide-border">
                             <li v-for="terrain in terrains" :key="terrain.id" class="p-6">
                                 <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
                                     <div class="flex-1">
                                         <div class="flex items-start justify-between">
                                             <div>
-                                                <h4 class="text-lg font-medium text-gray-900 dark:text-white">{{ terrain.title }}</h4>
-                                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                                <h4 class="text-lg font-medium text-foreground">{{ terrain.title }}</h4>
+                                                <p class="mt-1 text-sm text-muted-foreground">
                                                     {{ terrain.city }}, {{ terrain.zip_code }}
                                                 </p>
                                             </div>
@@ -377,11 +377,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                                                 <span
                                                     v-if="terrain.analysis"
                                                     :class="[
-                                                        terrain.analysis.profitability_label === 'Excellent'
+                                                        terrain.analysis.profitability_label === 'excellent'
                                                             ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
-                                                            : terrain.analysis.profitability_label === 'Good'
+                                                            : terrain.analysis.profitability_label === 'good'
                                                               ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-                                                              : terrain.analysis.profitability_label === 'Average'
+                                                              : terrain.analysis.profitability_label === 'average'
                                                                 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
                                                                 : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
                                                         'inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -394,18 +394,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                                         <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
                                             <div>
-                                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Surface</p>
-                                                <p class="text-base font-medium text-gray-900 dark:text-white">
+                                                <p class="text-xs font-medium text-muted-foreground">Surface</p>
+                                                <p class="text-base font-medium text-foreground">
                                                     {{ formatSurface(terrain.surface_m2) }}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Price</p>
-                                                <p class="text-base font-medium text-gray-900 dark:text-white">{{ formatPrice(terrain.price) }}</p>
+                                                <p class="text-xs font-medium text-muted-foreground">Price</p>
+                                                <p class="text-base font-medium text-foreground">{{ formatPrice(terrain.price) }}</p>
                                             </div>
                                             <div>
-                                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Status</p>
-                                                <p class="text-base font-medium text-gray-900 dark:text-white">
+                                                <p class="text-xs font-medium text-muted-foreground">Status</p>
+                                                <p class="text-base font-medium text-foreground">
                                                     {{ terrain.viabilised ? 'Viabilised' : 'Not Viabilised' }}
                                                 </p>
                                             </div>
@@ -413,23 +413,23 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                                         <div v-if="terrain.analysis" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
                                             <div>
-                                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Viability Cost</p>
-                                                <p class="text-base font-medium text-gray-900 dark:text-white">
+                                                <p class="text-xs font-medium text-muted-foreground">Viability Cost</p>
+                                                <p class="text-base font-medium text-foreground">
                                                     {{ formatPrice(terrain.analysis.viability_cost) }}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Estimated Profit</p>
-                                                <p class="text-base font-medium text-gray-900 dark:text-white">
+                                                <p class="text-xs font-medium text-muted-foreground">Estimated Profit</p>
+                                                <p class="text-base font-medium text-foreground">
                                                     {{ formatPrice(terrain.analysis.net_margin_estimate) }}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">AI Score</p>
+                                                <p class="text-xs font-medium text-muted-foreground">AI Score</p>
                                                 <div class="flex items-center">
-                                                    <span class="text-base font-medium text-gray-900 dark:text-white">{{
-                                                        Number(terrain.analysis.ai_score).toFixed(1)
-                                                    }}</span>
+                                                    <span class="text-base font-medium text-foreground">{{
+                                                            Number(terrain.analysis.ai_score).toFixed(1)
+                                                        }}</span>
                                                     <div class="ml-2 h-1.5 w-16 rounded-full bg-gray-200 dark:bg-gray-700">
                                                         <div
                                                             class="h-1.5 rounded-full"
@@ -451,31 +451,31 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                                         <div class="mt-4">
                                             <div class="flex items-center justify-between">
-                                                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Notes for this project</p>
+                                                <p class="text-sm font-medium text-muted-foreground">Notes for this project</p>
                                                 <div class="flex space-x-2">
                                                     <Button
                                                         v-if="!editingNotes[terrain.id]"
                                                         @click="startEditingNotes(terrain.id)"
-                                                        variant="ghost"
+                                                        variant="outline"
                                                         size="sm"
-                                                        class="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                                        class="text-foreground hover:text-foreground/90"
                                                     >
                                                         Edit
                                                     </Button>
                                                     <div v-else class="flex space-x-2">
                                                         <Button
                                                             @click="saveNotes(terrain.id)"
-                                                            variant="ghost"
+                                                            variant="outline"
                                                             size="sm"
-                                                            class="text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400"
+                                                            class="text-foreground hover:text-foreground/90"
                                                         >
                                                             Save
                                                         </Button>
                                                         <Button
                                                             @click="cancelEditingNotes(terrain.id)"
-                                                            variant="ghost"
+                                                            variant="outline"
                                                             size="sm"
-                                                            class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400"
+                                                            class="text-destructive hover:text-destructive/90"
                                                         >
                                                             Cancel
                                                         </Button>
@@ -483,10 +483,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                                                 </div>
                                             </div>
                                             <div v-if="!editingNotes[terrain.id]" class="mt-1">
-                                                <p v-if="terrain.pivot.notes" class="text-base text-gray-900 dark:text-white">
+                                                <p v-if="terrain.pivot.notes" class="text-base text-foreground">
                                                     {{ terrain.pivot.notes }}
                                                 </p>
-                                                <p v-else class="text-base text-gray-500 italic dark:text-gray-600">
+                                                <p v-else class="text-base text-muted-foreground italic">
                                                     No notes for this terrain in this project
                                                 </p>
                                             </div>
@@ -494,7 +494,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                                 <Textarea
                                                     v-model="terrainNotes[terrain.id]"
                                                     rows="3"
-                                                    class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                                     placeholder="Add notes about this terrain in the project"
                                                 ></Textarea>
                                             </div>
@@ -505,7 +505,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                         <Link :href="route('terrains.show', terrain.id)">
                                             <Button
                                                 variant="outline"
-                                                class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                                                class="border-border text-foreground hover:text-foreground/90"
                                             >
                                                 View Terrain
                                             </Button>
@@ -522,14 +522,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </ul>
                     </div>
 
-                    <div v-else class="flex flex-col items-center justify-center border-t border-gray-200 p-16 text-center dark:border-gray-800">
-                        <Blocks class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" />
-                        <h3 class="mt-4 text-lg font-semibold text-gray-900 dark:text-white">No terrains in this project</h3>
-                        <p class="mt-2 text-base text-gray-600 dark:text-gray-400">Get started by adding a terrain to this project.</p>
+                    <div v-else class="flex flex-col items-center justify-center border-t border-border p-16 text-center">
+                        <Blocks class="mx-auto h-16 w-16 text-muted-foreground" />
+                        <h3 class="mt-4 text-lg font-semibold text-foreground">No terrains in this project</h3>
+                        <p class="mt-2 text-base text-muted-foreground">Get started by adding a terrain to this project.</p>
                         <div class="mt-8">
                             <Link :href="route('projects.terrains.add', project.id)">
                                 <Button
-                                    class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                                    class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                                 >
                                     <PlusCircle class="mr-2 h-4 w-4" /> Add Terrain
                                 </Button>

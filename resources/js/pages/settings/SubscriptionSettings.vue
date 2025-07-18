@@ -128,8 +128,8 @@ const formatPrice = (price: number | null) => {
 
 const featureIcon = (hasFeature: boolean) => {
     return hasFeature
-        ? '<span class="text-green-500 mr-2">&#10003;</span>' // Checkmark
-        : '<span class="text-red-500 mr-2">&#10008;</span>'; // Cross
+        ? '<span class="text-primary mr-2">&#10003;</span>' // Checkmark
+        : '<span class="text-destructive mr-2">&#10008;</span>'; // Cross
 };
 </script>
 
@@ -139,25 +139,25 @@ const featureIcon = (hasFeature: boolean) => {
             <div class="space-y-6">
                 <HeadingSmall title="Subscription settings" description="Update your subscription" />
 
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6 lg:p-8">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                <div class="bg-card overflow-hidden shadow-xl sm:rounded-lg p-6 lg:p-8">
+                    <h3 class="text-lg font-medium text-foreground mb-4">
                         Statut de l'abonnement
                     </h3>
 
                     <div v-if="subscription">
-                        <p class="text-gray-600 dark:text-gray-400 mb-2">
+                        <p class="text-muted-foreground mb-2">
                             Votre abonnement actuel : <span class="font-bold">{{ subscription.plan.name }}</span>
                         </p>
-                        <p class="text-gray-600 dark:text-gray-400 mb-2">
+                        <p class="text-muted-foreground mb-2">
                             Prix mensuel : <span class="font-bold">{{ formatPrice(Number(subscription.plan.price_monthly)) }}</span>
                         </p>
-                        <p class="text-gray-600 dark:text-gray-400 mb-2">
+                        <p class="text-muted-foreground mb-2">
                             Statut : <span class="font-bold">{{ subscription.stripe_status }}</span>
                         </p>
 
                         <div class="mt-4">
-                            <h4 class="text-md font-medium text-gray-900 dark:text-gray-100 mb-2">Fonctionnalités incluses :</h4>
-                            <ul class="text-gray-600 dark:text-gray-400 space-y-1">
+                            <h4 class="text-md font-medium text-foreground mb-2">Fonctionnalités incluses :</h4>
+                            <ul class="text-muted-foreground space-y-1">
                                 <li v-html="featureIcon(true) + 'Analyses par semaine\u00A0: ' + (subscription.plan.analyses_per_week === 0 ? 'Illimité' : subscription.plan.analyses_per_week)"></li>
                                 <li v-html="featureIcon(subscription.plan.pdf_pro) + 'PDF Pro'"></li>
                                 <li v-html="featureIcon(subscription.plan.comparator) + 'Comparateur'"></li>
@@ -170,13 +170,13 @@ const featureIcon = (hasFeature: boolean) => {
                         </div>
 
 
-                        <div v-if="subscription.on_grace_period" class="mt-4 p-3 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 rounded-md">
+                        <div v-if="subscription.on_grace_period" class="mt-4 p-3 bg-accent/20 text-accent-foreground rounded-md">
                             Votre abonnement est actuellement annulé mais reste actif jusqu'au {{ subscription.ends_at }}.
                         </div>
-                        <div v-else-if="subscription.stripe_status === 'canceled'" class="mt-4 p-3 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded-md">
+                        <div v-else-if="subscription.stripe_status === 'canceled'" class="mt-4 p-3 bg-destructive/20 text-destructive-foreground rounded-md">
                             Votre abonnement est actuellement inactif.
                         </div>
-                        <div v-else-if="subscription.stripe_status === 'active'" class="mt-4 p-3 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-md">
+                        <div v-else-if="subscription.stripe_status === 'active'" class="mt-4 p-3 bg-primary/20 text-primary-foreground rounded-md">
                             Votre abonnement est actif.
                         </div>
 
@@ -187,7 +187,7 @@ const featureIcon = (hasFeature: boolean) => {
                                 method="post"
                                 :class="{'opacity-25': processingResume}"
                                 :disabled="processingResume"
-                                class="cursor-pointer inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                                class="cursor-pointer inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-primary-foreground uppercase tracking-widest hover:bg-primary/90 focus:bg-primary/90 active:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition ease-in-out duration-150"
                             >
                                 <span v-if="!processingResume">Reprendre mon abonnement</span>
                                 <span v-else>Chargement...</span>
@@ -198,7 +198,7 @@ const featureIcon = (hasFeature: boolean) => {
                             </Button>
 
                             <a :href="route('billing-portal')" target="_top"
-                               class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-800 uppercase tracking-widest hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition ease-in-out duration-150">
+                               class="inline-flex items-center px-4 py-2 bg-secondary border border-transparent rounded-md font-semibold text-xs text-secondary-foreground uppercase tracking-widest hover:bg-secondary/90 focus:bg-secondary/90 active:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition ease-in-out duration-150">
                                 Accéder au portail de facturation
                             </a>
 
@@ -213,32 +213,32 @@ const featureIcon = (hasFeature: boolean) => {
                         </div>
                     </div>
                     <div v-else>
-                        <p class="text-gray-600 dark:text-gray-400">
+                        <p class="text-muted-foreground">
                             Vous n'avez pas d'abonnement actif pour le moment.
                         </p>
                         <Link :href="route('pricing.index')"
-                              class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                              class="mt-4 inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-primary-foreground uppercase tracking-widest hover:bg-primary/90 focus:bg-primary/90 active:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition ease-in-out duration-150">
                             Voir nos offres
                         </Link>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6 lg:p-8 mt-8">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                <div class="bg-card overflow-hidden shadow-xl sm:rounded-lg p-6 lg:p-8 mt-8">
+                    <h3 class="text-lg font-medium text-foreground mb-4">
                         Mes factures
                     </h3>
 
                     <div v-if="invoices.length > 0" class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
+                        <table class="min-w-full divide-y divide-border">
+                            <thead class="bg-muted">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                     Date
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                     Total
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                     Statut
                                 </th>
                                 <th scope="col" class="relative px-6 py-3">
@@ -246,36 +246,36 @@ const featureIcon = (hasFeature: boolean) => {
                                 </th>
                             </tr>
                             </thead>
-                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tbody class="bg-card divide-y divide-border">
                             <tr v-for="invoice in invoices" :key="invoice.id">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 dark:text-gray-100">{{ invoice.date }}</div>
+                                    <div class="text-sm text-foreground">{{ invoice.date }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 dark:text-gray-100">{{ invoice.total }}</div>
+                                    <div class="text-sm text-foreground">{{ invoice.total }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                         <span :class="[
                                             'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                                            invoice.status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : '',
-                                            invoice.status === 'open' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' : '',
-                                            invoice.status === 'void' ? 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100' : '',
+                                            invoice.status === 'paid' ? 'bg-primary text-primary-foreground' : '',
+                                            invoice.status === 'open' ? 'bg-accent text-accent-foreground' : '',
+                                            invoice.status === 'void' ? 'bg-destructive text-destructive-foreground' : '',
                                         ]">
                                             {{ invoice.status }}
                                         </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a v-if="isInvoiceDownloadable(invoice)" :href="route('invoices.download', invoice.id)" target="_blank" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-600">
+                                    <a v-if="isInvoiceDownloadable(invoice)" :href="route('invoices.download', invoice.id)" target="_blank" class="text-primary hover:text-primary/90">
                                         Télécharger
                                     </a>
-                                    <span v-else class="text-gray-400 dark:text-gray-600">Non disponible</span>
+                                    <span v-else class="text-muted-foreground">Non disponible</span>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <div v-else>
-                        <p class="text-gray-600 dark:text-gray-400">
+                        <p class="text-muted-foreground">
                             Aucune facture trouvée pour le moment.
                         </p>
                     </div>
@@ -285,9 +285,9 @@ const featureIcon = (hasFeature: boolean) => {
     </AuthenticatedLayout>
 
     <Modal :show="showCancelConfirmationModal" @close="showCancelConfirmationModal = false">
-        <div class="p-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirmer l'annulation de l'abonnement</h3>
-            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+        <div class="p-6 bg-card rounded-lg">
+            <h3 class="text-lg font-medium text-foreground">Confirmer l'annulation de l'abonnement</h3>
+            <p class="mt-4 text-sm text-muted-foreground">
                 Êtes-vous sûr de vouloir annuler votre abonnement ? Votre abonnement restera actif jusqu'à la fin de la période de facturation actuelle (le <span class="font-bold">{{ subscription?.ends_at }}</span>) et ne sera pas renouvelé automatiquement. Vous pouvez le reprendre à tout moment avant cette date.
             </p>
             <div class="mt-6 flex justify-end">
@@ -301,29 +301,29 @@ const featureIcon = (hasFeature: boolean) => {
     </Modal>
 
     <Modal :show="showSwapPlanModal" @close="showSwapPlanModal = false" :closeable="true" maxWidth="4xl">
-        <div class="p-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Changer de plan</h3>
-            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+        <div class="p-6 bg-card rounded-lg">
+            <h3 class="text-lg font-medium text-foreground">Changer de plan</h3>
+            <p class="mt-4 text-sm text-muted-foreground">
                 Sélectionnez le nouveau plan auquel vous souhaitez souscrire.
             </p>
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="plan in plans" :key="plan.id"
                      :class="[
-                         'border rounded-lg p-4 cursor-pointer flex flex-col',
-                         {'border-indigo-600 ring-2 ring-indigo-500': swapForm.new_plan_id === plan.id},
-                         {'dark:border-gray-700': swapForm.new_plan_id !== plan.id},
+                         'border rounded-lg p-4 cursor-pointer flex flex-col bg-background', /* Added bg-background for plan card */
+                         {'border-primary ring-2 ring-primary': swapForm.new_plan_id === plan.id}, /* Active plan border/ring */
+                         {'border-border': swapForm.new_plan_id !== plan.id}, /* Inactive plan border */
                          'hover:shadow-lg transition-shadow duration-200'
                      ]"
                      @click="swapForm.new_plan_id = plan.id"
                 >
                     <div class="flex items-center mb-3">
-                        <input type="radio" :id="'plan-' + plan.id" :value="plan.id" v-model="swapForm.new_plan_id" class="form-radio text-indigo-600 h-4 w-4">
-                        <label :for="'plan-' + plan.id" class="ml-3 text-lg font-semibold text-gray-900 dark:text-gray-100">{{ plan.name }}</label>
+                        <input type="radio" :id="'plan-' + plan.id" :value="plan.id" v-model="swapForm.new_plan_id" class="form-radio text-primary h-4 w-4">
+                        <label :for="'plan-' + plan.id" class="ml-3 text-lg font-semibold text-foreground">{{ plan.name }}</label>
                     </div>
-                    <p class="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">{{ formatPrice(Number(plan.price_monthly)) }}</p>
-                    <p class="text-gray-500 dark:text-gray-300 text-sm mt-2 flex-grow">{{ plan.description }}</p>
-                    <ul class="text-gray-600 dark:text-gray-400 text-sm mt-3 space-y-1">
+                    <p class="text-muted-foreground text-base font-medium mt-1">{{ formatPrice(Number(plan.price_monthly)) }}</p>
+                    <p class="text-muted-foreground text-sm mt-2 flex-grow">{{ plan.description }}</p>
+                    <ul class="text-muted-foreground text-sm mt-3 space-y-1">
                         <li v-html="featureIcon(true) + 'Analyses par semaine\u00A0: ' + (plan.analyses_per_week === 0 ? 'Illimité' : plan.analyses_per_week)"></li>
                         <li v-html="featureIcon(plan.pdf_pro) + 'PDF Pro'"></li>
                         <li v-html="featureIcon(plan.comparator) + 'Comparateur'"></li>
@@ -336,7 +336,7 @@ const featureIcon = (hasFeature: boolean) => {
                 </div>
             </div>
 
-            <div v-if="swapForm.errors.new_plan_id" class="mt-4 text-sm text-red-600 dark:text-red-400">
+            <div v-if="swapForm.errors.new_plan_id" class="mt-4 text-sm text-destructive">
                 {{ swapForm.errors.new_plan_id }}
             </div>
 

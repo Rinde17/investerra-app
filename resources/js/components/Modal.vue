@@ -21,11 +21,8 @@ watch(
 );
 
 const close = () => {
-    // CORRECTION 2 : S'assurer que `closeable` a une valeur par défaut de true si non défini
-    // Ou, si tu veux qu'il soit par défaut non-closeable, laisse le `if` et assure-toi de passer `closeable=true` explicitement
-    // quand tu veux qu'il soit fermable. Pour l'instant, je vais le rendre par défaut fermable dans le composant appelant.
-    // Pour ce composant Modal, on part du principe que `closeable` est bien passé.
-    if (props.closeable === undefined || props.closeable) { // rend closeable par défaut si non spécifié
+    // This ensures the modal is closeable by default if the prop is not explicitly set to false
+    if (props.closeable === undefined || props.closeable) {
         emit('close');
     }
 };
@@ -72,7 +69,7 @@ const handleEscape = (e: KeyboardEvent) => {
                 >
                     <div
                         v-show="show"
-                        class="fixed inset-0 bg-gray-500/75 dark:bg-gray-900/75 transition-opacity"
+                        class="fixed inset-0 bg-black/70 transition-opacity"
                         @click="close"
                     />
                 </Transition>
@@ -87,7 +84,7 @@ const handleEscape = (e: KeyboardEvent) => {
                 >
                     <div
                         v-show="show"
-                        class="mb-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full p-4 md:p-6 relative z-[51]" :class="maxWidthClass"
+                        class="mb-6 bg-card rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full p-4 md:p-6 relative z-[51]" :class="maxWidthClass"
                     >
                         <slot />
                     </div>

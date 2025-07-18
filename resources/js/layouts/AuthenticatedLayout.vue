@@ -16,8 +16,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 
-// Use props to pass title to a Head component
-const pageTitle = computed(() => props.title || 'Investerra');
+// Use props to pass the title to a Head component
+const pageTitle = computed(() => props.title || 'LandAnalysis');
 </script>
 
 <template>
@@ -28,9 +28,9 @@ const pageTitle = computed(() => props.title || 'Investerra');
     </Head>
 
     <!-- Authenticated Layout with Sidebar -->
-    <div class="min-h-screen bg-gradient-to-br from-[#f8f8f8] via-[#f0f0f0] to-[#f8f8f8] dark:from-[#0a0a0a] dark:via-[#100c1c] dark:to-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC]">
+    <div class="min-h-screen bg-background text-foreground">
         <!-- Dot pattern background -->
-        <div class="absolute inset-0 z-0 opacity-10" style="background-image: radial-gradient(#202020 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <div class="absolute inset-0 z-0 opacity-10" :style="{ 'background-image': `radial-gradient(var(--border) 1px, transparent 1px)`, 'background-size': '40px 40px' }"></div>
 
         <!-- Main Layout with Sidebar -->
         <AppSidebarLayout :breadcrumbs="breadcrumbs">

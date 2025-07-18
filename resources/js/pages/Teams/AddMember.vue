@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InputError from '@/components/InputError.vue'; // Assuming this is a custom component for errors
+import { Button } from '@/components/ui/button'; // Import shadcn Button
+import { Input } from '@/components/ui/input'; // Import shadcn Input
+import { Label } from '@/components/ui/label'; // Import shadcn Label
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Link, useForm } from '@inertiajs/vue3';
@@ -50,47 +50,47 @@ const submit = () => {
             <!-- Increased padding -->
             <div class="mb-8">
                 <!-- Increased margin-bottom -->
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Add Team Member</h1>
+                <h1 class="text-3xl font-bold text-foreground">Add Team Member</h1>
                 <!-- Larger title -->
-                <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                <p class="mt-2 text-base text-muted-foreground">
                     <!-- Adjusted size and color -->
                     Add a new member to your team "{{ props.team.name }}".
                 </p>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+            <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                 <!-- Consistent card styling -->
                 <form @submit.prevent="submit" class="p-8">
                     <!-- Increased padding -->
                     <div class="mb-6 grid gap-4">
                         <!-- Consistent grid gap -->
-                        <Label for="email" class="text-gray-700 dark:text-gray-200">
+                        <Label for="email" class="text-foreground">
                             <!-- Consistent label color -->
-                            Email Address <span class="text-red-500">*</span>
+                            Email Address <span class="text-destructive">*</span>
                         </Label>
                         <Input
                             id="email"
                             v-model="form.email"
                             type="email"
-                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                            class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                             required
                             placeholder="Enter email address"
                         />
                         <InputError :message="form.errors.email" />
-                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">The user must already be registered in the system.</p>
+                        <p class="mt-2 text-sm text-muted-foreground">The user must already be registered in the system.</p>
                     </div>
 
                     <div class="mb-6 grid gap-4">
                         <!-- Consistent grid gap -->
-                        <Label for="role" class="text-gray-700 dark:text-gray-200">
+                        <Label for="role" class="text-foreground">
                             <!-- Consistent label color -->
-                            Role <span class="text-red-500">*</span>
+                            Role <span class="text-destructive">*</span>
                         </Label>
                         <!-- Using native select with updated styling for consistency -->
                         <select
                             id="role"
                             v-model="form.role"
-                            class="block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-2 text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                            class="block w-full rounded-md border border-border bg-input px-4 py-2 text-foreground shadow-sm focus:border-primary focus:ring-primary focus:outline-none"
                             required
                         >
                             <option value="member">Member</option>
@@ -109,12 +109,12 @@ const submit = () => {
                                         type="radio"
                                         value="member"
                                         v-model="form.role"
-                                        class="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900"
+                                        class="h-4 w-4 rounded-full border-border text-primary focus:ring-primary dark:checked:bg-primary dark:focus:ring-offset-background"
                                     />
                                 </div>
                                 <div class="ml-3">
-                                    <label for="role-member" class="text-base font-medium text-gray-900 dark:text-white">Member</label>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    <label for="role-member" class="text-base font-medium text-foreground">Member</label>
+                                    <p class="text-sm text-muted-foreground">
                                         Can view and create projects, but cannot add or remove team members.
                                     </p>
                                 </div>
@@ -127,12 +127,12 @@ const submit = () => {
                                         type="radio"
                                         value="admin"
                                         v-model="form.role"
-                                        class="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900"
+                                        class="h-4 w-4 rounded-full border-border text-primary focus:ring-primary dark:checked:bg-primary dark:focus:ring-offset-background"
                                     />
                                 </div>
                                 <div class="ml-3">
-                                    <label for="role-admin" class="text-base font-medium text-gray-900 dark:text-white">Admin</label>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Can add and remove team members, and manage team settings.</p>
+                                    <label for="role-admin" class="text-base font-medium text-foreground">Admin</label>
+                                    <p class="text-sm text-muted-foreground">Can add and remove team members, and manage team settings.</p>
                                 </div>
                             </div>
                         </div>
@@ -143,14 +143,14 @@ const submit = () => {
                         <Link :href="route('teams.show', { team: props.team.id })">
                             <Button
                                 variant="outline"
-                                class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                                class="border-border text-foreground hover:bg-muted"
                             >
                                 Cancel
                             </Button>
                         </Link>
                         <Button
                             type="submit"
-                            class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                            class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                             :disabled="form.processing"
                         >
                             <span v-if="form.processing">Adding...</span>

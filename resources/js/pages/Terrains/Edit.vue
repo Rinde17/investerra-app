@@ -77,46 +77,48 @@ const submit = () => {
     <AuthenticatedLayout title="Edit Terrain" :breadcrumbs="breadcrumbs">
         <div class="mx-auto max-w-4xl p-6 lg:p-8">
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Terrain</h1>
-                <p class="mt-2 text-base text-gray-600 dark:text-gray-400">Update the details of this terrain.</p>
+                <h1 class="text-3xl font-bold text-foreground">Edit Terrain</h1>
+                <p class="mt-2 text-base text-muted-foreground">Update the details of this terrain.</p>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+            <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                 <form @submit.prevent="submit" class="p-8">
                     <div class="mb-8">
-                        <h2 class="mb-5 text-xl font-semibold text-gray-900 dark:text-white">Basic Information</h2>
+                        <h2 class="mb-5 text-xl font-semibold text-foreground">Basic Information</h2>
                         <div class="grid gap-6 md:grid-cols-2">
                             <div class="md:col-span-2">
-                                <Label for="title" class="mb-2"> Title <span class="text-red-500">*</span> </Label>
+                                <Label for="title" class="mb-2 text-foreground"> Title <span class="text-destructive">*</span> </Label>
                                 <Input
                                     id="title"
                                     v-model="form.title"
                                     type="text"
                                     required
                                     placeholder="Enter terrain title"
-                                    :class="{ 'border-red-500': form.errors.title }"
+                                    :class="{ 'border-destructive': form.errors.title }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.title" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.title" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.title }}
                                 </div>
                             </div>
 
                             <div class="md:col-span-2">
-                                <Label for="description" class="mb-2"> Description </Label>
+                                <Label for="description" class="mb-2 text-foreground"> Description </Label>
                                 <Textarea
                                     id="description"
                                     v-model="form.description"
                                     rows="3"
                                     placeholder="Describe the terrain"
-                                    :class="{ 'border-red-500': form.errors.description }"
+                                    :class="{ 'border-destructive': form.errors.description }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 ></Textarea>
-                                <div v-if="form.errors.description" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.description" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.description }}
                                 </div>
                             </div>
 
                             <div>
-                                <Label for="surface_m2" class="mb-2"> Surface (m²) <span class="text-red-500">*</span> </Label>
+                                <Label for="surface_m2" class="mb-2 text-foreground"> Surface (m²) <span class="text-destructive">*</span> </Label>
                                 <Input
                                     id="surface_m2"
                                     v-model="form.surface_m2"
@@ -125,15 +127,16 @@ const submit = () => {
                                     step="0.01"
                                     required
                                     placeholder="Enter surface area"
-                                    :class="{ 'border-red-500': form.errors.surface_m2 }"
+                                    :class="{ 'border-destructive': form.errors.surface_m2 }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.surface_m2" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.surface_m2" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.surface_m2 }}
                                 </div>
                             </div>
 
                             <div>
-                                <Label for="price" class="mb-2"> Price (€) <span class="text-red-500">*</span> </Label>
+                                <Label for="price" class="mb-2 text-foreground"> Price (€) <span class="text-destructive">*</span> </Label>
                                 <Input
                                     id="price"
                                     v-model="form.price"
@@ -142,39 +145,42 @@ const submit = () => {
                                     step="0.01"
                                     required
                                     placeholder="Enter price"
-                                    :class="{ 'border-red-500': form.errors.price }"
+                                    :class="{ 'border-destructive': form.errors.price }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.price" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.price" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.price }}
                                 </div>
                             </div>
 
                             <div>
-                                <Label for="city" class="mb-2"> City <span class="text-red-500">*</span> </Label>
+                                <Label for="city" class="mb-2 text-foreground"> City <span class="text-destructive">*</span> </Label>
                                 <Input
                                     id="city"
                                     v-model="form.city"
                                     type="text"
                                     required
                                     placeholder="Enter city"
-                                    :class="{ 'border-red-500': form.errors.city }"
+                                    :class="{ 'border-destructive': form.errors.city }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.city" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.city" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.city }}
                                 </div>
                             </div>
 
                             <div>
-                                <Label for="zip_code" class="mb-2"> ZIP Code <span class="text-red-500">*</span> </Label>
+                                <Label for="zip_code" class="mb-2 text-foreground"> ZIP Code <span class="text-destructive">*</span> </Label>
                                 <Input
                                     id="zip_code"
                                     v-model="form.zip_code"
                                     type="text"
                                     required
                                     placeholder="Enter ZIP code"
-                                    :class="{ 'border-red-500': form.errors.zip_code }"
+                                    :class="{ 'border-destructive': form.errors.zip_code }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.zip_code" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.zip_code" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.zip_code }}
                                 </div>
                             </div>
@@ -185,13 +191,13 @@ const submit = () => {
                                         id="viabilised"
                                         v-model="form.viabilised"
                                         type="checkbox"
-                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-indigo-500"
+                                        class="h-4 w-4 rounded border-border text-primary focus:ring-primary dark:checked:bg-primary"
                                     />
-                                    <Label for="viabilised" class="!mb-0 ml-2 text-sm">
+                                    <Label for="viabilised" class="!mb-0 ml-2 text-sm text-foreground">
                                         This terrain is already viabilised (has utilities and access)
                                     </Label>
                                 </div>
-                                <div v-if="form.errors.viabilised" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.viabilised" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.viabilised }}
                                 </div>
                             </div>
@@ -199,34 +205,36 @@ const submit = () => {
                     </div>
 
                     <div class="mb-8">
-                        <h2 class="mb-5 text-xl font-semibold text-gray-900 dark:text-white">Location (Optional)</h2>
+                        <h2 class="mb-5 text-xl font-semibold text-foreground">Location (Optional)</h2>
                         <div class="grid gap-6 md:grid-cols-2">
                             <div>
-                                <Label for="latitude" class="mb-2"> Latitude </Label>
+                                <Label for="latitude" class="mb-2 text-foreground"> Latitude </Label>
                                 <Input
                                     id="latitude"
                                     v-model="form.latitude"
                                     type="number"
                                     step="0.00000001"
                                     placeholder="Enter latitude"
-                                    :class="{ 'border-red-500': form.errors.latitude }"
+                                    :class="{ 'border-destructive': form.errors.latitude }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.latitude" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.latitude" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.latitude }}
                                 </div>
                             </div>
 
                             <div>
-                                <Label for="longitude" class="mb-2"> Longitude </Label>
+                                <Label for="longitude" class="mb-2 text-foreground"> Longitude </Label>
                                 <Input
                                     id="longitude"
                                     v-model="form.longitude"
                                     type="number"
                                     step="0.00000001"
                                     placeholder="Enter longitude"
-                                    :class="{ 'border-red-500': form.errors.longitude }"
+                                    :class="{ 'border-destructive': form.errors.longitude }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.longitude" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.longitude" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.longitude }}
                                 </div>
                             </div>
@@ -234,30 +242,31 @@ const submit = () => {
                     </div>
 
                     <div class="mb-8">
-                        <h2 class="mb-5 text-xl font-semibold text-gray-900 dark:text-white">Source Information (Optional)</h2>
+                        <h2 class="mb-5 text-xl font-semibold text-foreground">Source Information (Optional)</h2>
                         <div class="grid gap-6 md:grid-cols-2">
                             <div>
-                                <Label for="source_url" class="mb-2"> Source URL </Label>
+                                <Label for="source_url" class="mb-2 text-foreground"> Source URL </Label>
                                 <Input
                                     id="source_url"
                                     v-model="form.source_url"
                                     type="url"
                                     placeholder="https://example.com/terrain-listing"
-                                    :class="{ 'border-red-500': form.errors.source_url }"
+                                    :class="{ 'border-destructive': form.errors.source_url }"
+                                    class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                                 />
-                                <div v-if="form.errors.source_url" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.source_url" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.source_url }}
                                 </div>
                             </div>
 
                             <div>
-                                <Label for="source_platform" class="mb-2"> Source Platform </Label>
+                                <Label for="source_platform" class="mb-2 text-foreground"> Source Platform </Label>
                                 <div class="relative">
                                     <select
                                         id="source_platform"
                                         v-model="form.source_platform"
-                                        class="block w-full appearance-none rounded-md border border-gray-300 bg-background px-3 py-2 pr-8 text-sm ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:focus:ring-offset-gray-900"
-                                        :class="{ 'border-red-500': form.errors.source_platform }"
+                                        class="block w-full appearance-none rounded-md border border-border bg-input px-3 py-2 pr-8 text-sm ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        :class="{ 'border-destructive': form.errors.source_platform }"
                                     >
                                         <option value="">Select a platform</option>
                                         <option value="Leboncoin">Leboncoin</option>
@@ -268,7 +277,7 @@ const submit = () => {
                                         <option value="Other">Other</option>
                                     </select>
                                     <svg
-                                        class="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400"
+                                        class="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 24 24"
                                         fill="none"
@@ -280,18 +289,18 @@ const submit = () => {
                                         <polyline points="6 9 12 15 18 9"></polyline>
                                     </svg>
                                 </div>
-                                <div v-if="form.errors.source_platform" class="mt-2 text-sm text-red-500">
+                                <div v-if="form.errors.source_platform" class="mt-2 text-sm text-destructive">
                                     {{ form.errors.source_platform }}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-800">
+                    <div class="flex items-center justify-end gap-3 border-t border-border pt-6">
                         <Link :href="route('terrains.show', { terrain: props.terrain.id })">
-                            <Button type="button" variant="outline"> Cancel </Button>
+                            <Button type="button" variant="outline" class="border-border text-foreground hover:bg-muted"> Cancel </Button>
                         </Link>
-                        <Button type="submit" :disabled="form.processing || !form.isDirty">
+                        <Button type="submit" :disabled="form.processing || !form.isDirty" class="bg-primary text-primary-foreground hover:bg-primary/90">
                             <span v-if="form.processing">Saving...</span>
                             <span v-else>Save Changes</span>
                         </Button>

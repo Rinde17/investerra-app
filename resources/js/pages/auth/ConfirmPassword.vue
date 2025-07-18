@@ -27,14 +27,13 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div class="space-y-6">
                 <div class="grid gap-2">
-                    <Label htmlFor="password" class="text-gray-700 dark:text-gray-200">Mot de passe</Label>
+                    <Label htmlFor="password" class="text-foreground">Mot de passe</Label>
                     <Input
                         id="password"
                         type="password"
-                        class="block w-full bg-gray-50 border-gray-300 text-gray-800
-                               dark:bg-gray-800 dark:border-gray-700 dark:text-white
-                               focus:border-indigo-500 focus:ring-indigo-500
-                               placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                        class="block w-full bg-input border-border text-foreground
+                               focus:border-primary focus:ring-primary
+                               placeholder:text-muted-foreground"
                         v-model="form.password"
                         required
                         autocomplete="current-password"
@@ -45,9 +44,8 @@ const submit = () => {
                 </div>
 
                 <div class="flex items-center">
-                    <Button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white
-                                          dark:bg-indigo-700 dark:hover:bg-indigo-600
-                                          active:bg-indigo-800 dark:active:bg-indigo-800"
+                    <Button type="submit" class="w-full bg-primary hover:bg-primary/90 text-primary-foreground
+                                          active:bg-primary/80"
                             :disabled="form.processing">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin mr-2" />
                         Confirmer le mot de passe

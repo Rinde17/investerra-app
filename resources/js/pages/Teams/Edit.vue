@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import InputError from '@/components/InputError.vue'; // Assuming this is a custom component for errors
+import { Button } from '@/components/ui/button'; // Import shadcn Button
+import { Input } from '@/components/ui/input'; // Import shadcn Input
+import { Label } from '@/components/ui/label'; // Import shadcn Label
+import { Textarea } from '@/components/ui/textarea'; // Assuming shadcn Textarea
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Link, useForm } from '@inertiajs/vue3';
@@ -48,19 +48,19 @@ const submit = () => {
     <AuthenticatedLayout title="Edit Team" :breadcrumbs="breadcrumbs">
         <div class="mx-auto w-xl max-w-3xl p-6">
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Team</h1>
-                <p class="mt-2 text-base text-gray-600 dark:text-gray-400">Update your team's information.</p>
+                <h1 class="text-3xl font-bold text-foreground">Edit Team</h1>
+                <p class="mt-2 text-base text-muted-foreground">Update your team's information.</p>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+            <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                 <form @submit.prevent="submit" class="p-8">
                     <div class="mb-6 grid gap-4">
-                        <Label for="name" class="text-gray-700 dark:text-gray-200"> Team Name <span class="text-red-500">*</span> </Label>
+                        <Label for="name" class="text-foreground"> Team Name <span class="text-destructive">*</span> </Label>
                         <Input
                             id="name"
                             v-model="form.name"
                             type="text"
-                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                            class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                             required
                             placeholder="Enter team name"
                         />
@@ -68,12 +68,12 @@ const submit = () => {
                     </div>
 
                     <div class="mb-6 grid gap-4">
-                        <Label for="description" class="text-gray-700 dark:text-gray-200"> Description </Label>
+                        <Label for="description" class="text-foreground"> Description </Label>
                         <Textarea
                             id="description"
                             v-model="form.description"
                             rows="4"
-                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                            class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                             placeholder="Describe the purpose of this team"
                         ></Textarea>
                         <InputError :message="form.errors.description" />
@@ -83,14 +83,14 @@ const submit = () => {
                         <Link :href="route('teams.show', { team: props.team.id })">
                             <Button
                                 variant="outline"
-                                class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                                class="border-border text-foreground hover:bg-muted"
                             >
                                 Cancel
                             </Button>
                         </Link>
                         <Button
                             type="submit"
-                            class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                            class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                             :disabled="form.processing || !form.isDirty"
                         >
                             <span v-if="form.processing">Saving...</span>

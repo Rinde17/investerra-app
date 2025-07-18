@@ -16,6 +16,6 @@ Hi there,
 View the Team
 </x-mail::button>
 
-Thanks,<br>
-{{ config('app.name') }}
+Cordialement,<br>
+L'équipe {{ config('app.name') }}
 </x-mail::message>

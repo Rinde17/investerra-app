@@ -129,24 +129,24 @@ const breadcrumbs: BreadcrumbItem[] = [
             <!-- Increased overall padding and gap -->
             <!-- Header with Create Project button and search -->
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Projects</h1>
+                <h1 class="text-3xl font-bold text-foreground">Projects</h1>
                 <!-- Larger title -->
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <div class="relative">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <Search class="h-5 w-5 text-gray-400" />
+                            <Search class="h-5 w-5 text-muted-foreground" />
                             <!-- Lucide icon for search -->
                         </div>
                         <Input
                             v-model="searchQuery"
                             type="text"
-                            class="border-gray-300 bg-gray-50 pl-10 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                            class="border-border bg-input pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                             placeholder="Search projects..."
                         />
                     </div>
                     <Link :href="route('projects.create')">
                         <Button
-                            class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                            class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                         >
                             Create New Project
                         </Button>
@@ -164,8 +164,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                         variant="outline"
                         :class="[
                             sortBy === field
-                                ? 'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300'
-                                : 'border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800',
+                                ? 'border-primary/20 bg-primary/10 text-primary hover:bg-muted-foreground'
+                                : 'border-border text-foreground hover:bg-muted-foreground',
                             'inline-flex items-center transition-colors duration-200',
                         ]"
                     >
@@ -183,11 +183,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </div>
 
                 <div v-if="teams.length > 0" class="flex items-center">
-                    <Label for="team-filter" class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">Team:</Label>
+                    <Label for="team-filter" class="mr-2 text-sm font-medium text-foreground">Team:</Label>
                     <select
                         id="team-filter"
                         v-model="filterTeam"
-                        class="block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                        class="block w-full rounded-md border border-border bg-input px-3 py-1.5 text-sm text-foreground shadow-sm focus:border-primary focus:ring-primary focus:outline-none"
                     >
                         <option :value="null">All Teams</option>
                         <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
@@ -200,35 +200,35 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <div
                     v-for="project in filteredProjects"
                     :key="project.id"
-                    class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"
+                    class="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-all duration-300 hover:shadow-xl"
                 >
                     <div class="flex flex-1 flex-col p-6">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ project.name }}</h3>
+                            <h3 class="text-xl font-semibold text-foreground">{{ project.name }}</h3>
                             <span
                                 v-if="project.team"
-                                class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-100"
+                                class="rounded-full bg-secondary/80 px-3 py-1 text-xs font-medium text-secondary-foreground"
                             >
                                 {{ project.team.name }}
                             </span>
                         </div>
-                        <p v-if="project.description" class="mt-3 flex-1 text-base text-gray-600 dark:text-gray-400">
+                        <p v-if="project.description" class="mt-3 flex-1 text-base text-muted-foreground">
                             {{ project.description }}
                         </p>
-                        <p v-else class="mt-3 flex-1 text-base text-gray-500 italic dark:text-gray-600">No description provided</p>
+                        <p v-else class="mt-3 flex-1 text-base text-muted-foreground italic">No description provided</p>
                         <div class="mt-4 grid grid-cols-2 gap-4">
                             <div>
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Terrains</p>
-                                <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ project.terrains.length }}</p>
+                                <p class="text-xs font-medium text-muted-foreground">Terrains</p>
+                                <p class="text-lg font-semibold text-foreground">{{ project.terrains.length }}</p>
                             </div>
                             <div>
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Created</p>
-                                <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ formatDate(project.created_at) }}</p>
+                                <p class="text-xs font-medium text-muted-foreground">Created</p>
+                                <p class="text-lg font-semibold text-foreground">{{ formatDate(project.created_at) }}</p>
                             </div>
                         </div>
                         <div v-if="project.terrains.length > 0" class="mt-6">
                             <!-- Increased margin-top -->
-                            <p class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Related Terrains:</p>
+                            <p class="mb-2 text-sm font-medium text-foreground">Related Terrains:</p>
                             <!-- Adjusted text and added margin -->
                             <div class="flex flex-wrap gap-2">
                                 <span
@@ -236,14 +236,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     :key="terrain.id"
                                     :class="[
                                         terrain.analysis && terrain.analysis.profitability_label === 'Excellent'
-                                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
+                                            ? 'bg-primary/20 text-primary-foreground'
                                             : terrain.analysis && terrain.analysis.profitability_label === 'Good'
-                                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+                                              ? 'bg-secondary/20 text-secondary-foreground'
                                               : terrain.analysis && terrain.analysis.profitability_label === 'Average'
-                                                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
+                                                ? 'bg-accent/20 text-accent-foreground'
                                                 : terrain.analysis && terrain.analysis.profitability_label === 'Poor'
-                                                  ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
-                                                  : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100',
+                                                  ? 'bg-destructive/20 text-destructive-foreground'
+                                                  : 'bg-muted/20 text-muted-foreground',
                                         'inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium', // Adjusted padding
                                     ]"
                                 >
@@ -251,23 +251,23 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </span>
                                 <span
                                     v-if="project.terrains.length > 3"
-                                    class="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100"
+                                    class="inline-flex rounded-full bg-muted/20 px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
                                 >
                                     +{{ project.terrains.length - 3 }} more
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950/50">
+                    <div class="flex border-t border-border bg-muted/50">
                         <Link
                             :href="route('projects.show', project.id)"
-                            class="flex flex-1 items-center justify-center p-4 text-base font-medium text-indigo-600 transition-colors duration-200 hover:bg-gray-100 dark:text-indigo-400 dark:hover:bg-gray-800"
+                            class="flex flex-1 items-center justify-center p-4 text-base font-medium text-primary transition-colors duration-200 hover:bg-muted"
                         >
                             View Details
                         </Link>
                         <Link
                             :href="route('projects.edit', project.id)"
-                            class="flex flex-1 items-center justify-center border-l border-gray-200 p-4 text-base font-medium text-indigo-600 transition-colors duration-200 hover:bg-gray-100 dark:border-gray-800 dark:text-indigo-400 dark:hover:bg-gray-800"
+                            class="flex flex-1 items-center justify-center border-l border-border p-4 text-base font-medium text-primary transition-colors duration-200 hover:bg-muted"
                         >
                             Edit
                         </Link>
@@ -277,10 +277,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <!-- Empty state when no projects -->
                 <div
                     v-if="filteredProjects.length === 0"
-                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-16 text-center dark:border-gray-700 dark:bg-gray-900/50"
+                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-16 text-center"
                 >
                     <svg
-                        class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500"
+                        class="mx-auto h-16 w-16 text-muted-foreground"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -293,8 +293,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                             d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
                         />
                     </svg>
-                    <h3 class="mt-4 text-lg font-semibold text-gray-900 dark:text-white">No projects found</h3>
-                    <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                    <h3 class="mt-4 text-lg font-semibold text-foreground">No projects found</h3>
+                    <p class="mt-2 text-base text-muted-foreground">
                         {{
                             searchQuery || filterTeam !== null ? 'No projects match your search criteria.' : 'Get started by creating a new project.'
                         }}
@@ -302,7 +302,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <div class="mt-8">
                         <Link :href="route('projects.create')">
                             <Button
-                                class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                                class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                             >
                                 Create New Project
                             </Button>

@@ -89,7 +89,7 @@
     --background: hsl(36 21% 97%); /* #EEEBE4 */
     --foreground: hsl(168 42% 20%); /* #1E483F */
 
-    --card: hsl(36 26% 89%); /* #DCD4C9 */
+    --card: hsl(36 26% 92%); /* #E5DED3 */
     --card-foreground: hsl(168 42% 20%); /* #1E483F */
 
     --popover: hsl(36 26% 89%); /* #DCD4C9 */
@@ -101,7 +101,7 @@
     --secondary: hsl(156 29% 38%); /* #467C6A */
     --secondary-foreground: hsl(0 0% 100%); /* #FFFFFF */
 
-    --muted: hsl(36 26% 89%); /* #DCD4C9 */
+    --muted: hsl(36 26% 85%); /* #DCD4C9 */
     --muted-foreground: hsl(60 35% 32%); /* #6D6E33 */
 
     --accent: hsl(60 35% 32%); /* #6D6E33 */
@@ -110,8 +110,8 @@
     --destructive: hsl(0 84.2% 60.2%); /* Original destructive color */
     --destructive-foreground: hsl(0 0% 98%); /* Original destructive foreground */
 
-    --border: hsl(36 26% 89%); /* #DCD4C9 */
-    --input: hsl(36 26% 89%); /* #DCD4C9 */
+    --border: hsl(36 15% 70%); /* #B6AFA3 */
+    --input: hsl(36 30% 96%); /* #BFA98A */
     --ring: hsl(168 42% 20%); /* #1E483F */
 
     /* Chart colors (kept original as no new mapping was provided) */
@@ -133,6 +133,18 @@
     --sidebar-border: hsl(36 26% 89%); /* #DCD4C9 */
     --sidebar-ring: hsl(168 42% 20%); /* #1E483F */
     --sidebar: hsl(36 21% 97%); /* #EEEBE4 */
+
+    --toast-success-bg: var(--accent); /* #6D6E33 */
+    --toast-success-text: var(--accent-foreground); /* #FFFFFF */
+
+    --toast-error-bg: var(--destructive); /* rouge */
+    --toast-error-text: var(--destructive-foreground);
+
+    --toast-info-bg: var(--primary); /* #1E483F */
+    --toast-info-text: var(--primary-foreground); /* #FFFFFF */
+
+    --toast-warning-bg: var(--muted); /* #DCD4C9 */
+    --toast-warning-text: var(--muted-foreground); /* #6D6E33 */
 }
 
 .dark {
@@ -140,11 +152,11 @@
     --background: hsl(205 29% 21%); /* #273945 */
     --foreground: hsl(0 0% 88%); /* #E0E0E0 */
 
-    --card: hsl(208 22% 37%); /* #4B6270 */
-    --card-foreground: hsl(0 0% 88%); /* #E0E0E0 */
+    --card: hsl(206 30% 20%); /* #1F2D38 */
+    --card-foreground: hsl(0 0% 98%); /* #E0E0E0 */
 
     --popover: hsl(208 22% 37%); /* #4B6270 */
-    --popover-foreground: hsl(0 0% 88%); /* #E0E0E0 */
+    --popover-foreground: hsl(0 0% 98%); /* #E0E0E0 */
 
     --primary: hsl(160 24% 60%); /* #84B09F */
     --primary-foreground: hsl(205 29% 21%); /* #273945 */
@@ -182,6 +194,18 @@
     --sidebar-border: hsl(208 22% 37%); /* #4B6270 */
     --sidebar-ring: hsl(160 24% 60%); /* #84B09F */
     --sidebar: hsl(205 29% 21%); /* #273945 */
+
+    --toast-success-bg: var(--accent); /* #B6B767 */
+    --toast-success-text: var(--accent-foreground); /* #273945 */
+
+    --toast-error-bg: var(--destructive);
+    --toast-error-text: var(--destructive-foreground);
+
+    --toast-info-bg: var(--primary); /* #84B09F */
+    --toast-info-text: var(--primary-foreground); /* #273945 */
+
+    --toast-warning-bg: var(--muted); /* #4B6270 */
+    --toast-warning-text: var(--muted-foreground); /* #B6B767 */
 }
 
 @layer base {

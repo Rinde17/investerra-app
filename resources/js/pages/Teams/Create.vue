@@ -39,29 +39,29 @@ const submit = () => {
             <!-- Increased padding -->
             <div class="mb-8">
                 <!-- Increased margin-bottom -->
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Create New Team</h1>
+                <h1 class="text-3xl font-bold text-foreground">Create New Team</h1>
                 <!-- Larger title -->
-                <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
+                <p class="mt-2 text-base text-muted-foreground">
                     <!-- Adjusted size and color -->
                     Create a new team to collaborate with your colleagues on investment projects.
                 </p>
             </div>
 
-            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
+            <div class="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
                 <!-- Consistent card styling -->
                 <form @submit.prevent="submit" class="p-8">
                     <!-- Increased padding -->
                     <div class="mb-6 grid gap-4">
                         <!-- Using grid gap for consistency -->
-                        <Label for="name" class="text-gray-700 dark:text-gray-200">
+                        <Label for="name" class="text-foreground">
                             <!-- Consistent label color -->
-                            Team Name <span class="text-red-500">*</span>
+                            Team Name <span class="text-destructive">*</span>
                         </Label>
                         <Input
                             id="name"
                             v-model="form.name"
                             type="text"
-                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                            class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                             required
                             placeholder="Enter team name"
                         />
@@ -71,12 +71,12 @@ const submit = () => {
 
                     <div class="mb-6 grid gap-2">
                         <!-- Using grid gap for consistency -->
-                        <Label for="description" class="text-gray-700 dark:text-gray-200"> Description </Label>
+                        <Label for="description" class="text-foreground"> Description </Label>
                         <Textarea
                             id="description"
                             v-model="form.description"
                             rows="4"
-                            class="border-gray-300 bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
+                            class="border-border bg-input text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                             placeholder="Describe the purpose of this team"
                         ></Textarea>
                         <InputError :message="form.errors.description" />
@@ -88,14 +88,14 @@ const submit = () => {
                         <Link :href="route('teams.index')">
                             <Button
                                 variant="outline"
-                                class="border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                                class="border-border text-foreground hover:bg-muted"
                             >
                                 Cancel
                             </Button>
                         </Link>
                         <Button
                             type="submit"
-                            class="bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-800"
+                            class="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                             :disabled="form.processing"
                         >
                             <span v-if="form.processing">Creating...</span>

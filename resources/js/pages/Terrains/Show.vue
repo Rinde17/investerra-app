@@ -117,41 +117,41 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="flex flex-col gap-6 p-4 lg:p-8">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ terrain.title }}</h1>
-                    <p class="mt-2 text-base text-gray-600 dark:text-gray-400">{{ terrain.city }}, {{ terrain.zip_code }}</p>
+                    <h1 class="text-3xl font-bold text-foreground">{{ terrain.title }}</h1>
+                    <p class="mt-2 text-base text-muted-foreground">{{ terrain.city }}, {{ terrain.zip_code }}</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <Link :href="route('terrains.edit', terrain.id)">
-                        <Button variant="outline"> Edit Terrain </Button>
+                        <Button variant="outline" class="border-border text-foreground hover:bg-muted"> Edit Terrain </Button>
                     </Link>
                     <DeleteTerrain :terrainId="props.terrain.id" :terrainTitle="props.terrain.title" />
                 </div>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card>
+                <Card class="border-border bg-card">
                     <CardHeader class="pb-2">
-                        <CardDescription>Price</CardDescription>
-                        <CardTitle class="text-2xl">{{ formatPrice(terrain.price) }}</CardTitle>
+                        <CardDescription class="text-muted-foreground">Price</CardDescription>
+                        <CardTitle class="text-2xl text-foreground">{{ formatPrice(terrain.price) }}</CardTitle>
                     </CardHeader>
                 </Card>
-                <Card>
+                <Card class="border-border bg-card">
                     <CardHeader class="pb-2">
-                        <CardDescription>Surface</CardDescription>
-                        <CardTitle class="text-2xl">{{ formatSurface(terrain.surface_m2) }}</CardTitle>
+                        <CardDescription class="text-muted-foreground">Surface</CardDescription>
+                        <CardTitle class="text-2xl text-foreground">{{ formatSurface(terrain.surface_m2) }}</CardTitle>
                     </CardHeader>
                 </Card>
-                <Card>
+                <Card class="border-border bg-card">
                     <CardHeader class="pb-2">
-                        <CardDescription>Price per m²</CardDescription>
-                        <CardTitle class="text-2xl">
+                        <CardDescription class="text-muted-foreground">Price per m²</CardDescription>
+                        <CardTitle class="text-2xl text-foreground">
                             {{ analysis ? formatPricePerM2(analysis.price_m2) : formatPricePerM2(terrain.price / terrain.surface_m2) }}
                         </CardTitle>
                     </CardHeader>
                 </Card>
-                <Card>
+                <Card class="border-border bg-card">
                     <CardHeader class="pb-2">
-                        <CardDescription>Status</CardDescription>
+                        <CardDescription class="text-muted-foreground">Status</CardDescription>
                         <CardTitle class="text-2xl">
                             <span
                                 :class="[
@@ -168,7 +168,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </Card>
             </div>
 
-            <div class="border-b border-gray-200 dark:border-gray-800">
+            <div class="border-b border-border">
                 <nav class="-mb-px flex space-x-8">
                     <Button
                         variant="ghost"
@@ -176,7 +176,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         :class="[
                             activeTab === 'details'
                                 ? 'border-primary text-primary shadow-none'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+                                : 'border-transparent text-muted-foreground',
                             'rounded-none border-b-2 px-1 pt-4 pb-3 text-base font-medium', // Adjusted padding and font size for tabs
                         ]"
                     >
@@ -188,7 +188,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         :class="[
                             activeTab === 'analysis'
                                 ? 'border-primary text-primary shadow-none'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+                                : 'border-transparent text-muted-foreground hover:text-foreground',
                             'rounded-none border-b-2 px-1 pt-4 pb-3 text-base font-medium',
                         ]"
                     >
@@ -200,7 +200,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         :class="[
                             activeTab === 'projects'
                                 ? 'border-primary text-primary shadow-none'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
+                                : 'border-transparent text-muted-foreground hover:text-foreground',
                             'rounded-none border-b-2 px-1 pt-4 pb-3 text-base font-medium',
                         ]"
                     >
@@ -210,70 +210,70 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div v-if="activeTab === 'details'" class="grid gap-6 md:grid-cols-2">
-                <Card>
+                <Card class="border-border bg-card">
                     <CardHeader>
-                        <CardTitle>Basic Information</CardTitle>
+                        <CardTitle class="text-foreground">Basic Information</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                             <div class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Description</dt>
+                                <dd class="mt-1 text-sm text-foreground">
                                     {{ terrain.description || 'No description provided' }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">City</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ terrain.city }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">City</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ terrain.city }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">ZIP Code</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ terrain.zip_code }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">ZIP Code</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ terrain.zip_code }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatDate(terrain.created_at) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Created</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatDate(terrain.created_at) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatDate(terrain.updated_at) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Last Updated</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatDate(terrain.updated_at) }}</dd>
                             </div>
                         </dl>
                     </CardContent>
                 </Card>
 
-                <Card>
+                <Card class="border-border bg-card">
                     <CardHeader>
-                        <CardTitle>Additional Information</CardTitle>
+                        <CardTitle class="text-foreground">Additional Information</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                             <div v-if="terrain.latitude && terrain.longitude" class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ terrain.latitude }}, {{ terrain.longitude }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Location</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ terrain.latitude }}, {{ terrain.longitude }}</dd>
                             </div>
                             <div v-if="terrain.source_url" class="sm:col-span-2">
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Source URL</dt>
-                                <dd class="dark:text-primary-light mt-1 text-sm text-primary">
+                                <dt class="text-sm font-medium text-muted-foreground">Source URL</dt>
+                                <dd class="mt-1 text-sm text-primary">
                                     <a :href="terrain.source_url" target="_blank" rel="noopener noreferrer" class="hover:underline">
                                         {{ terrain.source_url }}
                                     </a>
                                 </dd>
                             </div>
                             <div v-if="terrain.source_platform">
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Source Platform</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ terrain.source_platform }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Source Platform</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ terrain.source_platform }}</dd>
                             </div>
                         </dl>
                     </CardContent>
                 </Card>
 
-                <Card v-if="terrain.latitude && terrain.longitude" class="md:col-span-2">
+                <Card v-if="terrain.latitude && terrain.longitude" class="md:col-span-2 border-border bg-card">
                     <CardHeader>
-                        <CardTitle>Map</CardTitle>
+                        <CardTitle class="text-foreground">Map</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="flex h-64 items-center justify-center rounded-md bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                        <div class="flex h-64 items-center justify-center rounded-md bg-muted text-muted-foreground">
                             Map Placeholder
                         </div>
                     </CardContent>
@@ -281,17 +281,17 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div v-if="activeTab === 'analysis'" class="grid gap-6 md:grid-cols-2">
-                <Card v-if="analysis">
+                <Card v-if="analysis" class="border-border bg-card">
                     <CardHeader>
                         <div class="flex items-center justify-between">
-                            <CardTitle>Analysis Results</CardTitle>
+                            <CardTitle class="text-foreground">Analysis Results</CardTitle>
                             <span
                                 :class="[
-                                    analysis.profitability_label === 'Excellent'
+                                    analysis.profitability_label === 'excellent'
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
-                                        : analysis.profitability_label === 'Good'
+                                        : analysis.profitability_label === 'good'
                                           ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-                                          : analysis.profitability_label === 'Average'
+                                          : analysis.profitability_label === 'average'
                                             ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
                                             : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
                                     'rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -300,11 +300,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 {{ analysis.profitability_label }}
                             </span>
                         </div>
-                        <CardDescription>Analysis performed on {{ formatDate(analysis.analyzed_at) }}</CardDescription>
+                        <CardDescription class="text-muted-foreground">Analysis performed on {{ formatDate(analysis.analyzed_at) }}</CardDescription>
 
                         <div class="mt-4 flex flex-wrap gap-2">
                             <a :href="route('terrains.analysis.pdf', terrain.id)" target="_blank">
-                                <Button>
+                                <Button class="bg-primary text-primary-foreground hover:bg-primary/90">
                                     <svg class="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path
                                             stroke-linecap="round"
@@ -317,7 +317,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </Button>
                             </a>
                             <a :href="route('terrains.analysis.csv', terrain.id)">
-                                <Button variant="outline">
+                                <Button variant="outline" class="border-border text-foreground hover:bg-muted">
                                     <svg class="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path
                                             stroke-linecap="round"
@@ -334,11 +334,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <CardContent>
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">AI Score</dt>
+                                <dt class="text-sm font-medium text-muted-foreground">AI Score</dt>
                                 <dd class="mt-1 flex items-center">
-                                    <span class="text-lg font-semibold text-gray-900 dark:text-white">{{
-                                        Number(analysis.ai_score).toFixed(1)
-                                    }}</span>
+                                    <span class="text-lg font-semibold text-foreground">{{
+                                            Number(analysis.ai_score).toFixed(1)
+                                        }}</span>
                                     <div class="ml-2 h-2 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
                                         <div
                                             class="h-2 rounded-full"
@@ -357,11 +357,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Market Price/m²</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPricePerM2(analysis.market_price_m2) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Market Price/m²</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPricePerM2(analysis.market_price_m2) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Price Difference</dt>
+                                <dt class="text-sm font-medium text-muted-foreground">Price Difference</dt>
                                 <dd
                                     class="mt-1 text-sm"
                                     :class="
@@ -375,35 +375,35 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Viability Cost</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(analysis.viability_cost) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Viability Cost</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPrice(analysis.viability_cost) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Possible Lots</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ analysis.lots_possible }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Possible Lots</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ analysis.lots_possible }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Resale Estimate (Min)</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(analysis.resale_estimate_min) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Resale Estimate (Min)</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPrice(analysis.resale_estimate_min) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Resale Estimate (Max)</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(analysis.resale_estimate_max) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Resale Estimate (Max)</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPrice(analysis.resale_estimate_max) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Net Margin Estimate</dt>
-                                <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Net Margin Estimate</dt>
+                                <dd class="mt-1 text-sm font-semibold text-foreground">
                                     {{ formatPrice(analysis.net_margin_estimate) }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Profit Margin</dt>
-                                <dd class="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Profit Margin</dt>
+                                <dd class="mt-1 text-sm font-semibold text-foreground">
                                     {{ Number(analysis.profit_margin_percentage).toFixed(2) }}%
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Overall Risk</dt>
+                                <dt class="text-sm font-medium text-muted-foreground">Overall Risk</dt>
                                 <dd class="mt-1 text-sm">
                                     <span
                                         :class="[
@@ -420,7 +420,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Recommendation</dt>
+                                <dt class="text-sm font-medium text-muted-foreground">Recommendation</dt>
                                 <dd class="mt-1 text-sm">
                                     <span
                                         :class="[
@@ -448,39 +448,39 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardContent>
                 </Card>
 
-                <Card v-if="analysis">
+                <Card v-if="analysis" class="border-border bg-card">
                     <CardHeader>
-                        <CardTitle>Investment Summary</CardTitle>
+                        <CardTitle class="text-foreground">Investment Summary</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6">
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Purchase Price</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(terrain.price) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Purchase Price</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPrice(terrain.price) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Viability Cost</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(analysis.viability_cost) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Viability Cost</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPrice(analysis.viability_cost) }}</dd>
                             </div>
-                            <Separator class="my-4" />
+                            <Separator class="my-4 bg-border" />
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Investment</dt>
-                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ formatPrice(totalInvestmentCost) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Total Investment</dt>
+                                <dd class="mt-1 text-lg font-semibold text-foreground">{{ formatPrice(totalInvestmentCost) }}</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Average Resale Estimate</dt>
-                                <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatPrice(averageResaleEstimate) }}</dd>
+                                <dt class="text-sm font-medium text-muted-foreground">Average Resale Estimate</dt>
+                                <dd class="mt-1 text-sm text-foreground">{{ formatPrice(averageResaleEstimate) }}</dd>
                             </div>
-                            <Separator class="my-4" />
+                            <Separator class="my-4 bg-border" />
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Net Profit</dt>
-                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Net Profit</dt>
+                                <dd class="mt-1 text-lg font-semibold text-foreground">
                                     {{ formatPrice(analysis.net_margin_estimate) }}
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Return on Investment</dt>
-                                <dd class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
+                                <dt class="text-sm font-medium text-muted-foreground">Return on Investment</dt>
+                                <dd class="mt-1 text-lg font-semibold text-foreground">
                                     {{ Number(analysis.profit_margin_percentage).toFixed(2) }}%
                                 </dd>
                             </div>
@@ -490,10 +490,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                 <div
                     v-if="!analysis"
-                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-900/30"
+                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-12 text-center"
                 >
                     <svg
-                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                        class="mx-auto h-12 w-12 text-muted-foreground"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -503,38 +503,38 @@ const breadcrumbs: BreadcrumbItem[] = [
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="1.5"
-                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 012-2V5a2 2 0 012-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                         />
                     </svg>
-                    <h3 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">No analysis available</h3>
-                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">This terrain hasn't been analyzed yet.</p>
+                    <h3 class="mt-4 text-base font-semibold text-foreground">No analysis available</h3>
+                    <p class="mt-2 text-sm text-muted-foreground">This terrain hasn't been analyzed yet.</p>
                 </div>
             </div>
 
-            <Card v-if="activeTab === 'projects'">
+            <Card v-if="activeTab === 'projects'" class="border-border bg-card">
                 <CardHeader>
                     <div class="flex items-center justify-between">
-                        <CardTitle>Projects Including This Terrain</CardTitle>
+                        <CardTitle class="text-foreground">Projects Including This Terrain</CardTitle>
                         <Link :href="route('projects.create')">
-                            <Button> New Project </Button>
+                            <Button class="bg-primary text-primary-foreground hover:bg-primary/90"> New Project </Button>
                         </Link>
                     </div>
                 </CardHeader>
                 <CardContent>
                     <div v-if="projects.length > 0" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <Card v-for="project in projects" :key="project.id" class="flex flex-col transition-all hover:shadow-lg">
+                        <Card v-for="project in projects" :key="project.id" class="flex flex-col transition-all hover:shadow-lg border-border bg-card">
                             <CardHeader>
-                                <CardTitle>{{ project.name }}</CardTitle>
-                                <CardDescription v-if="project.description" class="mt-2 flex-1 text-sm text-gray-500 dark:text-gray-400">
+                                <CardTitle class="text-foreground">{{ project.name }}</CardTitle>
+                                <CardDescription v-if="project.description" class="mt-2 flex-1 text-sm text-muted-foreground">
                                     {{ project.description }}
                                 </CardDescription>
-                                <CardDescription v-else class="mt-2 flex-1 text-sm text-gray-400 italic dark:text-gray-500">
+                                <CardDescription v-else class="mt-2 flex-1 text-sm text-muted-foreground italic">
                                     No description provided
                                 </CardDescription>
                             </CardHeader>
                             <CardContent class="mt-auto pt-0">
                                 <Link :href="route('projects.show', { project: project.id })" class="block">
-                                    <Button class="w-full"> View Project </Button>
+                                    <Button class="w-full bg-primary text-primary-foreground hover:bg-primary/90"> View Project </Button>
                                 </Link>
                             </CardContent>
                         </Card>
@@ -542,10 +542,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                     <div
                         v-else
-                        class="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-900/30"
+                        class="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-12 text-center"
                     >
                         <svg
-                            class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                            class="mx-auto h-12 w-12 text-muted-foreground"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -558,11 +558,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
                             />
                         </svg>
-                        <h3 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">No projects yet</h3>
-                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Add this terrain to a project to organize your investments.</p>
+                        <h3 class="mt-4 text-base font-semibold text-foreground">No projects yet</h3>
+                        <p class="mt-2 text-sm text-muted-foreground">Add this terrain to a project to organize your investments.</p>
                         <div class="mt-6">
                             <Link :href="route('projects.create')">
-                                <Button> Create New Project </Button>
+                                <Button class="bg-primary text-primary-foreground hover:bg-primary/90"> Create New Project </Button>
                             </Link>
                         </div>
                     </div>

@@ -96,78 +96,78 @@ const breadcrumbs: BreadcrumbItem[] = [
 <template>
     <AuthenticatedLayout title="Terrain Comparison" :breadcrumbs="breadcrumbs">
         <div class="p-4 lg:p-8">
-            <Card class="max-w-full overflow-hidden">
+            <Card class="max-w-full overflow-hidden border-border bg-card">
                 <CardHeader>
-                    <CardTitle>Terrain Comparison</CardTitle>
-                    <CardDescription>Compare multiple terrains and their analyses side-by-side.</CardDescription>
+                    <CardTitle class="text-foreground">Terrain Comparison</CardTitle>
+                    <CardDescription class="text-muted-foreground">Compare multiple terrains and their analyses side-by-side.</CardDescription>
                 </CardHeader>
                 <CardContent class="p-0"> <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead class="[&_tr]:border-b bg-gray-50 dark:bg-gray-800/50">
+                        <thead class="[&_tr]:border-b bg-muted/50">
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <th scope="col" class="h-12 px-4 text-left align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-gray-50 dark:bg-gray-800/50 z-10">
+                            <th scope="col" class="h-12 px-4 text-left align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-muted/50 z-10">
                                 Property
                             </th>
                             <th
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
                                 scope="col"
-                                class="h-12 px-4 text-left align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap"
+                                class="h-12 px-4 text-left align-middle font-medium text-foreground whitespace-nowrap"
                             >
                                 {{ terrain.title }}
                             </th>
                         </tr>
                         </thead>
-                        <tbody class="[&_tr:last-child]:border-0 bg-white dark:bg-gray-900">
-                        <tr class="bg-gray-100/50 dark:bg-gray-800/70 border-b">
-                            <th colspan="100%" class="h-12 px-4 text-left align-middle font-semibold text-gray-900 dark:text-gray-50 sticky left-0 bg-gray-100/50 dark:bg-gray-800/70 z-10">Basic Information</th>
+                        <tbody class="[&_tr:last-child]:border-0 bg-card">
+                        <tr class="bg-muted/50 border-b">
+                            <th colspan="100%" class="h-12 px-4 text-left align-middle font-semibold text-foreground sticky left-0 bg-muted/50 z-10">Basic Information</th>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">City</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">City</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.city }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">ZIP Code</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">ZIP Code</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.zip_code }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Surface</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Surface</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ formatSurface(terrain.surface_m2) }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Price</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Price</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ formatPrice(terrain.price) }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Viabilised</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Viabilised</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                         <span
                                             :class="[
@@ -182,17 +182,17 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </td>
                         </tr>
 
-                        <tr class="bg-gray-100/50 dark:bg-gray-800/70 border-b">
-                            <th colspan="100%" class="h-12 px-4 text-left align-middle font-semibold text-gray-900 dark:text-gray-50 sticky left-0 bg-gray-100/50 dark:bg-gray-800/70 z-10">
+                        <tr class="bg-muted/50 border-b">
+                            <th colspan="100%" class="h-12 px-4 text-left align-middle font-semibold text-foreground sticky left-0 bg-muted/50 z-10">
                                 Analysis Information
                             </th>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">AI Score</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">AI Score</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 <div v-if="terrain.analysis" class="flex items-center">
                                     <span class="font-semibold">{{ Number(terrain.analysis.ai_score).toFixed(1) }}</span>
@@ -212,15 +212,15 @@ const breadcrumbs: BreadcrumbItem[] = [
                                         ></div>
                                     </div>
                                 </div>
-                                <span v-else class="text-gray-500 dark:text-gray-400">N/A</span>
+                                <span v-else class="text-muted-foreground">N/A</span>
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Price per m²</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Price per m²</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{
                                     terrain.analysis
@@ -230,19 +230,19 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">
                                 Market Price per m²
                             </td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.analysis ? formatPricePerM2(terrain.analysis.market_price_m2) : 'N/A' }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">
                                 Price Difference
                             </td>
                             <td v-for="terrain in terrains" :key="terrain.id" class="p-4 align-middle whitespace-nowrap">
@@ -257,67 +257,67 @@ const breadcrumbs: BreadcrumbItem[] = [
                                             {{ terrain.analysis.price_difference_percentage > 0 ? '+' : ''
                                             }}{{ Number(terrain.analysis.price_difference_percentage).toFixed(2) }}%
                                         </span>
-                                <span v-else class="text-gray-500 dark:text-gray-400">N/A</span>
+                                <span v-else class="text-muted-foreground">N/A</span>
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Viability Cost</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Viability Cost</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.analysis ? formatPrice(terrain.analysis.viability_cost) : 'N/A' }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">
                                 Total Investment
                             </td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ formatPrice(totalInvestmentCost(terrain)) }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Possible Lots</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Possible Lots</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.analysis ? terrain.analysis.lots_possible : 'N/A' }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">
                                 Resale Estimate (Min)
                             </td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.analysis ? formatPrice(terrain.analysis.resale_estimate_min) : 'N/A' }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">
                                 Resale Estimate (Max)
                             </td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 {{ terrain.analysis ? formatPrice(terrain.analysis.resale_estimate_max) : 'N/A' }}
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">
                                 Net Margin Estimate
                             </td>
                             <td
@@ -334,7 +334,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Profit Margin</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Profit Margin</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
@@ -349,11 +349,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Profitability</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Profitability</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                         <span
                                             v-if="terrain.analysis"
@@ -370,15 +370,15 @@ const breadcrumbs: BreadcrumbItem[] = [
                                         >
                                             {{ terrain.analysis.profitability_label }}
                                         </span>
-                                <span v-else class="text-gray-500 dark:text-gray-400">N/A</span>
+                                <span v-else class="text-muted-foreground">N/A</span>
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">Overall Risk</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">Overall Risk</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                         <span
                                             v-if="terrain.analysis"
@@ -393,21 +393,21 @@ const breadcrumbs: BreadcrumbItem[] = [
                                         >
                                             {{ terrain.analysis.overall_risk?.charAt(0).toUpperCase() + terrain.analysis.overall_risk?.slice(1) }}
                                         </span>
-                                <span v-else class="text-gray-500 dark:text-gray-400">N/A</span>
+                                <span v-else class="text-muted-foreground">N/A</span>
                             </td>
                         </tr>
                         <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                            <td class="p-4 align-middle font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-900 z-10">View Details</td>
+                            <td class="p-4 align-middle font-medium text-foreground whitespace-nowrap sticky left-0 bg-card z-10">View Details</td>
                             <td
                                 v-for="terrain in terrains"
                                 :key="terrain.id"
-                                class="p-4 align-middle text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                                class="p-4 align-middle text-muted-foreground whitespace-nowrap"
                             >
                                 <Link
                                     :href="route('terrains.show', terrain.id)"
-                                    class="text-primary hover:text-primary-foreground dark:text-primary-dark dark:hover:text-primary-light underline-offset-4 hover:underline"
+                                    class="text-primary hover:text-primary/90 underline-offset-4 hover:underline"
                                 >
-                                    <Button type="button" variant="outline"> View Analysis </Button>
+                                    <Button type="button" variant="outline" class="border-border text-foreground hover:bg-muted"> View Analysis </Button>
                                 </Link>
                             </td>
                         </tr>
@@ -416,9 +416,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </div>
                 </CardContent>
             </Card>
-            <div v-if="!terrains || terrains.length === 0" class="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-900/30">
+            <div v-if="!terrains || terrains.length === 0" class="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-12 text-center">
                 <svg
-                    class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                    class="mx-auto h-12 w-12 text-muted-foreground"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -431,8 +431,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                         d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                 </svg>
-                <h3 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">No terrains selected for comparison</h3>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                <h3 class="mt-4 text-base font-semibold text-foreground">No terrains selected for comparison</h3>
+                <p class="mt-2 text-sm text-muted-foreground">
                     Please select terrains from the main listing page to compare them here.
                 </p>
             </div>

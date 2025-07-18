@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 import { FlashMessages } from '@/types';
+import { usePage } from '@inertiajs/vue3';
+import { computed, onMounted, ref, watch } from 'vue';
 
+// Lucide Icons
+import { AlertTriangle, CheckCircle, X as Close, Info, XCircle } from 'lucide-vue-next';
 
 const show = ref(false);
 const message = ref('');
-const type = ref('success'); // 'success', 'error', 'info', 'warning'
+const type = ref<'success' | 'error' | 'info' | 'warning'>('success');
 
 const page = usePage();
 
@@ -15,25 +17,28 @@ const hideToast = () => {
     message.value = '';
 };
 
-// Watch pour les messages flash
-watch(() => page.props.flash, (newFlash: FlashMessages) => {
-    if (newFlash.success) {
-        message.value = newFlash.success;
-        type.value = 'success';
-        show.value = true;
-        setTimeout(hideToast, 5000);
-    } else if (newFlash.error) {
-        message.value = newFlash.error;
-        type.value = 'error';
-        show.value = true;
-        setTimeout(hideToast, 7000);
-    }
-    // Ajoutez plus de conditions pour info, warning si vous les utilisez
-}, { deep: true }); // 'deep: true' est important pour les objets imbriqués
+// Watch flash messages
+watch(
+    () => page.props.flash,
+    (newFlash: FlashMessages) => {
+        if (newFlash.success) {
+            message.value = newFlash.success;
+            type.value = 'success';
+            show.value = true;
+            setTimeout(hideToast, 5000);
+        } else if (newFlash.error) {
+            message.value = newFlash.error;
+            type.value = 'error';
+            show.value = true;
+            setTimeout(hideToast, 7000);
+        }
+    },
+    { deep: true },
+);
 
-// Affiche un toast immédiatement au chargement si un message flash est déjà présent
+// Check initial flash on mount
 onMounted(() => {
-    const initialFlash: FlashMessages = page.props.flash; // Typage correct ici
+    const initialFlash: FlashMessages = page.props.flash;
 
     if (initialFlash.success) {
         message.value = initialFlash.success;
@@ -48,17 +53,16 @@ onMounted(() => {
     }
 });
 
-// Propriétés calculées pour les classes dynamiques des toasts
 const toastClasses = computed(() => {
     switch (type.value) {
         case 'success':
-            return 'bg-green-500 text-white';
+            return 'bg-[var(--toast-success-bg)] text-[var(--toast-success-text)]';
         case 'error':
-            return 'bg-red-500 text-white';
+            return 'bg-[var(--toast-error-bg)] text-[var(--toast-error-text)]';
         case 'info':
-            return 'bg-blue-500 text-white';
+            return 'bg-[var(--toast-info-bg)] text-[var(--toast-info-text)]';
         case 'warning':
-            return 'bg-yellow-500 text-white';
+            return 'bg-[var(--toast-warning-bg)] text-[var(--toast-warning-text)]';
         default:
             return 'bg-gray-700 text-white';
     }
@@ -67,15 +71,15 @@ const toastClasses = computed(() => {
 const iconClasses = computed(() => {
     switch (type.value) {
         case 'success':
-            return 'text-green-200';
+            return 'text-[color:var(--toast-success-text)]/80';
         case 'error':
-            return 'text-red-200';
+            return 'text-[color:var(--toast-error-text)]/80';
         case 'info':
-            return 'text-blue-200';
+            return 'text-[color:var(--toast-info-text)]/80';
         case 'warning':
-            return 'text-yellow-200';
+            return 'text-[color:var(--toast-warning-text)]/80';
         default:
-            return 'text-gray-200';
+            return 'text-white/80';
     }
 });
 </script>
@@ -89,26 +93,19 @@ const iconClasses = computed(() => {
         leave-from-class="transform opacity-100 translate-y-0"
         leave-to-class="transform opacity-0 translate-y-full"
     >
-        <div v-if="show && message" :class="['fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg flex items-center space-x-3', toastClasses]">
-            <svg v-if="type === 'success'" class="h-6 w-6" :class="iconClasses" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <svg v-else-if="type === 'error'" class="h-6 w-6" :class="iconClasses" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <svg v-else-if="type === 'info'" class="h-6 w-6" :class="iconClasses" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <svg v-else-if="type === 'warning'" class="h-6 w-6" :class="iconClasses" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+        <div v-if="show && message" :class="['fixed right-4 bottom-4 z-50 flex items-center space-x-3 rounded-lg p-4 shadow-lg', toastClasses]">
+            <CheckCircle v-if="type === 'success'" class="h-6 w-6" :class="iconClasses" />
+            <XCircle v-else-if="type === 'error'" class="h-6 w-6" :class="iconClasses" />
+            <Info v-else-if="type === 'info'" class="h-6 w-6" :class="iconClasses" />
+            <AlertTriangle v-else-if="type === 'warning'" class="h-6 w-6" :class="iconClasses" />
 
             <span class="font-semibold">{{ message }}</span>
 
-            <button @click="hideToast" class="ml-auto p-1 rounded-full hover:bg-white hover:bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
-                <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+            <button
+                @click="hideToast"
+                class="cursor-pointer hover:bg-opacity-40 focus:ring-opacity-50 ml-auto rounded-full p-1  focus:ring-2  focus:outline-none"
+            >
+                <Close class="h-5 w-5 text-white" />
             </button>
         </div>
     </Transition>

@@ -152,10 +152,10 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
         <div class="flex flex-col gap-8 p-6">
             <div class="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-4">
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Terrains</h1>
+                    <h1 class="text-3xl font-bold text-foreground">Terrains</h1>
                     <div v-if="canCompare && selectedTerrains.length > 0" class="flex items-center">
                         <span
-                            class="rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300"
+                            class="rounded-full bg-primary/80 px-2.5 py-0.5 text-xs font-medium text-primary-foreground"
                         >
                             {{ selectedTerrains.length }} selected
                         </span>
@@ -163,24 +163,24 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                 </div>
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <div class="relative w-full sm:w-auto">
-                        <Search class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <Search class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             v-model="searchQuery"
                             type="text"
                             placeholder="Search terrains..."
-                            class="rounded-md border border-gray-300 bg-gray-50 py-2 pr-3 pl-10 text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                            class="rounded-md border border-border bg-input py-2 pr-3 pl-10 text-foreground focus:border-primary focus:ring-primary"
                         />
                     </div>
                     <Button
                         v-if="canCompare && selectedTerrains.length >= 2"
                         @click="compareTerrains"
-                        class="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600"
+                        class="bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                         <BarChart2 class="mr-2 h-4 w-4" />
                         Compare Terrains
                     </Button>
                     <Link :href="route('terrains.create')">
-                        <Button class="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600">
+                        <Button class="bg-primary text-primary-foreground hover:bg-primary/90">
                             <PlusCircle class="mr-2 h-4 w-4" /> Add New Terrain
                         </Button>
                     </Link>
@@ -189,15 +189,15 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
 
             <div
                 v-if="!canCompare && filteredTerrains.length > 0"
-                class="mb-2 rounded-xl border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-800 dark:bg-gray-900"
+                class="mb-2 rounded-xl border border-border bg-card p-4 shadow-lg"
             >
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
-                        <Info class="h-5 w-5 text-indigo-500" />
+                        <Info class="h-5 w-5 text-primary" />
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Terrain Comparison Tool</h3>
-                        <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        <h3 class="text-sm font-medium text-foreground">Terrain Comparison Tool</h3>
+                        <div class="mt-1 text-sm text-muted-foreground">
                             <p>
                                 Upgrade to Pro or Investor plan to access our powerful terrain comparison tool. Compare up to 5 terrains side by side
                                 to make better investment decisions.
@@ -206,7 +206,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                         <div class="mt-2">
                             <Link
                                 :href="route('pricing.index')"
-                                class="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                class="text-sm font-medium text-primary hover:text-primary/90"
                             >
                                 View Pricing Plans &rarr;
                             </Link>
@@ -220,7 +220,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                     variant="outline"
                     @click="toggleSort('title')"
                     :class="{
-                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                        'border-primary/20 bg-primary/10 text-primary':
                             sortBy === 'title',
                     }"
                 >
@@ -231,7 +231,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                     variant="outline"
                     @click="toggleSort('price')"
                     :class="{
-                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                        'border-primary/20 bg-primary/10 text-primary':
                             sortBy === 'price',
                     }"
                 >
@@ -242,7 +242,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                     variant="outline"
                     @click="toggleSort('surface')"
                     :class="{
-                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                        'border-primary/20 bg-primary/10 text-primary':
                             sortBy === 'surface',
                     }"
                 >
@@ -257,7 +257,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                     variant="outline"
                     @click="toggleSort('price_m2')"
                     :class="{
-                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                        'border-primary/20 bg-primary/10 text-primary':
                             sortBy === 'price_m2',
                     }"
                 >
@@ -272,7 +272,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                     variant="outline"
                     @click="toggleSort('score')"
                     :class="{
-                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                        'border-primary/20 bg-primary/10 text-primary':
                             sortBy === 'score',
                     }"
                 >
@@ -283,7 +283,7 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                     variant="outline"
                     @click="toggleSort('profit')"
                     :class="{
-                        'border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300':
+                        'border-primary/20 bg-primary/10 text-primary':
                             sortBy === 'profit',
                     }"
                 >
@@ -300,8 +300,8 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                 <div
                     v-for="terrain in filteredTerrains"
                     :key="terrain.id"
-                    class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl dark:border-gray-800 dark:bg-gray-900"
-                    :class="{ 'ring-2 ring-indigo-500': canCompare && selectedTerrains.includes(terrain.id) }"
+                    class="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg transition-all hover:shadow-xl"
+                    :class="{ 'ring-2 ring-primary': canCompare && selectedTerrains.includes(terrain.id) }"
                 >
                     <div class="flex flex-1 flex-col p-6">
                         <div class="flex items-center justify-between">
@@ -312,19 +312,19 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                                         :id="`terrain-${terrain.id}`"
                                         :checked="selectedTerrains.includes(terrain.id)"
                                         @change="handleTerrainCheckboxChange($event, terrain.id)"
-                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-indigo-500"
+                                        class="h-4 w-4 rounded border-border text-primary focus:ring-primary dark:checked:bg-primary"
                                     />
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ terrain.title }}</h3>
+                                <h3 class="text-lg font-semibold text-foreground">{{ terrain.title }}</h3>
                             </div>
                             <span
                                 v-if="terrain.analysis"
                                 :class="[
-                                    terrain.analysis.profitability_label === 'Excellent'
+                                    terrain.analysis.profitability_label === 'excellent'
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
-                                        : terrain.analysis.profitability_label === 'Good'
+                                        : terrain.analysis.profitability_label === 'good'
                                           ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-                                          : terrain.analysis.profitability_label === 'Average'
+                                          : terrain.analysis.profitability_label === 'average'
                                             ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
                                             : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
                                     'rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -333,26 +333,26 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                                 {{ terrain.analysis.profitability_label }}
                             </span>
                         </div>
-                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ terrain.city }}, {{ terrain.zip_code }}</p>
+                        <p class="mt-2 text-sm text-muted-foreground">{{ terrain.city }}, {{ terrain.zip_code }}</p>
                         <div class="mt-4 grid grid-cols-2 gap-4">
                             <div>
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Price</p>
-                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ formatPrice(terrain.price) }}</p>
+                                <p class="text-xs font-medium text-muted-foreground">Price</p>
+                                <p class="text-sm font-semibold text-foreground">{{ formatPrice(terrain.price) }}</p>
                             </div>
                             <div>
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Surface</p>
-                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ formatSurface(terrain.surface_m2) }}</p>
+                                <p class="text-xs font-medium text-muted-foreground">Surface</p>
+                                <p class="text-sm font-semibold text-foreground">{{ formatSurface(terrain.surface_m2) }}</p>
                             </div>
                             <div>
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Price/m²</p>
-                                <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                <p class="text-xs font-medium text-muted-foreground">Price/m²</p>
+                                <p class="text-sm font-semibold text-foreground">
                                     {{ terrain.analysis ? formatPricePerM2(terrain.analysis.price_m2) : 'N/A' }}
                                 </p>
                             </div>
                             <div>
-                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">AI Score</p>
+                                <p class="text-xs font-medium text-muted-foreground">AI Score</p>
                                 <div class="flex items-center">
-                                    <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                                    <span class="text-sm font-semibold text-foreground">
                                         {{ terrain.analysis ? Number(terrain.analysis.ai_score).toFixed(1) : 'N/A' }}
                                     </span>
                                     <div v-if="terrain.analysis" class="ml-2 h-2 w-16 rounded-full bg-gray-200 dark:bg-gray-700">
@@ -374,13 +374,13 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                             </div>
                         </div>
                         <div class="mt-4">
-                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Status</p>
+                            <p class="text-xs font-medium text-muted-foreground">Status</p>
                             <div class="flex items-center">
                                 <span
                                     :class="[
                                         terrain.viabilised
-                                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
-                                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
+                                            ? 'bg-primary/20 text-primary-foreground'
+                                            : 'bg-accent/20 text-accent-foreground',
                                         'mt-1 inline-flex rounded-full px-2 py-0.5 text-xs font-medium',
                                     ]"
                                 >
@@ -389,22 +389,22 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                             </div>
                         </div>
                         <div v-if="terrain.analysis && terrain.analysis.net_margin_estimate" class="mt-4">
-                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Estimated Profit</p>
-                            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                            <p class="text-xs font-medium text-muted-foreground">Estimated Profit</p>
+                            <p class="text-sm font-semibold text-foreground">
                                 {{ formatPrice(terrain.analysis.net_margin_estimate) }}
                             </p>
                         </div>
                     </div>
-                    <div class="flex border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
+                    <div class="flex border-t border-border bg-muted/50">
                         <Link
                             :href="route('terrains.show', terrain.id)"
-                            class="flex flex-1 items-center justify-center p-3 text-sm font-medium text-indigo-600 hover:bg-gray-100 dark:text-indigo-400 dark:hover:bg-gray-800"
+                            class="flex flex-1 items-center justify-center p-3 text-sm font-medium text-primary hover:bg-muted"
                         >
                             View Details
                         </Link>
                         <Link
                             :href="route('terrains.edit', terrain.id)"
-                            class="flex flex-1 items-center justify-center border-l border-gray-200 p-3 text-sm font-medium text-indigo-600 hover:bg-gray-100 dark:border-gray-800 dark:text-indigo-400 dark:hover:bg-gray-800"
+                            class="flex flex-1 items-center justify-center border-l border-border p-3 text-sm font-medium text-primary hover:bg-muted"
                         >
                             Edit
                         </Link>
@@ -413,20 +413,20 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
 
                 <div
                     v-if="filteredTerrains.length === 0"
-                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-800"
+                    class="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-12 text-center"
                 >
                     <template v-if="searchQuery">
-                        <Frown class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-                        <h3 class="mt-2 text-base font-semibold text-gray-900 dark:text-white">No terrains found</h3>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">No terrains match your search criteria.</p>
+                        <Frown class="mx-auto h-12 w-12 text-muted-foreground" />
+                        <h3 class="mt-2 text-base font-semibold text-foreground">No terrains found</h3>
+                        <p class="mt-1 text-sm text-muted-foreground">No terrains match your search criteria.</p>
                     </template>
                     <template v-else>
-                        <Blocks class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-                        <h3 class="mt-2 text-base font-semibold text-gray-900 dark:text-white">No terrains available</h3>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Get started by adding a new terrain.</p>
+                        <Blocks class="mx-auto h-12 w-12 text-muted-foreground" />
+                        <h3 class="mt-2 text-base font-semibold text-foreground">No terrains available</h3>
+                        <p class="mt-1 text-sm text-muted-foreground">Get started by adding a new terrain.</p>
                         <div class="mt-6">
                             <Link :href="route('terrains.create')">
-                                <Button class="bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600">
+                                <Button class="bg-primary text-primary-foreground hover:bg-primary/90">
                                     <PlusCircle class="mr-2 h-4 w-4" /> Add New Terrain
                                 </Button>
                             </Link>

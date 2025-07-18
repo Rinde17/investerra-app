@@ -24,7 +24,7 @@ function toggleTheme() {
 
 <template>
     <header
-        class="flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
+        class="flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
     >
         <div class="flex items-center gap-2">
             <SidebarTrigger class="-ml-1" />
@@ -36,8 +36,8 @@ function toggleTheme() {
                     @click="toggleTheme"
                     :class="[
                         'flex items-center justify-center rounded-md p-2 transition-colors',
-                        'hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60',
-                        'text-neutral-500 dark:text-neutral-400'
+                        'hover:bg-muted/60', /* Using muted for hover background */
+                        'text-muted-foreground' /* Using muted-foreground for text color */
                     ]"
                 >
                     <component :is="appearance === 'dark' ? Sun : Moon" class="h-4 w-4" />
