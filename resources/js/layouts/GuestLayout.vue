@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Link, Head, usePage } from '@inertiajs/vue3';
+import { Link, Head, usePage, router } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { computed } from 'vue';
 import type { BreadcrumbItemType } from '@/types';
-import { Moon, Sun } from 'lucide-vue-next';
+import { LogOut, Moon, Sun } from 'lucide-vue-next';
 import { useAppearance } from '@/composables/useAppearance';
 
 // Define props for title, description, and breadcrumbs
@@ -39,6 +39,10 @@ function toggleTheme() {
     const next = appearance.value === 'dark' ? 'light' : 'dark'
     updateAppearance(next)
 }
+
+const handleLogout = () => {
+    router.flushAll();
+};
 </script>
 
 <template>
@@ -102,14 +106,17 @@ function toggleTheme() {
                             <Link :href="route('pricing.index')" class="inline-block rounded-md border border-primary px-5 py-2 text-sm leading-normal text-primary hover:bg-primary/10 transition-colors duration-300">
                                 S'abonner
                             </Link>
-                            <Link :href="route('dashboard')" class="inline-block rounded-md border border-border px-5 py-2 text-sm leading-normal hover:bg-muted transition-colors duration-300">
-                                Dashboard
+                            <Link class="cursor-pointer inline-block rounded-md bg-primary px-5 py-2 text-sm leading-normal text-primary-foreground hover:bg-primary/90 transition-colors duration-300" method="post" :href="route('logout')" @click="handleLogout">
+                                Déconnexion
                             </Link>
                         </template>
                         <!-- User is authenticated and subscribed -->
                         <template v-else-if="isAuthenticatedAndSubscribed">
                             <Link :href="route('dashboard')" class="inline-block rounded-md border border-border px-5 py-2 text-sm leading-normal hover:bg-muted transition-colors duration-300">
                                 Dashboard
+                            </Link>
+                            <Link class="cursor-pointer inline-block rounded-md bg-primary px-5 py-2 text-sm leading-normal text-primary-foreground hover:bg-primary/90 transition-colors duration-300" method="post" :href="route('logout')" @click="handleLogout">
+                                Déconnexion
                             </Link>
                         </template>
                         <!-- User is not authenticated -->
