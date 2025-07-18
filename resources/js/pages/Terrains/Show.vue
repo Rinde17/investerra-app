@@ -6,7 +6,8 @@ import { computed, ref } from 'vue';
 import DeleteTerrain from '@/components/DeleteTerrain.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Import Card components
-import { Separator } from '@/components/ui/separator'; // Can be used for visual separation
+import { Separator } from '@/components/ui/separator';
+import Map from '@/components/Map.vue'; // Can be used for visual separation
 
 // Define props for the component
 const props = defineProps<{
@@ -273,8 +274,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <CardTitle class="text-foreground">Map</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div class="flex h-64 items-center justify-center rounded-md bg-muted text-muted-foreground">
-                            Map Placeholder
+                        <div class="flex h-80 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                            <Map :latitude="terrain.latitude" :longitude="terrain.longitude" :title="terrain.title" />
                         </div>
                     </CardContent>
                 </Card>
