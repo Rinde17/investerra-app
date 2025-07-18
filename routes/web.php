@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
@@ -16,9 +17,9 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
-Route::get('/contact', function () {
-    return Inertia::render('Contact');
-})->name('contact');
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Accès aux pricing disponibles
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing.index');

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
+import { useForm } from '@inertiajs/vue3';
 
 // Références pour contrôler l'apparition progressive du contenu
 const showHeroContent = ref(false);
@@ -31,7 +32,7 @@ onMounted(() => {
 });
 
 // Logique pour la soumission du formulaire (côté frontend, à adapter avec votre backend Laravel)
-const form = ref({
+const form = useForm({
     name: '',
     email: '',
     subject: '',
@@ -39,17 +40,11 @@ const form = ref({
 });
 
 const submitForm = () => {
-    console.log('Formulaire soumis :', form.value);
-    // Ici, vous enverriez les données à votre backend Laravel via Inertia.js ou Axios
-    // Par exemple : Inertia.post(route('contact.submit'), form.value);
-    alert('Message envoyé ! Nous vous répondrons bientôt.');
-    // Réinitialiser le formulaire
-    form.value = {
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-    };
+    form.post(route('contact.store'), {
+        onSuccess: () => {
+            form.reset();
+        },
+    });
 };
 </script>
 
@@ -149,7 +144,7 @@ const submitForm = () => {
                         <div class="text-center">
                             <button
                                 type="submit"
-                                class="inline-block px-10 py-5 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xl font-bold rounded-full shadow-2xl hover:from-primary/90 hover:to-secondary/90 transform hover:scale-105 transition-all duration-500"
+                                class="cursor-pointer inline-block px-10 py-5 bg-gradient-to-r from-primary to-secondary text-primary-foreground text-xl font-bold rounded-full shadow-2xl hover:from-primary/90 hover:to-secondary/90 transform hover:scale-105 transition-all duration-500"
                             >
                                 Envoyer le Message
                             </button>

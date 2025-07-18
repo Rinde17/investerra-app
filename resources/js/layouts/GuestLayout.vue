@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import type { BreadcrumbItemType } from '@/types';
 import { LogOut, Moon, Sun } from 'lucide-vue-next';
 import { useAppearance } from '@/composables/useAppearance';
+import ToastNotification from '@/components/ToastNotification.vue';
 
 // Define props for title, description, and breadcrumbs
 interface Props {
@@ -145,4 +146,6 @@ const handleLogout = () => {
             </div>
         </footer>
     </div>
+
+    <ToastNotification />
 </template>
