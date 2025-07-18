@@ -379,8 +379,8 @@ const handleTerrainCheckboxChange = (event: Event, terrainId: number) => {
                                 <span
                                     :class="[
                                         terrain.viabilised
-                                            ? 'bg-primary/20 text-primary-foreground'
-                                            : 'bg-accent/20 text-accent-foreground',
+                                            ? 'bg-primary/80 text-primary-foreground'
+                                            : 'bg-accent/80 text-accent-foreground',
                                         'mt-1 inline-flex rounded-full px-2 py-0.5 text-xs font-medium',
                                     ]"
                                 >

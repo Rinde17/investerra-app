@@ -13,6 +13,12 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
 
 // Accès aux pricing disponibles
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing.index');

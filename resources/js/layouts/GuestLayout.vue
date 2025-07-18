@@ -79,11 +79,11 @@ const handleLogout = () => {
                         <Link :href="route('pricing.index')" class="text-foreground hover:text-primary font-medium">
                             Tarifs
                         </Link>
-                        <Link href="#" class="text-foreground hover:text-primary font-medium">
+                        <Link :href="route('contact')" class="text-foreground hover:text-primary font-medium">
                             Contact
                         </Link>
-                        <Link href="#" class="text-foreground hover:text-primary font-medium">
-                            Infos
+                        <Link :href="route('about')" class="text-foreground hover:text-primary font-medium">
+                            À Propos
                         </Link>
                     </nav>
 
