@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3'; // Importer usePage pour les messages flash
 import { computed, ref } from 'vue';
 import DeleteTerrain from '@/components/DeleteTerrain.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; // Import Card components
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import Map from '@/components/Map.vue'; // Can be used for visual separation
+import LeafletMap, { type MapTerrain } from '@/components/LeafletMap.vue'; // Importer le type MapTerrain
 
 // Define props for the component
 const props = defineProps<{
@@ -101,6 +101,25 @@ const averageResaleEstimate = computed(() => {
     return (Number(props.analysis.resale_estimate_min) + Number(props.analysis.resale_estimate_max)) / 2;
 });
 
+// Préparer les données pour le composant LeafletMap
+const mapTerrainData = computed<MapTerrain | null>(() => {
+    if (props.terrain && props.terrain.latitude !== null && props.terrain.longitude !== null) {
+        return {
+            id: props.terrain.id,
+            title: props.terrain.title,
+            city: props.terrain.city,
+            latitude: props.terrain.latitude,
+            longitude: props.terrain.longitude,
+            surface_m2: props.terrain.surface_m2,
+            price: props.terrain.price,
+        };
+    }
+    return null;
+});
+
+// Pour les messages flash de Inertia
+const flash = computed(() => usePage().props.flash);
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Terrains',
@@ -128,6 +147,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <DeleteTerrain :terrainId="props.terrain.id" :terrainTitle="props.terrain.title" />
                 </div>
             </div>
+
+            <div v-if="flash.success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ flash.success }}</span>
+            </div>
+            <div v-if="flash.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ flash.error }}</span>
+            </div>
+
 
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <Card class="border-border bg-card">
@@ -178,7 +205,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             activeTab === 'details'
                                 ? 'border-primary text-primary shadow-none'
                                 : 'border-transparent text-muted-foreground',
-                            'rounded-none border-b-2 px-1 pt-4 pb-3 text-base font-medium', // Adjusted padding and font size for tabs
+                            'rounded-none border-b-2 px-1 pt-4 pb-3 text-base font-medium',
                         ]"
                     >
                         Details
@@ -249,7 +276,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardHeader>
                     <CardContent>
                         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-                            <div v-if="terrain.latitude && terrain.longitude" class="sm:col-span-2">
+                            <div v-if="terrain.latitude !== null && terrain.longitude !== null" class="sm:col-span-2">
                                 <dt class="text-sm font-medium text-muted-foreground">Location</dt>
                                 <dd class="mt-1 text-sm text-foreground">{{ terrain.latitude }}, {{ terrain.longitude }}</dd>
                             </div>
@@ -269,13 +296,23 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardContent>
                 </Card>
 
-                <Card v-if="terrain.latitude && terrain.longitude" class="md:col-span-2 border-border bg-card">
+                <Card v-if="terrain.latitude !== null && terrain.longitude !== null" class="md:col-span-2 border-border bg-card">
                     <CardHeader>
                         <CardTitle class="text-foreground">Map</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div class="flex h-80 items-center justify-center rounded-md bg-muted text-muted-foreground">
-                            <Map :latitude="terrain.latitude" :longitude="terrain.longitude" :title="terrain.title" />
+                            <LeafletMap :terrain="mapTerrainData" :initial-zoom="15" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card v-else class="md:col-span-2 border-border bg-card">
+                    <CardHeader>
+                        <CardTitle class="text-foreground">Map</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="flex h-80 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                            Localisation non renseignée ou non géocodée pour ce terrain.
                         </div>
                     </CardContent>
                 </Card>
@@ -298,7 +335,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     'rounded-full px-2.5 py-0.5 text-xs font-medium',
                                 ]"
                             >
-                                {{ analysis.profitability_label }}
+                                {{ analysis.profitability_label?.charAt(0).toUpperCase() + analysis.profitability_label?.slice(1) }}
                             </span>
                         </div>
                         <CardDescription class="text-muted-foreground">Analysis performed on {{ formatDate(analysis.analyzed_at) }}</CardDescription>

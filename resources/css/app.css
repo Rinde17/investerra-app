@@ -145,6 +145,9 @@
 
     --toast-warning-bg: var(--muted); /* #DCD4C9 */
     --toast-warning-text: var(--muted-foreground); /* #6D6E33 */
+
+    --color-land-green: #2E7D32; /* Votre vert foncé */
+    --color-data-green: #8BC34A; /* Votre vert clair */
 }
 
 .dark {
@@ -206,6 +209,9 @@
 
     --toast-warning-bg: var(--muted); /* #4B6270 */
     --toast-warning-text: var(--muted-foreground); /* #B6B767 */
+
+    --color-land-green: #8BC34A; /* En mode sombre, le vert foncé devient le vert clair pour la visibilité */
+    --color-data-green: #8BC34A;
 }
 
 @layer base {

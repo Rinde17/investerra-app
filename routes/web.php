@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\TerrainAnalysisController;
 use App\Http\Controllers\TerrainController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WebhookController;
+use App\Http\Middleware\CheckSubscription;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -45,10 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Routes that require an active subscription
-    Route::prefix('app')->middleware([App\Http\Middleware\CheckSubscription::class])->group(function () {
-        Route::get('dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->name('dashboard');
+    Route::prefix('app')->middleware([CheckSubscription::class])->group(function () {
+        Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
         Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
         Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
