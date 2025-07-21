@@ -36,16 +36,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout/success', [SubscriptionController::class, 'success'])->name('checkout-success');
     Route::get('/checkout/cancel', [SubscriptionController::class, 'cancel'])->name('checkout-cancel');
 
-    Route::prefix('admin')->group(function () {
-
-        Route::get('/users', function () {
-
-            // Matches The "/admin/users" URL
-
-        });
-
-    });
-
     // Routes that require an active subscription
     Route::prefix('app')->middleware([CheckSubscription::class])->group(function () {
         Route::get('/dashboard', DashboardController::class)->name('dashboard');
