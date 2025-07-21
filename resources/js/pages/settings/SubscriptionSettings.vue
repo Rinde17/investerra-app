@@ -170,13 +170,13 @@ const featureIcon = (hasFeature: boolean) => {
                         </div>
 
 
-                        <div v-if="subscription.on_grace_period" class="mt-4 p-3 bg-accent/20 text-accent-foreground rounded-md">
+                        <div v-if="subscription.on_grace_period" class="mt-4 p-3 bg-accent/80 text-accent-foreground rounded-md">
                             Votre abonnement est actuellement annulé mais reste actif jusqu'au {{ subscription.ends_at }}.
                         </div>
-                        <div v-else-if="subscription.stripe_status === 'canceled'" class="mt-4 p-3 bg-destructive/20 text-destructive-foreground rounded-md">
+                        <div v-else-if="subscription.stripe_status === 'canceled'" class="mt-4 p-3 bg-destructive/80 text-destructive-foreground rounded-md">
                             Votre abonnement est actuellement inactif.
                         </div>
-                        <div v-else-if="subscription.stripe_status === 'active'" class="mt-4 p-3 bg-primary/20 text-primary-foreground rounded-md">
+                        <div v-else-if="subscription.stripe_status === 'active'" class="mt-4 p-3 bg-primary/80 text-primary-foreground rounded-md">
                             Votre abonnement est actif.
                         </div>
 
