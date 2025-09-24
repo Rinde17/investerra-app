@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed $stripe_price_id
  * @property mixed $id
  * @property mixed $name
+ * @property mixed $price_monthly
  * @method static create(array $array)
  * @method static where(string $string, mixed $stripePriceId)
  * @method static find(mixed $new_plan_id)
