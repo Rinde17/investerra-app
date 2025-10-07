@@ -50,12 +50,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('teams.show', { team: props.team.id }),
     },
 ];
-
+/*
 const featureIcon = (hasFeature: boolean) => {
     return hasFeature
         ? '<span class="text-primary mr-2">&#10003;</span>' // Checkmark
         : '<span class="text-destructive mr-2">&#10008;</span>'; // Cross
 };
+*/
 </script>
 
 <template>
