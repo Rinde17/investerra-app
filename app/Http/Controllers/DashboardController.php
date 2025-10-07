@@ -37,8 +37,8 @@ class DashboardController extends Controller
                 'id'        => $terrain->id,
                 'title'     => $terrain->title,
                 'city'      => $terrain->city,
-                'latitude'  => (float) $terrain->latitude, // Assurez-vous que c'est un float
-                'longitude' => (float) $terrain->longitude, // Assurez-vous que c'est un float
+                'latitude'  => (float) $terrain->latitude,
+                'longitude' => (float) $terrain->longitude,
                 'surface_m2' => (float) $terrain->surface_m2,
                 'price'     => (float) $terrain->price,
             ];

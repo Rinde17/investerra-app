@@ -46,13 +46,11 @@ class ContactController extends Controller
 
         // 3. Envoi de l'e-mail
         try {
-            // Remplacez 'votre_email_de_reception@exemple.com' par l'adresse où vous voulez recevoir les messages
-            Mail::to('votre_email_de_reception@exemple.com')->send(new ContactFormMail($validatedData));
+            // Remplacez 'email_de_reception@exemple.com' par l'adresse où on veut recevoir les messages
+            Mail::to('email_de_reception@exemple.com')->send(new ContactFormMail($validatedData));
         } catch (\Exception $e) {
             // Log l'erreur si l'envoi d'email échoue
             Log::error('Erreur lors de l\'envoi de l\'email de contact: ' . $e->getMessage());
-            // Vous pouvez choisir de ne pas empêcher le succès si seule l'email échoue (car la BDD est ok)
-            // Ou de rediriger avec un message d'avertissement différent
             return redirect()->back()->withErrors(['email_error' => 'Votre message a été enregistré, mais l\'envoi de l\'email a échoué.']);
         }
 
